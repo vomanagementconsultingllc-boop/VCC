@@ -229,9 +229,8 @@ a { color: inherit; }
 /* =============================================================
    ABOUT — video background at 50% opacity
    ============================================================= */
-.about-video { position: relative; overflow: hidden; background: var(--umber-900); }
-.about-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; z-index: 0; }
-.about-inner { position: relative; z-index: 1; }
+.about-video { background: var(--umber-900); }
+.about-inner { position: relative; }
 .about-video .sec-title { color: var(--ink-on-dark); }
 .about-video .runhead { color: var(--ink-on-dark-2); }
 .about-video .runhead .idx { color: var(--gold-400); }

@@ -102,6 +102,24 @@
       echo.textContent = data.name + ' · ' + data.business + '  ·  ' + planLabel + '  ·  ' + when;
     }
 
+    /* Send lead to GoHighLevel */
+    fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/4443b4fb-c762-4bbd-b2f4-271ed028c9cc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        phone: '',
+        companyName: data.business,
+        website: data.website,
+        monthlyRevenue: data.revenue,
+        timeframe: data.timeframe,
+        goal: data.goal,
+        message: data.about,
+        source: 'VCC Website'
+      })
+    }).catch(function () {});
+
     form.style.display = 'none';
     success.classList.add('show');
     success.setAttribute('tabindex', '-1');
