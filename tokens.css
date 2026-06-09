@@ -1,0 +1,137 @@
+/* =============================================================
+   VO CREATIVE CO. — Core Foundations: Color + Type
+   Direction: "Roman Gold" — warm, quiet-luxury system.
+   White-led surfaces, antique gold & camel accents, deep espresso ink.
+   Marcellus for display; Hanken Grotesk for UI/body.
+   ============================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---- Raw palette ---- */
+  --white:      #FFFFFF;
+  --cream-50:   #FFFFFF;
+  --cream-100:  #FCFBF9;
+  --cream-200:  #F4F3EF;
+  --oat-300:    #ECEAE4;
+  --sand-400:   #DBD7CE;
+  --sand-500:   #C0BBB0;
+
+  --gold-300:   #DCC392;
+  --gold-400:   #C2A06B;
+  --gold-500:   #A77B3E;
+  --gold-600:   #8A6430;
+  --gold-700:   #6E4E2E;
+
+  --bronze-600: #6E4E2E;
+  --bronze-700: #523A22;
+
+  --espresso-900: #251D16;
+  --espresso-800: #3A2E22;
+  --taupe-700:  #5A4A39;
+  --taupe-600:  #70604D;
+  --taupe-400:  #9C8C76;
+
+  --umber-900:  #241C14;
+  --umber-800:  #322619;
+  --umber-700:  #44351F;
+
+  --green-500:  #5C7355;
+  --amber-500:  #B58227;
+  --brick-500:  #A6432F;
+  --slate-500:  #5B6E7A;
+
+  /* ---- Semantic tokens ---- */
+  --bg:            var(--white);
+  --surface:       var(--white);
+  --surface-2:     var(--cream-200);
+  --surface-band:  var(--oat-300);
+  --surface-dark:  var(--umber-900);
+  --surface-ink:   var(--espresso-900);
+
+  --ink:           var(--espresso-900);
+  --ink-2:         var(--taupe-600);
+  --ink-3:         var(--taupe-400);
+  --ink-on-dark:   #F4F1EA;
+  --ink-on-dark-2: #BCB3A4;
+
+  --line:          #EAE7E0;
+  --line-strong:   var(--sand-400);
+  --line-on-dark:  rgba(244,241,234,0.16);
+
+  --primary:           var(--gold-500);
+  --primary-hover:     var(--gold-600);
+  --primary-pressed:   var(--gold-700);
+  --primary-soft:      #EFE2C6;
+  --on-primary:        #FAF5EC;
+
+  --secondary:         var(--bronze-600);
+  --secondary-hover:   var(--bronze-700);
+  --secondary-soft:    #E7DAC4;
+  --on-secondary:      #FAF5EC;
+
+  --accent:            var(--gold-400);
+  --accent-strong:     var(--gold-500);
+  --accent-soft:       #F0E4CB;
+
+  --success:       var(--green-500);
+  --success-soft:  #E1E9DD;
+  --warning:       var(--amber-500);
+  --warning-soft:  #F3E7C9;
+  --error:         var(--brick-500);
+  --error-soft:    #F2DAD2;
+  --info:          var(--slate-500);
+  --info-soft:     #DEE6EA;
+
+  --focus-ring:    color-mix(in srgb, var(--gold-500) 55%, transparent);
+
+  /* ---- Typography ---- */
+  --font-display: 'Marcellus', 'Times New Roman', serif;
+  --font-sans:    'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Spline Sans Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --w-reg: 400;
+  --w-med: 500;
+  --w-semi: 600;
+  --w-bold: 700;
+
+  --fs-display-1: 84px;  --lh-display-1: 1.04;
+  --fs-display-2: 62px;  --lh-display-2: 1.07;
+  --fs-h1:        46px;  --lh-h1: 1.1;
+  --fs-h2:        34px;  --lh-h2: 1.18;
+  --fs-h3:        26px;  --lh-h3: 1.26;
+  --fs-h4:        20px;  --lh-h4: 1.32;
+  --fs-eyebrow:   13px;  --lh-eyebrow: 1.2;   --ls-eyebrow: 0.2em;
+  --fs-body-lg:   19px;  --lh-body-lg: 1.6;
+  --fs-body:      17px;  --lh-body: 1.62;
+  --fs-body-sm:   15px;  --lh-body-sm: 1.55;
+  --fs-caption:   13px;  --lh-caption: 1.45;
+  --fs-button:    15px;  --lh-button: 1;
+
+  /* ---- Spacing ---- */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 24px;  --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;
+  --sp-9: 96px;  --sp-10: 128px; --sp-11: 192px;
+
+  /* ---- Radii ---- */
+  --r-xs: 3px;  --r-sm: 6px;  --r-md: 10px;  --r-lg: 14px;
+  --r-xl: 20px; --r-2xl: 28px; --r-pill: 999px;
+
+  /* ---- Shadows ---- */
+  --shadow-xs: 0 1px 2px rgba(37,29,22,0.06);
+  --shadow-sm: 0 2px 6px -1px rgba(37,29,22,0.08);
+  --shadow-md: 0 8px 24px -8px rgba(37,29,22,0.13);
+  --shadow-lg: 0 20px 50px -16px rgba(37,29,22,0.18);
+  --shadow-xl: 0 36px 80px -24px rgba(37,29,22,0.24);
+
+  /* ---- Motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-med: 240ms;
+  --dur-slow: 420ms;
+
+  --container: 1200px;
+  --container-wide: 1320px;
+  --container-text: 720px;
+}
