@@ -1,0 +1,191 @@
+/* =============================================================
+   VO CREATIVE CO. — Core Foundations: Color + Type
+   Direction: "Roman Gold" — a warm, quiet-luxury system for a
+   health & wellness growth agency. White-led surfaces, antique gold
+   & camel accents, deep espresso ink. Wordmark-only identity set in
+   the classical roman face Marcellus; Hanken Grotesk for everything else.
+   ============================================================= */
+
+/* ---- Webfonts (Google Fonts CDN) ----
+   Display: Marcellus (+ Marcellus SC)  ·  UI/Body: Hanken Grotesk  ·  Mono: Spline Sans Mono
+   NOTE: linked from CDN. For offline/print fidelity, drop the .woff2 files
+   into /fonts and swap the @import for @font-face. (Flagged in README.) */
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ============================================================
+     1. RAW PALETTE  (the warm Roman-Gold ramp)
+     ============================================================ */
+
+  /* Paper / warm-white neutrals — backgrounds & surfaces.
+     White-led: pure-white surfaces, with barely-warm grays for depth & lines. */
+  --white:      #FFFFFF;   /* main surface color */
+  --cream-50:   #FFFFFF;   /* surface / cards */
+  --cream-100:  #FCFBF9;   /* page canvas — whisper-warm white */
+  --cream-200:  #F4F3EF;   /* subtle alt surface / panels */
+  --oat-300:    #ECEAE4;   /* section bands */
+  --sand-400:   #DBD7CE;   /* dividers */
+  --sand-500:   #C0BBB0;   /* muted warm gray */
+
+  /* Gold — PRIMARY family (antique gold + camel) */
+  --gold-300:   #DCC392;
+  --gold-400:   #C2A06B;   /* camel — accent */
+  --gold-500:   #A77B3E;   /* primary */
+  --gold-600:   #8A6430;   /* primary hover */
+  --gold-700:   #6E4E2E;   /* primary pressed / bronze */
+
+  /* Bronze / umber — deep warm neutrals & secondary */
+  --bronze-600: #6E4E2E;
+  --bronze-700: #523A22;
+
+  /* Espresso — INK (warm near-black) */
+  --espresso-900: #251D16; /* primary ink */
+  --espresso-800: #3A2E22;
+  --taupe-700:  #5A4A39;
+  --taupe-600:  #70604D;   /* secondary ink */
+  --taupe-400:  #9C8C76;   /* tertiary ink / placeholder */
+
+  /* Umber — deep warm surface for premium dark sections */
+  --umber-900:  #241C14;
+  --umber-800:  #322619;
+  --umber-700:  #44351F;
+
+  /* Status hues (warm-tuned) */
+  --green-500:  #5C7355;
+  --amber-500:  #B58227;
+  --brick-500:  #A6432F;
+  --slate-500:  #5B6E7A;
+
+  /* ============================================================
+     2. SEMANTIC TOKENS  (use these in product, not raw ramp)
+     ============================================================ */
+
+  /* Backgrounds & surfaces */
+  --bg:            var(--white);
+  --surface:       var(--white);
+  --surface-2:     var(--cream-200);
+  --surface-band:  var(--oat-300);
+  --surface-dark:  var(--umber-900);
+  --surface-ink:   var(--espresso-900);
+
+  /* Text */
+  --ink:           var(--espresso-900);
+  --ink-2:         var(--taupe-600);
+  --ink-3:         var(--taupe-400);
+  --ink-on-dark:   #F4F1EA;
+  --ink-on-dark-2: #BCB3A4;
+
+  /* Lines & borders */
+  --line:          #EAE7E0;
+  --line-strong:   var(--sand-400);
+  --line-on-dark:  rgba(244,241,234,0.16);
+
+  /* Brand roles */
+  --primary:           var(--gold-500);
+  --primary-hover:     var(--gold-600);
+  --primary-pressed:   var(--gold-700);
+  --primary-soft:      #EFE2C6;   /* tints/backgrounds */
+  --on-primary:        #FAF5EC;
+
+  --secondary:         var(--bronze-600);
+  --secondary-hover:   var(--bronze-700);
+  --secondary-soft:    #E7DAC4;
+  --on-secondary:      #FAF5EC;
+
+  --accent:            var(--gold-400);
+  --accent-strong:     var(--gold-500);
+  --accent-soft:       #F0E4CB;
+
+  /* Status */
+  --success:       var(--green-500);
+  --success-soft:  #E1E9DD;
+  --warning:       var(--amber-500);
+  --warning-soft:  #F3E7C9;
+  --error:         var(--brick-500);
+  --error-soft:    #F2DAD2;
+  --info:          var(--slate-500);
+  --info-soft:     #DEE6EA;
+
+  /* Focus ring */
+  --focus-ring:    color-mix(in srgb, var(--gold-500) 55%, transparent);
+
+  /* ============================================================
+     3. TYPOGRAPHY
+     ============================================================ */
+  --font-display: 'Marcellus', 'Times New Roman', serif;       /* classical roman — display & headings */
+  --font-sans:    'Hanken Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Spline Sans Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Weights — Marcellus is single-weight (400). Body/UI use Hanken weights. */
+  --w-reg: 400;   /* @kind font */
+  --w-med: 500;   /* @kind font */
+  --w-semi: 600;  /* @kind font */
+  --w-bold: 700;  /* @kind font */
+
+  /* Type scale — display uses Marcellus 400; body/UI use Hanken Grotesk.
+     Sizes in px for clarity; line-heights unitless. */
+  --fs-display-1: 84px;  --lh-display-1: 1.04; /* @kind font */ --ls-display-1: 0.005em; /* @kind font */
+  --fs-display-2: 62px;  --lh-display-2: 1.07; /* @kind font */ --ls-display-2: 0.005em; /* @kind font */
+  --fs-h1:        46px;  --lh-h1: 1.1;         /* @kind font */ --ls-h1: 0.008em; /* @kind font */
+  --fs-h2:        34px;  --lh-h2: 1.18;        /* @kind font */ --ls-h2: 0.01em;  /* @kind font */
+  --fs-h3:        26px;  --lh-h3: 1.26;        /* @kind font */ --ls-h3: 0.01em;  /* @kind font */
+  --fs-h4:        20px;  --lh-h4: 1.32;        /* @kind font */ --ls-h4: 0;       /* @kind font */
+  --fs-eyebrow:   13px;  --lh-eyebrow: 1.2;    /* @kind font */ --ls-eyebrow: 0.2em; /* @kind font */
+  --fs-body-lg:   19px;  --lh-body-lg: 1.6;    /* @kind font */
+  --fs-body:      17px;  --lh-body: 1.62;      /* @kind font */
+  --fs-body-sm:   15px;  --lh-body-sm: 1.55;   /* @kind font */
+  --fs-caption:   13px;  --lh-caption: 1.45;   /* @kind font */
+  --fs-button:    15px;  --lh-button: 1;       /* @kind font */
+
+  /* ============================================================
+     4. SPACING  (4px base unit)
+     ============================================================ */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 24px;  --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;
+  --sp-9: 96px;  --sp-10: 128px; --sp-11: 192px;
+
+  /* ============================================================
+     5. RADII  (soft, not bubbly — luxury restraint)
+     ============================================================ */
+  --r-xs: 3px;  --r-sm: 6px;  --r-md: 10px;  --r-lg: 14px;
+  --r-xl: 20px; --r-2xl: 28px; --r-pill: 999px;
+
+  /* ============================================================
+     6. ELEVATION  (warm espresso-tinted shadows, never pure black)
+     ============================================================ */
+  --shadow-xs: 0 1px 2px rgba(37,29,22,0.06);
+  --shadow-sm: 0 2px 6px -1px rgba(37,29,22,0.08);
+  --shadow-md: 0 8px 24px -8px rgba(37,29,22,0.13);
+  --shadow-lg: 0 20px 50px -16px rgba(37,29,22,0.18);
+  --shadow-xl: 0 36px 80px -24px rgba(37,29,22,0.24);
+
+  /* ============================================================
+     7. MOTION
+     ============================================================ */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);    /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast: 140ms;  /* @kind other */
+  --dur-med: 240ms;   /* @kind other */
+  --dur-slow: 420ms;  /* @kind other */
+
+  /* Page rhythm */
+  --container: 1200px;       /* @kind spacing */
+  --container-wide: 1320px;  /* @kind spacing */
+  --container-text: 720px;   /* @kind spacing */
+}
+
+/* =============================================================
+   SEMANTIC TYPE CLASSES — apply directly or copy the rules
+   ============================================================= */
+.t-display-1 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: var(--fs-display-1); line-height: var(--lh-display-1); letter-spacing: var(--ls-display-1); color: var(--ink); }
+.t-display-2 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: var(--fs-display-2); line-height: var(--lh-display-2); letter-spacing: var(--ls-display-2); color: var(--ink); }
+.t-h1 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: var(--fs-h1); line-height: var(--lh-h1); letter-spacing: var(--ls-h1); color: var(--ink); }
+.t-h2 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: var(--fs-h2); line-height: var(--lh-h2); letter-spacing: var(--ls-h2); color: var(--ink); }
+.t-h3 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: var(--fs-h3); line-height: var(--lh-h3); letter-spacing: var(--ls-h3); color: var(--ink); }
+.t-h4 { font-family: var(--font-sans); font-weight: var(--w-semi); font-size: var(--fs-h4); line-height: var(--lh-h4); color: var(--ink); }
+.t-eyebrow { font-family: var(--font-sans); font-weight: var(--w-semi); font-size: var(--fs-eyebrow); line-height: var(--lh-eyebrow); letter-spacing: var(--ls-eyebrow); text-transform: uppercase; color: var(--primary); }
+.t-body-lg { font-family: var(--font-sans); font-weight: var(--w-reg); font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); color: var(--ink-2); }
+.t-body { font-family: var(--font-sans); font-weight: var(--w-reg); font-size: var(--fs-body); line-height: var(--lh-body); color: var(--ink-2); }
+.t-body-sm { font-family: var(--font-sans); font-weight: var(--w-reg); font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); color: var(--ink-2); }
+.t-caption { font-family: var(--font-sans); font-weight: var(--w-med); font-size: var(--fs-caption); line-height: var(--lh-caption); color: var(--ink-3); }
+.t-mono { font-family: var(--font-mono); font-weight: var(--w-reg); font-size: var(--fs-body-sm); letter-spacing: -0.01em; color: var(--ink-2); }
