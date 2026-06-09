@@ -8,6 +8,21 @@
 
   /* ---- Scroll-triggered autoplay for About clips ---- */
   var pvids = document.querySelectorAll('.pvid');
+  pvids.forEach(function (box) {
+    var v = box.querySelector('video');
+    if (!v) return;
+    /* Force browser to load the file and show the first frame */
+    v.load();
+    v.addEventListener('loadeddata', function () {
+      try { v.currentTime = 0.01; } catch (e) {}
+    }, { once: true });
+    /* Tap fallback for mobile browsers that block autoplay */
+    box.addEventListener('click', function () {
+      box.classList.add('playing');
+      v.play().catch(function () {});
+    });
+  });
+
   if ('IntersectionObserver' in window && pvids.length) {
     var vidObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -23,7 +38,7 @@
           try { v.currentTime = 0; } catch (e) {}
         }
       });
-    }, { threshold: 0.4 });
+    }, { threshold: 0.15 });
     pvids.forEach(function (box) { vidObserver.observe(box); });
   }
 
