@@ -6,18 +6,26 @@
 (function () {
   'use strict';
 
-  /* ---- Hover-to-play clips (About principles) ---- */
-  document.querySelectorAll('[data-hovervid]').forEach(function (box) {
-    var v = box.querySelector('video');
-    if (!v) return;
-    box.addEventListener('mouseenter', function () {
-      v.play().catch(function () {});
-    });
-    box.addEventListener('mouseleave', function () {
-      v.pause();
-      try { v.currentTime = 0; } catch (e) {}
-    });
-  });
+  /* ---- Scroll-triggered autoplay for About clips ---- */
+  var pvids = document.querySelectorAll('.pvid');
+  if ('IntersectionObserver' in window && pvids.length) {
+    var vidObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var box = entry.target;
+        var v = box.querySelector('video');
+        if (!v) return;
+        if (entry.isIntersecting) {
+          box.classList.add('playing');
+          v.play().catch(function () {});
+        } else {
+          box.classList.remove('playing');
+          v.pause();
+          try { v.currentTime = 0; } catch (e) {}
+        }
+      });
+    }, { threshold: 0.4 });
+    pvids.forEach(function (box) { vidObserver.observe(box); });
+  }
 
   /* ---- Sticky nav state ---- */
   var nav = document.querySelector('.nav');
