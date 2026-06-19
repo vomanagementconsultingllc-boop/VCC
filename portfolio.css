@@ -1,0 +1,252 @@
+/* =============================================================
+   VO CREATIVE CO. — Portfolio / Showcase page styles
+   ============================================================= */
+
+/* ---- Page header ---- */
+.pg-header {
+  padding-block: clamp(120px, 16vw, 200px) clamp(64px, 9vw, 112px);
+}
+.pg-header .runhead { margin-bottom: 22px; }
+.pg-title {
+  font-family: var(--font-display);
+  font-weight: var(--w-reg);
+  font-size: clamp(56px, 9vw, 116px);
+  line-height: 1.0;
+  letter-spacing: 0.006em;
+  color: var(--ink-on-dark);
+  margin: 0 0 28px;
+}
+.pg-lead {
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--ink-on-dark-2);
+  margin: 0;
+  max-width: 38em;
+}
+
+/* ---- Active nav link ---- */
+.nav-active { color: var(--primary) !important; }
+.nav-active::after { width: 100% !important; background: var(--primary) !important; }
+.nav:not(.scrolled) .nav-links .nav-active { color: var(--gold-300) !important; }
+.nav:not(.scrolled) .nav-links .nav-active::after { background: var(--gold-300) !important; }
+
+/* ---- Case study head ---- */
+.cs-head { margin-bottom: clamp(28px, 3.5vw, 48px); }
+.cs-eyebrow { margin-top: 8px; }
+
+/* ---- Case study grid ---- */
+.cs-grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+.cs-grid-flip { grid-template-columns: 1.1fr 0.9fr; }
+.cs-grid-flip .cs-body { order: 2; }
+.cs-grid-flip .cs-media { order: 1; }
+
+/* ---- Case study body ---- */
+.cs-lockup { margin-bottom: 28px; }
+
+.cs-logo-ph {
+  width: 120px; height: 48px;
+  border: 1.5px dashed var(--sand-400);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+}
+.cs-logo-ph span {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+
+.cs-name {
+  font-family: var(--font-display);
+  font-weight: var(--w-reg);
+  font-size: clamp(28px, 3.6vw, 46px);
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  margin: 0 0 5px;
+}
+.cs-type {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.cs-desc {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--ink-2);
+  margin: 0 0 24px;
+  max-width: 36em;
+}
+
+/* ---- Tags ---- */
+.cs-tags {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cs-tags li {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: var(--w-semi);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gold-600);
+  background: var(--primary-soft);
+  border-radius: var(--r-pill);
+  padding: 5px 12px;
+}
+
+/* ---- Metrics ---- */
+.cs-metrics {
+  display: flex;
+  gap: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-strong);
+  flex-wrap: wrap;
+}
+.cs-m { display: flex; flex-direction: column; gap: 4px; min-width: 80px; }
+.cs-m-v {
+  font-family: var(--font-display);
+  font-weight: var(--w-reg);
+  font-size: clamp(22px, 2.8vw, 34px);
+  line-height: 1;
+  color: var(--primary);
+  letter-spacing: 0.01em;
+}
+.cs-m-l {
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--ink-3);
+  font-weight: var(--w-med);
+}
+
+/* ---- Media column ---- */
+.cs-clips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+/* Video placeholder */
+.pvid-ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--cream-200),
+    var(--cream-200) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+  border: 1.5px dashed var(--sand-400);
+}
+.band-soft .pvid-ph {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--oat-300),
+    var(--oat-300) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+}
+.pvid-ph-icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--sand-400);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-3);
+  opacity: 0.7;
+}
+.pvid-ph-icon svg { width: 16px; height: 16px; }
+.pvid-ph-lbl {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ---- Before / After ---- */
+.cs-ba {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.cs-ba-fig { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.cs-ba-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+.cs-before-img {
+  background: linear-gradient(135deg, var(--sand-400) 0%, var(--oat-300) 100%);
+  position: relative;
+}
+.cs-before-img::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 8px,
+    rgba(37,29,22,0.06) 8px,
+    rgba(37,29,22,0.06) 9px
+  );
+}
+.cs-after-img {
+  background: linear-gradient(135deg, var(--gold-300) 0%, var(--cream-200) 100%);
+}
+.cs-ba-cap {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ---- CTA band layout ---- */
+.cs-cta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 5vw, 80px);
+  align-items: start;
+}
+.cs-cta-side .statement-sig { margin-bottom: 32px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 960px) {
+  .cs-grid,
+  .cs-grid-flip { grid-template-columns: 1fr; gap: 40px; }
+  .cs-grid-flip .cs-body { order: 1; }
+  .cs-grid-flip .cs-media { order: 2; }
+  .cs-cta { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 680px) {
+  .cs-clips { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cs-ba { gap: 10px; }
+  .cs-metrics { gap: 18px; }
+  .pg-lead { font-size: var(--fs-body); }
+}
+
+@media (max-width: 480px) {
+  .cs-clips { grid-template-columns: 1fr 1fr; }
+}

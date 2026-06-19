@@ -38,3 +38,8 @@
   for = "/index.html"
   [headers.values]
     Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/work.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
