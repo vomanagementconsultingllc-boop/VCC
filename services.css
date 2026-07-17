@@ -256,6 +256,96 @@
 }
 .svc-other-card .arr { font-family: var(--font-sans); color: var(--primary); }
 
+/* =============================================================
+   WORK SHOWCASE — media tiles + varied gallery layouts
+   ============================================================= */
+.work-head { margin-bottom: clamp(28px, 3.5vw, 48px); }
+.work-head .sec-title { margin-top: 14px; }
+.work-head .sec-intro { margin-top: 12px; }
+
+/* Base media tile (drop a <video> or <img> inside to go live) */
+.wtile {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: repeating-linear-gradient(45deg,
+    var(--cream-200), var(--cream-200) 4px, transparent 4px, transparent 12px);
+  border: 1.5px dashed var(--sand-400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.band-soft .wtile {
+  background: repeating-linear-gradient(45deg,
+    var(--oat-300), var(--oat-300) 4px, transparent 4px, transparent 12px);
+}
+.wtile video, .wtile img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 3;
+}
+.wtile-ph {
+  display: flex; flex-direction: column; align-items: center; gap: 9px;
+  color: var(--ink-3); text-align: center; padding: 12px;
+}
+.wtile-ph .ic {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--sand-400); display: flex; align-items: center; justify-content: center;
+  color: var(--taupe-600); opacity: 0.85;
+}
+.wtile-ph .ic svg { width: 17px; height: 17px; }
+.wtile-ph .lbl {
+  font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* Aspect helpers */
+.ar-916  { aspect-ratio: 9 / 16; }
+.ar-169  { aspect-ratio: 16 / 9; }
+.ar-11   { aspect-ratio: 1 / 1; }
+.ar-1610 { aspect-ratio: 16 / 10; }
+
+/* --- Influencer: staggered vertical reel wall --- */
+.work-reel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.work-reel .wtile:nth-child(even) { transform: translateY(32px); }
+
+/* --- Lifestyle: feature vlog + filmstrip --- */
+.work-feature-main { margin-bottom: 16px; }
+.work-feature-main .ic { width: 60px; height: 60px; }
+.work-feature-main .ic svg { width: 24px; height: 24px; }
+.work-feature-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+/* --- Social: story tiles --- */
+.work-stories { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.work-stories .wtile { border-radius: var(--r-lg); }
+
+/* --- Events: mixed-size photo mosaic --- */
+.work-mosaic {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 150px; gap: 14px; grid-auto-flow: dense;
+}
+.work-mosaic .wtile { height: 100%; }
+.work-mosaic .big  { grid-column: span 2; grid-row: span 2; }
+.work-mosaic .wide { grid-column: span 2; }
+.work-mosaic .tall { grid-row: span 2; }
+
+/* --- Strategy: website + content split --- */
+.work-split { display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: stretch; }
+.work-split .col { display: grid; grid-template-rows: 1fr 1fr; gap: 16px; }
+.work-split > .wtile, .work-split .col .wtile { height: 100%; min-height: 200px; }
+.wmock::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 28px;
+  background: var(--oat-300); z-index: 1;
+}
+.wmock::after {
+  content: ""; position: absolute; top: 10px; left: 14px;
+  width: 8px; height: 8px; border-radius: 50%; background: var(--sand-500);
+  box-shadow: 14px 0 0 var(--sand-500), 28px 0 0 var(--sand-500); z-index: 2;
+}
+
+/* --- E-commerce: product grid + BTS strip --- */
+.work-products { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.work-bts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+
 /* ---- Responsive ---- */
 @media (max-width: 960px) {
   .svc-inner,
@@ -267,9 +357,19 @@
   .svc-detail .svc-includes { position: static; }
   .svc-cards { grid-template-columns: repeat(2, 1fr); }
   .svc-other-grid { grid-template-columns: repeat(2, 1fr); }
+  .work-stories { grid-template-columns: repeat(3, 1fr); }
+  .work-products { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 680px) {
   .pg-lead { font-size: var(--fs-body); }
   .svc-cards { grid-template-columns: 1fr; }
   .svc-other-grid { grid-template-columns: 1fr; }
+  .work-reel { grid-template-columns: repeat(2, 1fr); }
+  .work-reel .wtile:nth-child(even) { transform: none; }
+  .work-feature-strip { grid-template-columns: repeat(2, 1fr); }
+  .work-stories { grid-template-columns: repeat(2, 1fr); }
+  .work-mosaic { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 120px; }
+  .work-split { grid-template-columns: 1fr; }
+  .work-products { grid-template-columns: repeat(2, 1fr); }
+  .work-bts { grid-template-columns: 1fr; }
 }
