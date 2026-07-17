@@ -1,0 +1,108 @@
+/* =============================================================
+   VO CREATIVE CO. — Services page styles
+   ============================================================= */
+
+/* ---- Page header (shared visual language with portfolio) ---- */
+.pg-header {
+  padding-block: clamp(120px, 16vw, 200px) clamp(64px, 9vw, 112px);
+}
+.pg-header .runhead { margin-bottom: 22px; }
+.pg-title {
+  font-family: var(--font-display);
+  font-weight: var(--w-reg);
+  font-size: clamp(56px, 9vw, 116px);
+  line-height: 1.0;
+  letter-spacing: 0.006em;
+  color: var(--ink-on-dark);
+  margin: 0 0 28px;
+}
+.pg-lead {
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--ink-on-dark-2);
+  margin: 0;
+  max-width: 38em;
+}
+
+/* ---- Service section ---- */
+.svc-inner {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: clamp(40px, 6vw, 96px);
+  align-items: start;
+}
+.svc-flip .svc-body { order: 2; }
+.svc-flip .svc-includes { order: 1; }
+
+.svc-body .runhead { margin-bottom: 18px; }
+.svc-title {
+  font-family: var(--font-display);
+  font-weight: var(--w-reg);
+  font-size: clamp(30px, 4vw, 50px);
+  line-height: 1.08;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+  margin: 0 0 22px;
+  max-width: 15em;
+  text-wrap: balance;
+}
+.svc-desc {
+  font-size: var(--fs-body-lg);
+  line-height: var(--lh-body-lg);
+  color: var(--ink-2);
+  margin: 0 0 32px;
+  max-width: 34em;
+}
+
+/* ---- What's included panel ---- */
+.svc-includes {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: clamp(26px, 3vw, 40px);
+}
+.band-soft .svc-includes { box-shadow: var(--shadow-lg); }
+.svc-inc-label { margin: 0 0 20px; }
+.svc-list { list-style: none; margin: 0; padding: 0; }
+.svc-list li {
+  position: relative;
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  color: var(--ink);
+  padding: 14px 0 14px 30px;
+  border-top: 1px solid var(--line);
+}
+.svc-list li:first-child { border-top: 0; }
+.svc-list li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 21px;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid var(--primary);
+  border-bottom: 1.5px solid var(--primary);
+  transform: rotate(-45deg);
+}
+
+/* ---- CTA band (reused from portfolio) ---- */
+.cs-cta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(36px, 5vw, 80px);
+  align-items: start;
+}
+.cs-cta-side .statement-sig { margin-bottom: 32px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 960px) {
+  .svc-inner,
+  .svc-flip { grid-template-columns: 1fr; gap: 32px; }
+  .svc-flip .svc-body { order: 1; }
+  .svc-flip .svc-includes { order: 2; }
+  .cs-cta { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  .pg-lead { font-size: var(--fs-body); }
+}

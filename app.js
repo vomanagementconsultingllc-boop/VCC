@@ -61,6 +61,29 @@
     });
   }
 
+  /* ---- Services dropdown ---- */
+  var dd = document.querySelector('.nav-dd');
+  if (dd) {
+    var ddBtn = dd.querySelector('.nav-dd-btn');
+    ddBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = dd.classList.toggle('open');
+      ddBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.addEventListener('click', function (e) {
+      if (!dd.contains(e.target)) {
+        dd.classList.remove('open');
+        ddBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+    dd.addEventListener('mouseenter', function () {
+      if (window.innerWidth > 680) { dd.classList.add('open'); ddBtn.setAttribute('aria-expanded', 'true'); }
+    });
+    dd.addEventListener('mouseleave', function () {
+      if (window.innerWidth > 680) { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); }
+    });
+  }
+
   /* ---- Scroll reveal ---- */
   var reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {

@@ -24,12 +24,6 @@
   max-width: 38em;
 }
 
-/* ---- Active nav link ---- */
-.nav-active { color: var(--primary) !important; }
-.nav-active::after { width: 100% !important; background: var(--primary) !important; }
-.nav:not(.scrolled) .nav-links .nav-active { color: var(--gold-300) !important; }
-.nav:not(.scrolled) .nav-links .nav-active::after { background: var(--gold-300) !important; }
-
 /* ---- Case study head ---- */
 .cs-head { margin-bottom: clamp(28px, 3.5vw, 48px); }
 .cs-eyebrow { margin-top: 8px; }
