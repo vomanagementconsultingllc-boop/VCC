@@ -65,23 +65,24 @@
   var dd = document.querySelector('.nav-dd');
   if (dd) {
     var ddBtn = dd.querySelector('.nav-dd-btn');
-    ddBtn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      var open = dd.classList.toggle('open');
+    function isMobileNav() { return window.innerWidth <= 680; }
+    function setDd(open) {
+      dd.classList.toggle('open', open);
       ddBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    /* Tap toggles on mobile; on desktop hover handles it */
+    ddBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      setDd(!dd.classList.contains('open'));
     });
+    /* Click outside closes */
     document.addEventListener('click', function (e) {
-      if (!dd.contains(e.target)) {
-        dd.classList.remove('open');
-        ddBtn.setAttribute('aria-expanded', 'false');
-      }
+      if (!dd.contains(e.target)) setDd(false);
     });
-    dd.addEventListener('mouseenter', function () {
-      if (window.innerWidth > 680) { dd.classList.add('open'); ddBtn.setAttribute('aria-expanded', 'true'); }
-    });
-    dd.addEventListener('mouseleave', function () {
-      if (window.innerWidth > 680) { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); }
-    });
+    /* Desktop hover open/close */
+    dd.addEventListener('mouseenter', function () { if (!isMobileNav()) setDd(true); });
+    dd.addEventListener('mouseleave', function () { if (!isMobileNav()) setDd(false); });
   }
 
   /* ---- Scroll reveal ---- */
