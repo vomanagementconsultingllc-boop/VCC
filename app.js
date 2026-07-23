@@ -85,6 +85,33 @@
     dd.addEventListener('mouseleave', function () { if (!isMobileNav()) setDd(false); });
   }
 
+  /* ---- Client marquee: pan horizontally as the section scrolls by ---- */
+  var marquee = document.getElementById('client-marquee');
+  if (marquee) {
+    var mtrack = marquee.querySelector('.marquee-track');
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var panScheduled = false;
+    function panMarquee() {
+      panScheduled = false;
+      var rect = marquee.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var progress = (vh - rect.top) / (rect.height + vh);
+      if (progress < 0) progress = 0;
+      if (progress > 1) progress = 1;
+      var overflow = mtrack.scrollWidth - marquee.clientWidth;
+      if (overflow < 0) overflow = 0;
+      mtrack.style.transform = 'translateX(' + (-progress * overflow) + 'px)';
+    }
+    if (!reduceMotion) {
+      window.addEventListener('scroll', function () {
+        if (!panScheduled) { panScheduled = true; requestAnimationFrame(panMarquee); }
+      }, { passive: true });
+      window.addEventListener('resize', panMarquee);
+      window.addEventListener('load', panMarquee);
+      panMarquee();
+    }
+  }
+
   /* ---- Scroll reveal ---- */
   var reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
