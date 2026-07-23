@@ -165,7 +165,7 @@
     }
 
     /* Send lead to GoHighLevel */
-    fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/4443b4fb-c762-4bbd-b2f4-271ed028c9cc', {
+    fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/85805c35-568b-49a8-ab39-c10114ac94dc', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
