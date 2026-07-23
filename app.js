@@ -95,10 +95,12 @@
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var overflowX = 0;
     var scheduled = false;
+    var clones = [];
 
+    /* DESKTOP: pin the section, drive the row with vertical scroll */
     function updatePin() {
       scheduled = false;
-      if (overflowX <= 0) { mtrack.style.transform = ''; return; }
+      if (!clientsSection.classList.contains('is-pinned') || overflowX <= 0) return;
       var top = clientsPin.getBoundingClientRect().top;
       var progress = (-top) / overflowX;
       if (progress < 0) progress = 0;
@@ -106,20 +108,53 @@
       mtrack.style.transform = 'translateX(' + (-progress * overflowX) + 'px)';
     }
 
+    /* MOBILE: continuous auto-scroll (duplicate the row for a seamless loop) */
+    function setAuto(on) {
+      if (on && clones.length === 0) {
+        var kids = Array.prototype.slice.call(mtrack.children);
+        var gap = parseFloat(getComputedStyle(mtrack).columnGap || getComputedStyle(mtrack).gap) || 0;
+        var shift = 0;
+        kids.forEach(function (n) { shift += n.offsetWidth + gap; });
+        kids.forEach(function (n) {
+          var c = n.cloneNode(true);
+          c.setAttribute('aria-hidden', 'true');
+          clones.push(c);
+          mtrack.appendChild(c);
+        });
+        mtrack.style.setProperty('--marquee-shift', shift + 'px');
+        mtrack.style.setProperty('--marquee-dur', (kids.length * 2.6) + 's');
+      } else if (!on && clones.length) {
+        clones.forEach(function (c) { if (c.parentNode) c.parentNode.removeChild(c); });
+        clones = [];
+        mtrack.style.removeProperty('--marquee-shift');
+        mtrack.style.removeProperty('--marquee-dur');
+      }
+      clientsSection.classList.toggle('is-auto', on);
+    }
+
     function measure() {
-      // width the row overflows the viewport by = how far we pan
-      overflowX = mtrack.scrollWidth - window.innerWidth;
-      if (reduceMotion || overflowX <= 0) {
-        // not enough to pin (or user prefers reduced motion): keep the
-        // simple swipeable row baseline
+      var mobile = window.innerWidth <= 680;
+      if (reduceMotion) {                 // accessible baseline: swipeable row
         clientsSection.classList.remove('is-pinned');
-        clientsPin.style.height = '';
-        mtrack.style.transform = '';
-        overflowX = 0;
+        setAuto(false);
+        clientsPin.style.height = ''; mtrack.style.transform = ''; overflowX = 0;
+        return;
+      }
+      if (mobile) {                       // mobile: auto-scroll marquee
+        clientsSection.classList.remove('is-pinned');
+        clientsPin.style.height = ''; mtrack.style.transform = ''; overflowX = 0;
+        setAuto(true);
+        return;
+      }
+      /* desktop: pinned horizontal scroll */
+      setAuto(false);
+      overflowX = mtrack.scrollWidth - window.innerWidth;
+      if (overflowX <= 0) {
+        clientsSection.classList.remove('is-pinned');
+        clientsPin.style.height = ''; mtrack.style.transform = ''; overflowX = 0;
         return;
       }
       clientsSection.classList.add('is-pinned');
-      // scroll room while pinned = the horizontal distance to travel
       clientsPin.style.height = (window.innerHeight + overflowX) + 'px';
       updatePin();
     }

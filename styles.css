@@ -459,7 +459,7 @@ a { color: inherit; }
 }
 .cslide img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-/* pinned enhancement (added by JS when motion is allowed) */
+/* pinned enhancement — DESKTOP (added by JS) */
 .clients.is-pinned .clients-pin { position: relative; padding-block: 0; }
 .clients.is-pinned .clients-sticky {
   position: sticky; top: 0; height: 100vh; overflow: hidden;
@@ -467,6 +467,14 @@ a { color: inherit; }
   gap: clamp(20px, 4vh, 44px); padding-block: 5vh;
 }
 .clients.is-pinned .marquee { overflow: hidden; }
+
+/* auto-scroll enhancement — MOBILE (added by JS) */
+@keyframes clients-marquee { to { transform: translateX(calc(var(--marquee-shift, 50%) * -1)); } }
+.clients.is-auto .marquee { overflow: hidden; }
+.clients.is-auto .marquee-track {
+  width: max-content;
+  animation: clients-marquee var(--marquee-dur, 45s) linear infinite;
+}
 
 @media (max-width: 680px) {
   .cslide { width: clamp(190px, 62vw, 250px); }
