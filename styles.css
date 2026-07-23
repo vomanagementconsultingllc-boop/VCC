@@ -430,18 +430,27 @@ a { color: inherit; }
 .footer .f-cap { font-family: var(--font-mono); font-size: 12px; color: var(--gold-400); }
 
 /* =============================================================
-   CLIENT MARQUEE — full-bleed strip that pans on scroll
+   CLIENT MARQUEE — pinned horizontal scroll
+   Baseline: a swipeable row. With JS: the section pins and the row
+   scrolls left→right as you scroll, then the page continues.
    ============================================================= */
-.clients { padding-block: clamp(56px, 8vw, 110px); background: var(--cream-100); overflow: hidden; }
-.clients-head { margin-bottom: clamp(28px, 3.5vw, 48px); }
+.clients { background: var(--cream-100); }
+.clients-head { margin-bottom: clamp(24px, 3vw, 40px); }
 .clients-title {
   font-family: var(--font-display); font-weight: var(--w-reg);
   font-size: clamp(30px, 4vw, 52px); line-height: 1.08;
   letter-spacing: 0.006em; color: var(--ink); margin: 12px 0 0; text-wrap: balance;
 }
 .clients-intro { font-size: var(--fs-body-lg); line-height: 1.6; color: var(--ink-2); margin: 14px 0 0; max-width: 34em; }
-.marquee { width: 100%; overflow: hidden; }
-.marquee-track { display: flex; gap: 18px; width: max-content; will-change: transform; }
+
+/* baseline (no JS / reduced motion): simple horizontally-scrollable strip */
+.clients-pin { padding-block: clamp(56px, 8vw, 110px); }
+.marquee { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.marquee-track {
+  display: flex; gap: 18px; width: max-content;
+  padding-inline: max(24px, (100vw - var(--container-wide)) / 2);
+  will-change: transform;
+}
 .cslide {
   flex: 0 0 auto; margin: 0;
   width: clamp(230px, 24vw, 320px); aspect-ratio: 3 / 4;
@@ -449,7 +458,20 @@ a { color: inherit; }
   background: var(--oat-300); box-shadow: var(--shadow-md);
 }
 .cslide img { width: 100%; height: 100%; object-fit: cover; display: block; }
-@media (max-width: 680px) { .cslide { width: clamp(190px, 62vw, 250px); } .marquee-track { gap: 12px; } }
+
+/* pinned enhancement (added by JS when motion is allowed) */
+.clients.is-pinned .clients-pin { position: relative; padding-block: 0; }
+.clients.is-pinned .clients-sticky {
+  position: sticky; top: 0; height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: center;
+  gap: clamp(20px, 4vh, 44px); padding-block: 5vh;
+}
+.clients.is-pinned .marquee { overflow: hidden; }
+
+@media (max-width: 680px) {
+  .cslide { width: clamp(190px, 62vw, 250px); }
+  .marquee-track { gap: 12px; }
+}
 
 /* =============================================================
    REVEAL ANIMATION

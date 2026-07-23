@@ -85,31 +85,52 @@
     dd.addEventListener('mouseleave', function () { if (!isMobileNav()) setDd(false); });
   }
 
-  /* ---- Client marquee: pan horizontally as the section scrolls by ---- */
+  /* ---- Client marquee: pin the section and scroll the row horizontally,
+         then release so the page continues down ---- */
   var marquee = document.getElementById('client-marquee');
-  if (marquee) {
+  var clientsSection = document.getElementById('clients');
+  var clientsPin = document.getElementById('clients-pin');
+  if (marquee && clientsSection && clientsPin) {
     var mtrack = marquee.querySelector('.marquee-track');
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var panScheduled = false;
-    function panMarquee() {
-      panScheduled = false;
-      var rect = marquee.getBoundingClientRect();
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      var progress = (vh - rect.top) / (rect.height + vh);
+    var overflowX = 0;
+    var scheduled = false;
+
+    function updatePin() {
+      scheduled = false;
+      if (overflowX <= 0) { mtrack.style.transform = ''; return; }
+      var top = clientsPin.getBoundingClientRect().top;
+      var progress = (-top) / overflowX;
       if (progress < 0) progress = 0;
       if (progress > 1) progress = 1;
-      var overflow = mtrack.scrollWidth - marquee.clientWidth;
-      if (overflow < 0) overflow = 0;
-      mtrack.style.transform = 'translateX(' + (-progress * overflow) + 'px)';
+      mtrack.style.transform = 'translateX(' + (-progress * overflowX) + 'px)';
     }
-    if (!reduceMotion) {
-      window.addEventListener('scroll', function () {
-        if (!panScheduled) { panScheduled = true; requestAnimationFrame(panMarquee); }
-      }, { passive: true });
-      window.addEventListener('resize', panMarquee);
-      window.addEventListener('load', panMarquee);
-      panMarquee();
+
+    function measure() {
+      // width the row overflows the viewport by = how far we pan
+      overflowX = mtrack.scrollWidth - window.innerWidth;
+      if (reduceMotion || overflowX <= 0) {
+        // not enough to pin (or user prefers reduced motion): keep the
+        // simple swipeable row baseline
+        clientsSection.classList.remove('is-pinned');
+        clientsPin.style.height = '';
+        mtrack.style.transform = '';
+        overflowX = 0;
+        return;
+      }
+      clientsSection.classList.add('is-pinned');
+      // scroll room while pinned = the horizontal distance to travel
+      clientsPin.style.height = (window.innerHeight + overflowX) + 'px';
+      updatePin();
     }
+
+    window.addEventListener('scroll', function () {
+      if (!scheduled) { scheduled = true; requestAnimationFrame(updatePin); }
+    }, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('load', measure);
+    measure();
+    setTimeout(measure, 300); // re-measure once images/fonts settle
   }
 
   /* ---- Scroll reveal ---- */
