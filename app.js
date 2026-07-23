@@ -103,6 +103,20 @@
   if (!form) return;
   var success = document.getElementById('book-success');
 
+  /* Pre-select a service if arriving from a service page (?service=...) */
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var wanted = params.get('service');
+    if (wanted) {
+      var sel = form.querySelector('[name="service"]');
+      if (sel) {
+        Array.prototype.forEach.call(sel.options, function (opt) {
+          if (opt.value.toLowerCase() === wanted.toLowerCase()) { sel.value = opt.value; }
+        });
+      }
+    }
+  } catch (e) {}
+
   function setError(field, msg) {
     var input = form.querySelector('[name="' + field + '"]');
     if (!input) return;
@@ -135,6 +149,7 @@
     else if (!isEmail(data.email)) { setError('email', 'That email doesn’t look right.'); ok = false; }
     if (!data.business) { setError('business', 'What’s your business called?'); ok = false; }
     if (!data.revenue) { setError('revenue', 'Pick a range so we point you to the right plan.'); ok = false; }
+    if (!data.service) { setError('service', 'Which service are you interested in?'); ok = false; }
 
     if (!ok) {
       var firstErr = form.querySelector('.err');
@@ -142,11 +157,11 @@
       return;
     }
 
-    var planLabel = data.goal ? data.goal : 'Not sure yet, help me figure it out';
+    var serviceLabel = data.service ? data.service : 'Not sure yet';
     var when = data.timeframe ? data.timeframe : 'Flexible';
     var echo = document.getElementById('success-echo');
     if (echo) {
-      echo.textContent = data.name + ' · ' + data.business + '  ·  ' + planLabel + '  ·  ' + when;
+      echo.textContent = data.name + ' · ' + data.business + '  ·  ' + serviceLabel + '  ·  ' + when;
     }
 
     /* Send lead to GoHighLevel */
@@ -160,6 +175,7 @@
         companyName: data.business,
         website: data.website,
         monthlyRevenue: data.revenue,
+        service: data.service,
         timeframe: data.timeframe,
         goal: data.goal,
         message: data.about,
