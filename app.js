@@ -164,10 +164,14 @@
       echo.textContent = data.name + ' · ' + data.business + '  ·  ' + serviceLabel + '  ·  ' + when;
     }
 
-    /* Send lead to GoHighLevel */
+    /* Send lead to GoHighLevel.
+       Content-Type text/plain keeps this a "simple" request so the browser
+       doesn't fire a CORS preflight the webhook can't answer. GHL still
+       parses the JSON body. keepalive lets it finish even as the UI updates. */
     fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/85805c35-568b-49a8-ab39-c10114ac94dc', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      keepalive: true,
       body: JSON.stringify({
         name: data.name,
         email: data.email,
