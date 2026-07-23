@@ -164,7 +164,18 @@
       echo.textContent = data.name + ' · ' + data.business + '  ·  ' + serviceLabel + '  ·  ' + when;
     }
 
-    /* Send lead to GoHighLevel.
+    /* Primary capture: Netlify Forms (same-origin, always delivers, emails you).
+       Netlify detects the form in index.html and stores every submission. */
+    var nl = new URLSearchParams();
+    nl.append('form-name', 'booking');
+    Object.keys(data).forEach(function (k) { nl.append(k, data[k] || ''); });
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: nl.toString()
+    }).catch(function () {});
+
+    /* Secondary: mirror the lead to GoHighLevel for the CRM.
        Content-Type text/plain keeps this a "simple" request so the browser
        doesn't fire a CORS preflight the webhook can't answer. GHL still
        parses the JSON body. keepalive lets it finish even as the UI updates. */
