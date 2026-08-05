@@ -168,6 +168,39 @@
     setTimeout(measure, 300); // re-measure once images/fonts settle
   }
 
+  /* ---- Client showcase modals (Our Work) ---- */
+  var scTriggers = document.querySelectorAll('[data-sc]');
+  if (scTriggers.length) {
+    function scOpen(modal) {
+      modal.classList.add('open');
+      document.body.classList.add('sc-lock');
+      modal.querySelectorAll('video').forEach(function (v) { v.play().catch(function () {}); });
+      var closeBtn = modal.querySelector('.sc-close');
+      if (closeBtn) closeBtn.focus();
+    }
+    function scClose(modal) {
+      modal.classList.remove('open');
+      document.body.classList.remove('sc-lock');
+      modal.querySelectorAll('video').forEach(function (v) { v.pause(); });
+    }
+    scTriggers.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var modal = document.getElementById('sc-' + btn.getAttribute('data-sc'));
+        if (modal) scOpen(modal);
+      });
+    });
+    document.querySelectorAll('.sc-modal').forEach(function (modal) {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal || (e.target.closest && e.target.closest('[data-close]'))) scClose(modal);
+      });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.sc-modal.open').forEach(scClose);
+      }
+    });
+  }
+
   /* ---- Scroll reveal ---- */
   var reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {

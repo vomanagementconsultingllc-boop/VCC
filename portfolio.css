@@ -70,6 +70,72 @@
   .brand-grid { grid-template-columns: 1fr; max-width: 380px; margin-inline: auto; }
 }
 
+/* ---- "View work" button on each brand card ---- */
+.brand-view-btn {
+  display: inline-flex; align-items: center; gap: 9px; margin-top: 16px;
+  font-family: var(--font-sans); font-size: 13px; font-weight: var(--w-semi);
+  letter-spacing: 0.02em; color: var(--on-primary); background: var(--primary);
+  border: 0; border-radius: var(--r-pill); padding: 11px 20px; cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.brand-view-btn:hover { background: var(--primary-hover); }
+.brand-view-btn:active { transform: translateY(1px); }
+.brand-view-btn .arr { transition: transform var(--dur-med) var(--ease-out); }
+.brand-view-btn:hover .arr { transform: translateX(4px); }
+
+/* ---- Showcase modal ---- */
+.sc-modal {
+  position: fixed; inset: 0; z-index: 200; display: none;
+  align-items: flex-start; justify-content: center;
+  padding: clamp(14px, 4vw, 56px);
+  background: rgba(20,14,9,0.62); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+  overflow-y: auto;
+}
+.sc-modal.open { display: flex; animation: sc-fade var(--dur-med) var(--ease-out); }
+@keyframes sc-fade { from { opacity: 0; } to { opacity: 1; } }
+.sc-panel {
+  position: relative; width: min(100%, 1040px); margin: auto;
+  background: var(--cream-100); border-radius: var(--r-lg);
+  box-shadow: var(--shadow-xl); padding: clamp(24px, 4vw, 52px);
+}
+.sc-close {
+  position: absolute; top: 14px; right: 14px; width: 40px; height: 40px;
+  border-radius: 50%; border: 0; background: var(--cream-200); color: var(--ink);
+  cursor: pointer; display: grid; place-items: center; font-size: 22px; line-height: 1;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+.sc-close:hover { background: var(--oat-300); }
+.sc-head { max-width: 42em; margin-bottom: clamp(20px, 3vw, 34px); padding-right: 44px; }
+.sc-sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--primary); margin: 0 0 8px; }
+.sc-name { font-family: var(--font-display); font-weight: var(--w-reg); font-size: clamp(28px, 3.6vw, 44px); line-height: 1.1; color: var(--ink); margin: 0 0 10px; }
+.sc-desc { font-size: var(--fs-body); line-height: 1.6; color: var(--ink-2); margin: 0; }
+.sc-block-label { font-family: var(--font-sans); font-weight: var(--w-semi); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); margin: 26px 0 12px; }
+.sc-block-label:first-of-type { margin-top: 0; }
+
+/* media tiles inside the showcase */
+.sc-feature { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; background: #1a140d; }
+.sc-photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.sc-reels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.sc-tile { position: relative; overflow: hidden; border-radius: var(--r-sm); background: var(--oat-300); }
+.sc-photo-grid .sc-tile { aspect-ratio: 4 / 5; }
+.sc-reels .sc-tile { aspect-ratio: 9 / 16; }
+.sc-feature video, .sc-feature img,
+.sc-tile video, .sc-tile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.sc-ph {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px; color: var(--ink-3);
+  background: repeating-linear-gradient(45deg, var(--oat-300), var(--oat-300) 4px, var(--cream-200) 4px, var(--cream-200) 12px);
+}
+.sc-ph .ic { width: 40px; height: 40px; border-radius: 50%; background: var(--sand-400); display: grid; place-items: center; color: var(--taupe-600); }
+.sc-ph .ic svg { width: 16px; height: 16px; }
+.sc-ph .lbl { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+body.sc-lock { overflow: hidden; }
+
+@media (max-width: 680px) {
+  .sc-photo-grid { grid-template-columns: repeat(2, 1fr); }
+  .sc-reels { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ---- Page header ---- */
 .pg-header {
   padding-block: clamp(120px, 16vw, 200px) clamp(64px, 9vw, 112px);
