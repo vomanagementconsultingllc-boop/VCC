@@ -113,7 +113,7 @@
 .sc-block-label:first-of-type { margin-top: 0; }
 
 /* media tiles inside the showcase */
-.sc-feature { position: relative; width: 100%; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; background: #1a140d; }
+.sc-feature { position: relative; width: min(340px, 74vw); aspect-ratio: 9 / 16; margin-inline: auto; border-radius: var(--r-md); overflow: hidden; background: #1a140d; }
 .sc-photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .sc-reels { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .sc-tile { position: relative; overflow: hidden; border-radius: var(--r-sm); background: var(--oat-300); }
