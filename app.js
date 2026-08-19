@@ -174,7 +174,8 @@
     function scOpen(modal) {
       modal.classList.add('open');
       document.body.classList.add('sc-lock');
-      modal.querySelectorAll('video').forEach(function (v) { v.play().catch(function () {}); });
+      /* autoplay only muted reels; interviews stay paused (press play for sound) */
+      modal.querySelectorAll('video').forEach(function (v) { if (v.muted) v.play().catch(function () {}); });
       var closeBtn = modal.querySelector('.sc-close');
       if (closeBtn) closeBtn.focus();
     }
