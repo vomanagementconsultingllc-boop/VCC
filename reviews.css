@@ -1,0 +1,42 @@
+/* =============================================================
+   VO CREATIVE CO. — What People Are Saying
+   ============================================================= */
+.rev-head { margin-bottom: clamp(28px, 3.5vw, 48px); }
+
+/* shared placeholder */
+.rev-ph {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 9px; color: var(--ink-3);
+  background: repeating-linear-gradient(45deg, var(--cream-200), var(--cream-200) 4px, transparent 4px, transparent 12px);
+}
+.band-soft .rev-ph { background: repeating-linear-gradient(45deg, var(--oat-300), var(--oat-300) 4px, transparent 4px, transparent 12px); }
+.rev-ph .ic { width: 44px; height: 44px; border-radius: 50%; background: var(--sand-400); display: grid; place-items: center; color: var(--taupe-600); }
+.rev-ph .ic svg { width: 17px; height: 17px; }
+.rev-ph .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* video testimonials — 9:16 grid */
+.rev-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.rev-vtile {
+  position: relative; aspect-ratio: 9 / 16; border-radius: var(--r-md);
+  overflow: hidden; background: #1a140d; border: 1px solid var(--line);
+}
+.rev-vtile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* text-message screenshots — masonry columns (varied heights) */
+.rev-texts { columns: 3; column-gap: 16px; }
+.rev-ttile {
+  break-inside: avoid; margin: 0 0 16px; position: relative;
+  border-radius: var(--r-md); overflow: hidden;
+  border: 1px solid var(--line-strong); box-shadow: var(--shadow-sm); background: var(--surface);
+}
+.rev-ttile img { width: 100%; display: block; }
+/* placeholder tiles need an explicit height (no image yet) */
+.rev-ttile .rev-ph { position: relative; height: 0; padding-bottom: 150%; }
+.rev-ttile .rev-ph > * { position: relative; }
+
+@media (max-width: 960px) { .rev-texts { columns: 2; } }
+@media (max-width: 860px) { .rev-videos { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) {
+  .rev-videos { grid-template-columns: 1fr; max-width: 340px; margin-inline: auto; }
+  .rev-texts { columns: 1; max-width: 340px; margin-inline: auto; }
+}

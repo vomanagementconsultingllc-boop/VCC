@@ -61,29 +61,34 @@
     });
   }
 
-  /* ---- Services dropdown ---- */
-  var dd = document.querySelector('.nav-dd');
-  if (dd) {
+  /* ---- Nav dropdowns (Services, Our Work) ---- */
+  function isMobileNav() { return window.innerWidth <= 680; }
+  var navDds = document.querySelectorAll('.nav-dd');
+  navDds.forEach(function (dd) {
     var ddBtn = dd.querySelector('.nav-dd-btn');
-    function isMobileNav() { return window.innerWidth <= 680; }
+    if (!ddBtn) return;
     function setDd(open) {
       dd.classList.toggle('open', open);
       ddBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
-    /* Tap toggles on mobile; on desktop hover handles it */
     ddBtn.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
       setDd(!dd.classList.contains('open'));
     });
-    /* Click outside closes */
-    document.addEventListener('click', function (e) {
-      if (!dd.contains(e.target)) setDd(false);
-    });
-    /* Desktop hover open/close */
     dd.addEventListener('mouseenter', function () { if (!isMobileNav()) setDd(true); });
     dd.addEventListener('mouseleave', function () { if (!isMobileNav()) setDd(false); });
-  }
+  });
+  /* Click outside closes any open dropdown */
+  document.addEventListener('click', function (e) {
+    navDds.forEach(function (dd) {
+      if (!dd.contains(e.target)) {
+        dd.classList.remove('open');
+        var b = dd.querySelector('.nav-dd-btn');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
 
   /* ---- Client marquee: pin the section and scroll the row horizontally,
          then release so the page continues down ---- */
