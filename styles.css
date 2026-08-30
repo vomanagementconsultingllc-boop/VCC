@@ -482,6 +482,17 @@ a { color: inherit; }
 }
 
 /* =============================================================
+   GIVE-BACK BANNER (homepage)
+   ============================================================= */
+.giveback { background: linear-gradient(135deg, var(--gold-400), var(--gold-600)); padding-block: clamp(44px, 6vw, 76px); }
+.giveback-inner { display: flex; align-items: center; justify-content: space-between; gap: clamp(22px, 4vw, 52px); flex-wrap: wrap; }
+.giveback-eyebrow { font-family: var(--font-sans); font-weight: var(--w-bold); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--espresso-900); opacity: 0.72; margin: 0 0 12px; }
+.giveback-title { font-family: var(--font-sans); font-weight: 800; font-size: clamp(28px, 4.4vw, 52px); line-height: 1.02; letter-spacing: -0.015em; color: var(--espresso-900); margin: 0; text-wrap: balance; }
+.giveback-sub { font-size: var(--fs-body); line-height: 1.55; color: var(--espresso-800); margin: 14px 0 0; max-width: 42em; }
+.giveback-btn { background: var(--espresso-900); color: var(--gold-300); border: 0; padding: 15px 30px; white-space: nowrap; flex: 0 0 auto; }
+.giveback-btn:hover { background: #000; }
+
+/* =============================================================
    REVEAL ANIMATION
    ============================================================= */
 .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); }
