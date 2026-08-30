@@ -220,6 +220,60 @@
     reveals.forEach(function (el) { el.classList.add('in'); });
   }
 
+  /* ---- Initiative (non-profit) application form ---- */
+  var initForm = document.getElementById('initiative-form');
+  if (initForm) {
+    var initSuccess = document.getElementById('initiative-success');
+    function initEmailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+    function initSetErr(field, msg) {
+      var input = initForm.querySelector('[name="' + field + '"]');
+      if (!input) return;
+      input.classList.add('err');
+      var hint = input.parentElement.querySelector('.hint');
+      if (hint) { hint.textContent = msg; hint.classList.add('err'); }
+    }
+    initForm.querySelectorAll('.inp, .ta').forEach(function (input) {
+      input.addEventListener('input', function () {
+        input.classList.remove('err');
+        var hint = input.parentElement.querySelector('.hint');
+        if (hint) { hint.textContent = ''; hint.classList.remove('err'); }
+      });
+    });
+    initForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var data = {};
+      initForm.querySelectorAll('.inp, .ta').forEach(function (i) { data[i.name] = (i.value || '').trim(); });
+      var ok = true;
+      if (!data.org) { initSetErr('org', 'What&rsquo;s your organization called?'); ok = false; }
+      if (!data.name) { initSetErr('name', 'Please tell us your name.'); ok = false; }
+      if (!data.email) { initSetErr('email', 'We need an email to reach you.'); ok = false; }
+      else if (!initEmailOk(data.email)) { initSetErr('email', 'That email doesn’t look right.'); ok = false; }
+      if (!data.cause) { initSetErr('cause', 'Tell us a little about your cause.'); ok = false; }
+      if (!ok) { var fe = initForm.querySelector('.err'); if (fe && fe.focus) fe.focus(); return; }
+
+      /* Netlify Forms capture (same-origin) */
+      var nl = new URLSearchParams();
+      nl.append('form-name', 'initiative');
+      Object.keys(data).forEach(function (k) { nl.append(k, data[k] || ''); });
+      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: nl.toString() }).catch(function () {});
+
+      /* Mirror to GoHighLevel */
+      fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/85805c35-568b-49a8-ab39-c10114ac94dc', {
+        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, keepalive: true,
+        body: JSON.stringify({
+          name: data.name, email: data.email, phone: data.phone,
+          companyName: data.org, website: data.website,
+          socials: data.socials, cause: data.cause,
+          usage: data.usage, reason: data.why,
+          source: 'VCC Initiative'
+        })
+      }).catch(function () {});
+
+      initForm.style.display = 'none';
+      if (initSuccess) { initSuccess.classList.add('show'); initSuccess.setAttribute('tabindex', '-1'); initSuccess.focus({ preventScroll: true }); }
+    });
+  }
+
   /* ---- Booking form ---- */
   var form = document.getElementById('book-form');
   if (!form) return;
