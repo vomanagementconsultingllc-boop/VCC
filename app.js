@@ -220,6 +220,32 @@
     reveals.forEach(function (el) { el.classList.add('in'); });
   }
 
+  /* ---- Testimonial carousels (one item at a time, arrows) ---- */
+  document.querySelectorAll('.carousel').forEach(function (car) {
+    var track = car.querySelector('.car-track');
+    var slides = car.querySelectorAll('.car-slide');
+    if (!track || !slides.length) return;
+    var prev = car.querySelector('.car-prev');
+    var next = car.querySelector('.car-next');
+    var wrap = car.parentElement;
+    var curEl = wrap ? wrap.querySelector('.car-count-cur') : null;
+    var i = 0;
+    function show(n) {
+      i = (n + slides.length) % slides.length;
+      track.style.transform = 'translateX(' + (-i * 100) + '%)';
+      slides.forEach(function (s, idx) {
+        var v = s.querySelector('video');
+        if (!v) return;
+        if (idx === i) { v.play().catch(function () {}); }
+        else { v.pause(); try { v.currentTime = 0; } catch (e) {} }
+      });
+      if (curEl) curEl.textContent = i + 1;
+    }
+    if (prev) prev.addEventListener('click', function () { show(i - 1); });
+    if (next) next.addEventListener('click', function () { show(i + 1); });
+    show(0);
+  });
+
   /* ---- Initiative (non-profit) application form ---- */
   var initForm = document.getElementById('initiative-form');
   if (initForm) {
