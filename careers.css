@@ -3,13 +3,42 @@
    ============================================================= */
 .job-wrap { max-width: 840px; margin-inline: auto; }
 
-.job-head { margin-bottom: clamp(28px, 4vw, 44px); }
+.job-listing-head { margin-bottom: clamp(20px, 2.5vw, 30px); }
+.job-listing-hint { font-size: 13.5px; color: var(--ink-3); margin: 12px 0 0; }
+
+/* expandable job listing */
+.job-item {
+  border: 1px solid var(--line-strong); border-radius: var(--r-lg);
+  background: var(--surface); box-shadow: var(--shadow-sm);
+  overflow: hidden; transition: box-shadow var(--dur-med) var(--ease-out);
+}
+.job-item[open] { box-shadow: var(--shadow-md); }
+.job-summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center;
+  justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  padding: clamp(22px, 3vw, 34px);
+}
+.job-summary::-webkit-details-marker { display: none; }
+.job-summary:hover { background: var(--cream-100); }
 .job-title {
   font-family: var(--font-display); font-weight: var(--w-reg);
-  font-size: clamp(34px, 5vw, 58px); line-height: 1.06;
-  letter-spacing: 0.006em; color: var(--ink); margin: 14px 0 0;
+  font-size: clamp(26px, 3.6vw, 40px); line-height: 1.1;
+  letter-spacing: 0.006em; color: var(--ink); margin: 0;
 }
-.job-meta { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 20px 0 0; }
+.job-toggle {
+  display: inline-flex; align-items: center; gap: 9px; white-space: nowrap;
+  font-family: var(--font-sans); font-weight: var(--w-semi); font-size: 13px;
+  letter-spacing: 0.02em; color: var(--primary);
+}
+.job-toggle .chev { font-size: 10px; transition: transform var(--dur-med) var(--ease-out); }
+.job-item[open] .job-toggle .chev { transform: rotate(180deg); }
+.job-toggle-close { display: none; }
+.job-item[open] .job-toggle-open { display: none; }
+.job-item[open] .job-toggle-close { display: inline; }
+
+.job-detail { padding: 0 clamp(22px, 3vw, 34px) clamp(26px, 3vw, 38px); border-top: 1px solid var(--line); padding-top: clamp(24px, 3vw, 34px); }
+
+.job-meta { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 16px 0 0; }
 .job-meta li {
   font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.04em;
   color: var(--gold-600); background: var(--primary-soft);
