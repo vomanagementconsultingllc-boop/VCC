@@ -283,18 +283,6 @@
       Object.keys(data).forEach(function (k) { nl.append(k, data[k] || ''); });
       fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: nl.toString() }).catch(function () {});
 
-      /* Mirror to GoHighLevel */
-      fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/85805c35-568b-49a8-ab39-c10114ac94dc', {
-        method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, keepalive: true,
-        body: JSON.stringify({
-          name: data.name, email: data.email, phone: data.phone,
-          companyName: data.org, website: data.website,
-          socials: data.socials, cause: data.cause,
-          usage: data.usage, reason: data.why,
-          source: 'VCC Initiative'
-        })
-      }).catch(function () {});
-
       initForm.style.display = 'none';
       if (initSuccess) { initSuccess.classList.add('show'); initSuccess.setAttribute('tabindex', '-1'); initSuccess.focus({ preventScroll: true }); }
     });
@@ -375,29 +363,6 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: nl.toString()
-    }).catch(function () {});
-
-    /* Secondary: mirror the lead to GoHighLevel for the CRM.
-       Content-Type text/plain keeps this a "simple" request so the browser
-       doesn't fire a CORS preflight the webhook can't answer. GHL still
-       parses the JSON body. keepalive lets it finish even as the UI updates. */
-    fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/85805c35-568b-49a8-ab39-c10114ac94dc', {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      keepalive: true,
-      body: JSON.stringify({
-        name: data.name,
-        email: data.email,
-        phone: '',
-        companyName: data.business,
-        website: data.website,
-        monthlyRevenue: data.revenue,
-        service: data.service,
-        timeframe: data.timeframe,
-        goal: data.goal,
-        message: data.about,
-        source: 'VCC Website'
-      })
     }).catch(function () {});
 
     form.style.display = 'none';
