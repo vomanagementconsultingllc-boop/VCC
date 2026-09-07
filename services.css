@@ -5,7 +5,11 @@
 /* ---- Page header (shared visual language with portfolio) ---- */
 .pg-header {
   padding-block: clamp(120px, 16vw, 200px) clamp(64px, 9vw, 112px);
+  position: relative; isolation: isolate; overflow: hidden;
 }
+.pg-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.32; z-index: -2; }
+.pg-bg-scrim { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(20,14,9,0.30) 0%, rgba(36,28,20,0.78) 100%); }
+.pg-header .wrap { position: relative; z-index: 1; }
 .pg-header .runhead { margin-bottom: 22px; }
 .pg-title {
   font-family: var(--font-display);
