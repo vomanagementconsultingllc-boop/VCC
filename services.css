@@ -290,6 +290,7 @@
 .mshow-side .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
 .mshow-media { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-lg); background: #1a140d; aspect-ratio: 16 / 9; }
 .mshow-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mshow-media.portrait { aspect-ratio: 3 / 4; max-width: 400px; width: 100%; margin-inline: auto; }
 .mshow-side.rev .mshow-media { order: 2; }
 .mshow-body .eyebrow { margin-bottom: 14px; }
 .mshow-body h2 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: clamp(26px, 3.4vw, 42px); line-height: 1.12; color: var(--ink); margin: 0 0 18px; text-wrap: balance; }
