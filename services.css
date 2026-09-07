@@ -285,6 +285,9 @@
 .mshow-over .eyebrow { color: var(--gold-300); }
 .mshow-over h2 { font-family: var(--font-display); font-weight: var(--w-reg); font-size: clamp(30px, 5vw, 62px); line-height: 1.08; letter-spacing: 0.005em; color: #fff; margin: 14px 0 0; max-width: 15em; text-wrap: balance; }
 .mshow-over p { font-size: var(--fs-body-lg); line-height: 1.6; color: rgba(255,255,255,0.9); margin: 18px 0 0; max-width: 34em; }
+.mshow-over.center { text-align: center; }
+.mshow-over.center h2, .mshow-over.center p { margin-left: auto; margin-right: auto; }
+.mshow-over.center .btn { margin-top: 28px; }
 
 /* Text BESIDE a video (split) */
 .mshow-side .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
