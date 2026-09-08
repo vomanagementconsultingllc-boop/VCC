@@ -371,3 +371,38 @@
     success.focus({ preventScroll: true });
   });
 })();
+
+/* Scroll-linked flyover (Vacations): a plane that drifts across the
+   viewport as the page is scrolled. No-op on pages without .flyover
+   and when the visitor prefers reduced motion. */
+(function () {
+  var plane = document.querySelector('.flyover-plane');
+  if (!plane) return;
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  var ticking = false;
+
+  function draw() {
+    ticking = false;
+    var vw = window.innerWidth;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+
+    // Fly from just off the left edge to just off the right edge.
+    var x = (-0.24 * vw) + p * (1.48 * vw);
+    // Gentle arc: rises a touch through the middle of the page.
+    var y = Math.sin(p * Math.PI) * -34;
+    // Subtle pitch so the nose follows the arc.
+    var rot = Math.cos(p * Math.PI) * 3.2;
+
+    plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg)';
+  }
+
+  function onScroll() {
+    if (!ticking) { ticking = true; requestAnimationFrame(draw); }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  draw();
+})();

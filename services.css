@@ -289,6 +289,24 @@
 .mshow-over.center h2, .mshow-over.center p { margin-left: auto; margin-right: auto; }
 .mshow-over.center .btn { margin-top: 28px; }
 
+/* Scroll-linked flyover (decorative) */
+.flyover { position: fixed; inset: 0 0 auto 0; height: 0; pointer-events: none; z-index: 6; }
+.flyover-plane {
+  position: absolute; top: 15vh; left: 0;
+  width: 78px; height: auto;
+  color: var(--gold-400);
+  opacity: 0.72;
+  will-change: transform;
+  transform: translate3d(-24vw, 0, 0);
+  filter: drop-shadow(0 8px 12px rgba(40, 26, 12, 0.28));
+}
+@media (max-width: 640px) {
+  .flyover-plane { width: 52px; opacity: 0.62; top: 12vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flyover { display: none; }
+}
+
 /* Text BESIDE a video (split) */
 .mshow-side .wrap { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
 .mshow-media { position: relative; border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-lg); background: #1a140d; aspect-ratio: 16 / 9; }

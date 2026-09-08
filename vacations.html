@@ -159,6 +159,24 @@
   </div>
 </footer>
 
+<!-- SCROLL FLYOVER -->
+<div class="flyover" aria-hidden="true">
+  <svg class="flyover-plane" viewBox="0 0 152 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="flyTrail" x1="0" y1="0" x2="152" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="currentColor" stop-opacity="0"></stop>
+        <stop offset="1" stop-color="currentColor" stop-opacity="0.55"></stop>
+      </linearGradient>
+    </defs>
+    <line x1="2" y1="24" x2="90" y2="24" stroke="url(#flyTrail)" stroke-width="2.2" stroke-linecap="round"></line>
+    <g fill="currentColor">
+      <path d="M96 21 L89 7 L98 11.5 L103 20 Z"></path>
+      <path d="M116 26 L95 40 L108 40 L124 27.2 Z"></path>
+      <path d="M149 24 C144 21 130 20 118 20 L100 20.5 C96 21 94 22.4 94 24 C94 25.6 96 27 100 27.5 L118 28 C130 28 144 27 149 24 Z"></path>
+    </g>
+  </svg>
+</div>
+
 <script src="app.js?v=2"></script>
 </body>
 </html>
