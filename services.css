@@ -290,18 +290,17 @@
 .mshow-over.center .btn { margin-top: 28px; }
 
 /* Scroll-linked flyover (decorative) */
-.flyover { position: fixed; inset: 0 0 auto 0; height: 0; pointer-events: none; z-index: 6; }
+.flyover { position: fixed; inset: 0; height: 100vh; pointer-events: none; z-index: 6; overflow: hidden; }
 .flyover-plane {
-  position: absolute; top: 15vh; left: 0;
-  width: 78px; height: auto;
-  color: var(--gold-400);
-  opacity: 0.72;
+  position: absolute; top: 0; left: 0;
+  width: 132px; height: auto;
+  opacity: 0.92;
   will-change: transform;
-  transform: translate3d(-24vw, 0, 0);
-  filter: drop-shadow(0 8px 12px rgba(40, 26, 12, 0.28));
+  transform: translate3d(-30vw, 105vh, 0);
+  filter: drop-shadow(0 12px 20px rgba(40, 26, 12, 0.22));
 }
 @media (max-width: 640px) {
-  .flyover-plane { width: 52px; opacity: 0.62; top: 12vh; }
+  .flyover-plane { width: 84px; opacity: 0.85; }
 }
 @media (prefers-reduced-motion: reduce) {
   .flyover { display: none; }

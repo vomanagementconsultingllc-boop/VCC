@@ -385,17 +385,15 @@
   function draw() {
     ticking = false;
     var vw = window.innerWidth;
+    var vh = window.innerHeight;
     var max = document.documentElement.scrollHeight - window.innerHeight;
     var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
 
-    // Fly from just off the left edge to just off the right edge.
-    var x = (-0.24 * vw) + p * (1.48 * vw);
-    // Gentle arc: rises a touch through the middle of the page.
-    var y = Math.sin(p * Math.PI) * -34;
-    // Subtle pitch so the nose follows the arc.
-    var rot = Math.cos(p * Math.PI) * 3.2;
+    // Fly diagonally from off the bottom-left to off the top-right.
+    var x = (-0.30 * vw) + p * (1.60 * vw);
+    var y = (1.05 * vh) + p * (-1.45 * vh);
 
-    plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg)';
+    plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
   }
 
   function onScroll() {
