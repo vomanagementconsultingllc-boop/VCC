@@ -387,11 +387,14 @@
     var vw = window.innerWidth;
     var vh = window.innerHeight;
     var max = document.documentElement.scrollHeight - window.innerHeight;
-    var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    var raw = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    // Complete the whole crossing within the first ~35% of the scroll,
+    // so it whips across fast and dramatically near the top.
+    var p = Math.min(1, raw / 0.35);
 
-    // Fly diagonally from off the bottom-left to off the top-right.
-    var x = (-0.30 * vw) + p * (1.60 * vw);
-    var y = (1.05 * vh) + p * (-1.45 * vh);
+    // Fly diagonally from well off the bottom-left to well off the top-right.
+    var x = (-0.75 * vw) + p * (2.15 * vw);
+    var y = (1.25 * vh) + p * (-1.9 * vh);
 
     plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
   }

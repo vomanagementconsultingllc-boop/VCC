@@ -293,14 +293,14 @@
 .flyover { position: fixed; inset: 0; height: 100vh; pointer-events: none; z-index: 6; overflow: hidden; }
 .flyover-plane {
   position: absolute; top: 0; left: 0;
-  width: 132px; height: auto;
-  opacity: 0.92;
+  width: clamp(300px, 46vw, 680px); height: auto;
+  opacity: 0.95;
   will-change: transform;
-  transform: translate3d(-30vw, 105vh, 0);
-  filter: drop-shadow(0 12px 20px rgba(40, 26, 12, 0.22));
+  transform: translate3d(-70vw, 125vh, 0);
+  filter: drop-shadow(0 22px 34px rgba(40, 26, 12, 0.30));
 }
 @media (max-width: 640px) {
-  .flyover-plane { width: 84px; opacity: 0.85; }
+  .flyover-plane { width: clamp(220px, 70vw, 420px); opacity: 0.9; }
 }
 @media (prefers-reduced-motion: reduce) {
   .flyover { display: none; }
