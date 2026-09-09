@@ -390,14 +390,16 @@
     var rect = section.getBoundingClientRect();
     var W = section.offsetWidth;
     var H = section.offsetHeight;
+    var pw = plane.offsetWidth;
+    var ph = plane.offsetHeight;
     // 0 as the section enters from the bottom, 1 as it leaves past the top.
     var p = (vh - rect.top) / (vh + H);
     p = Math.min(1, Math.max(0, p));
 
-    // Mostly left-to-right sweep with a gentle climb, crossing over the
-    // centered text (the plane sits in front of it).
-    var x = (-0.95 * W) + p * (2.05 * W);
-    var y = (0.66 * H) + p * (-0.52 * H);
+    // Full-screen plane flying straight across, left to right, no vertical
+    // movement (vertically centered in the section).
+    var x = -pw + p * (W + 2 * pw);
+    var y = (H - ph) / 2;
 
     plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
   }
