@@ -394,9 +394,10 @@
     var p = (vh - rect.top) / (vh + H);
     p = Math.min(1, Math.max(0, p));
 
-    // Diagonal sweep from off the bottom-left to off the top-right.
-    var x = (-0.60 * W) + p * (2.15 * W);
-    var y = (1.10 * H) + p * (-1.55 * H);
+    // Mostly left-to-right sweep with a gentle climb, crossing over the
+    // centered text (the plane sits in front of it).
+    var x = (-0.95 * W) + p * (2.05 * W);
+    var y = (0.66 * H) + p * (-0.52 * H);
 
     plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
   }

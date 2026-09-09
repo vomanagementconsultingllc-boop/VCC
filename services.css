@@ -298,17 +298,17 @@
 .flyby-sub { font-size: var(--fs-body-lg); line-height: 1.6; color: rgba(255,255,255,0.9); margin: 22px auto 0; max-width: 32em; }
 .flyby-plane {
   position: absolute; top: 0; left: 0;
-  width: clamp(430px, 70vw, 1040px); height: auto;
-  z-index: 1; opacity: 0.95; pointer-events: none;
+  width: clamp(520px, 84vw, 1260px); height: auto;
+  z-index: 3; opacity: 0.97; pointer-events: none;
   will-change: transform;
-  transform: translate3d(-70vw, 120%, 0);
-  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.42));
+  transform: translate3d(-95vw, 62%, 0);
+  filter: drop-shadow(0 26px 46px rgba(0, 0, 0, 0.45));
 }
 @media (max-width: 640px) {
-  .flyby-plane { width: clamp(300px, 90vw, 560px); }
+  .flyby-plane { width: clamp(360px, 104vw, 640px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .flyby-plane { transform: translate3d(46vw, 8%, 0); }
+  .flyby-plane { transform: translate3d(52vw, -8%, 0); }
 }
 
 /* Text BESIDE a video (split) */
