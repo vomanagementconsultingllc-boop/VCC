@@ -428,6 +428,15 @@
   .work-products { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 680px) {
+  /* Make the hero header fill the screen before the next section */
+  .pg-header {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: clamp(104px, 22vh, 180px) clamp(56px, 12vh, 110px);
+  }
   .pg-lead { font-size: var(--fs-body); }
   .svc-cards { grid-template-columns: 1fr; }
   .svc-other-grid { grid-template-columns: 1fr; }
