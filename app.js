@@ -372,29 +372,31 @@
   });
 })();
 
-/* Scroll-linked flyover (Vacations): a plane that drifts across the
-   viewport as the page is scrolled. No-op on pages without .flyover
-   and when the visitor prefers reduced motion. */
+/* "We fly with you" flyby: the plane sweeps diagonally across its own
+   section (bottom-left to top-right) as that section passes through the
+   viewport. No-op on other pages and under prefers-reduced-motion. */
 (function () {
-  var plane = document.querySelector('.flyover-plane');
+  var plane = document.querySelector('.flyby-plane');
   if (!plane) return;
+  var section = plane.closest('.flyby');
+  if (!section) return;
   if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   var ticking = false;
 
   function draw() {
     ticking = false;
-    var vw = window.innerWidth;
     var vh = window.innerHeight;
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    var raw = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    // Complete the whole crossing within the first ~35% of the scroll,
-    // so it whips across fast and dramatically near the top.
-    var p = Math.min(1, raw / 0.35);
+    var rect = section.getBoundingClientRect();
+    var W = section.offsetWidth;
+    var H = section.offsetHeight;
+    // 0 as the section enters from the bottom, 1 as it leaves past the top.
+    var p = (vh - rect.top) / (vh + H);
+    p = Math.min(1, Math.max(0, p));
 
-    // Fly diagonally from well off the bottom-left to well off the top-right.
-    var x = (-0.75 * vw) + p * (2.15 * vw);
-    var y = (1.25 * vh) + p * (-1.9 * vh);
+    // Diagonal sweep from off the bottom-left to off the top-right.
+    var x = (-0.60 * W) + p * (2.15 * W);
+    var y = (1.10 * H) + p * (-1.55 * H);
 
     plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
   }
