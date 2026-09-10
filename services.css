@@ -6,6 +6,11 @@
 .pg-header {
   padding-block: clamp(120px, 16vw, 200px) clamp(64px, 9vw, 112px);
   position: relative; isolation: isolate; overflow: hidden;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .pg-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 1; z-index: -2; }
 .pg-bg-scrim { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.55) 100%); }
@@ -428,13 +433,8 @@
   .work-products { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 680px) {
-  /* Make the hero header fill the screen before the next section */
+  /* Tighter hero padding on phones (full-height is set on the base rule) */
   .pg-header {
-    min-height: 100vh;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     padding-block: clamp(104px, 22vh, 180px) clamp(56px, 12vh, 110px);
   }
   .pg-lead { font-size: var(--fs-body); }
