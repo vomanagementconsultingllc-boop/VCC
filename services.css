@@ -328,6 +328,17 @@
   .mshow-side.rev .mshow-media { order: 0; }
 }
 
+/* Video assortment grid ("We create videos like this")
+   Attach more clips by copying a .vtile block. */
+.vgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.6vw, 22px); }
+.vtile { position: relative; border-radius: var(--r-lg); overflow: hidden; background: #1a140d; aspect-ratio: 9 / 16; box-shadow: var(--shadow-md); }
+.vtile video, .vtile img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.vtile:nth-child(3n+2) { transform: translateY(30px); }
+@media (max-width: 680px) {
+  .vgrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .vtile:nth-child(3n+2) { transform: none; }
+}
+
 /* =============================================================
    WORK SHOWCASE — media tiles + varied gallery layouts
    ============================================================= */
