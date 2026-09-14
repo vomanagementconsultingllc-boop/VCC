@@ -339,6 +339,11 @@
 .docs-embed { max-width: 1080px; margin: clamp(8px, 3vw, 34px) auto 0; }
 .docs-embed video { display: block; width: 100%; }
 
+/* Landscape video carousel (Full Service examples) */
+.carousel.wide { max-width: 900px; }
+.vwork { position: relative; width: 100%; aspect-ratio: 3 / 2; border-radius: var(--r-lg); overflow: hidden; background: #0d0a07; box-shadow: var(--shadow-lg); }
+.vwork video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+
 /* Placeholder slide for the video carousel (awaiting a real clip) */
 .vtestimonial.ph { display: flex; align-items: center; justify-content: center; }
 .vtestimonial.ph .ph-inner { display: flex; flex-direction: column; align-items: center; gap: 12px; color: rgba(255,255,255,0.62); }
