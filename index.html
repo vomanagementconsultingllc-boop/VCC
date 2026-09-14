@@ -267,83 +267,127 @@
           <form id="book-form" name="booking" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
             <input type="hidden" name="form-name" value="booking">
             <p class="hp-field" aria-hidden="true"><label>Don’t fill this out: <input name="bot-field"></label></p>
-            <div class="field-grid">
-              <div class="f">
-                <label for="f-name">Full name <span class="req">*</span></label>
-                <input class="inp" id="f-name" name="name" type="text" placeholder="Jane Rivera" autocomplete="name">
-                <div class="hint" data-default=""></div>
+
+            <div class="wiz">
+              <div class="wiz-top">
+                <div class="wiz-progress"><span class="wiz-bar" id="wiz-bar"></span></div>
+                <p class="wiz-count">Step <span id="wiz-cur">1</span> of <span id="wiz-total">6</span></p>
               </div>
-              <div class="f">
-                <label for="f-email">Work email <span class="req">*</span></label>
-                <input class="inp" id="f-email" name="email" type="email" placeholder="jane@yourbusiness.co" autocomplete="email">
-                <div class="hint" data-default=""></div>
+
+              <div class="wiz-body">
+                <!-- Contact info first (everyone) -->
+                <div class="wstep" data-when="all">
+                  <label for="f-name">First, what&rsquo;s your name?</label>
+                  <input class="inp" id="f-name" name="name" type="text" placeholder="Jane Rivera" autocomplete="name" required>
+                  <div class="hint" data-default=""></div>
+                </div>
+                <div class="wstep" data-when="all">
+                  <label for="f-email">What&rsquo;s the best email to reach you?</label>
+                  <input class="inp" id="f-email" name="email" type="email" placeholder="jane@email.com" autocomplete="email" required>
+                  <div class="hint" data-default=""></div>
+                </div>
+                <div class="wstep" data-when="all">
+                  <label for="f-phone">And a phone number?</label>
+                  <input class="inp" id="f-phone" name="phone" type="tel" placeholder="(555) 123 4567" autocomplete="tel" required>
+                  <div class="hint" data-default=""></div>
+                </div>
+
+                <!-- Branch point -->
+                <div class="wstep" data-when="all">
+                  <label for="f-service">Which service are you interested in?</label>
+                  <select class="sel" id="f-service" name="service" required>
+                    <option value="" disabled selected>Select a service</option>
+                    <option>Influencer Content</option>
+                    <option>Vacations</option>
+                    <option>Social Media Management</option>
+                    <option>Events</option>
+                    <option>Full Service Marketing</option>
+                    <option>E-commerce</option>
+                    <option>Not sure yet, help me decide</option>
+                  </select>
+                  <div class="hint" data-default=""></div>
+                </div>
+
+                <!-- Business services only -->
+                <div class="wstep" data-when="biz">
+                  <label for="f-business">What&rsquo;s your business called?</label>
+                  <input class="inp" id="f-business" name="business" type="text" placeholder="Your business" autocomplete="organization" required>
+                  <div class="hint" data-default=""></div>
+                </div>
+                <div class="wstep" data-when="biz">
+                  <label for="f-revenue">Roughly what&rsquo;s your monthly revenue?</label>
+                  <select class="sel" id="f-revenue" name="revenue" required>
+                    <option value="" disabled selected>Select a range</option>
+                    <option>Under $30K / month</option>
+                    <option>$30 to 60K / month</option>
+                    <option>$50K+ / month</option>
+                    <option>$80K+ / month</option>
+                  </select>
+                  <div class="hint" data-default=""></div>
+                </div>
+                <div class="wstep" data-when="biz">
+                  <label for="f-site">Your website (if you have one)</label>
+                  <input class="inp" id="f-site" name="website" type="text" placeholder="yoursite.com">
+                  <div class="hint" data-default=""></div>
+                </div>
+                <div class="wstep" data-when="biz">
+                  <label for="f-plan">What do you need most?</label>
+                  <select class="sel" id="f-plan" name="goal">
+                    <option value="" disabled selected>Choose what fits best</option>
+                    <option>Consistent content, done for me</option>
+                    <option>A full content team</option>
+                    <option>Content plus the systems that book clients</option>
+                    <option>Train my team to run it in house</option>
+                    <option>Not sure yet, help me figure it out</option>
+                  </select>
+                  <div class="hint" data-default=""></div>
+                </div>
+
+                <!-- Vacations -->
+                <div class="wstep" data-when="Vacations">
+                  <label for="f-destination">Where are you headed?</label>
+                  <input class="inp" id="f-destination" name="destination" type="text" placeholder="Where you&rsquo;re going, and who&rsquo;s coming">
+                  <div class="hint" data-default=""></div>
+                </div>
+
+                <!-- Events -->
+                <div class="wstep" data-when="Events">
+                  <label for="f-eventtype">What kind of event is it?</label>
+                  <input class="inp" id="f-eventtype" name="eventtype" type="text" placeholder="Launch, party, pop-up, corporate&hellip;">
+                  <div class="hint" data-default=""></div>
+                </div>
+
+                <!-- Influencer Content -->
+                <div class="wstep" data-when="Influencer Content">
+                  <label for="f-channel">What&rsquo;s your main channel or @handle?</label>
+                  <input class="inp" id="f-channel" name="channel" type="text" placeholder="@yourhandle / your platform">
+                  <div class="hint" data-default=""></div>
+                </div>
+
+                <!-- Everyone: timing + anything else -->
+                <div class="wstep" data-when="all">
+                  <label for="f-timeframe">When are you looking to get started?</label>
+                  <select class="sel" id="f-timeframe" name="timeframe">
+                    <option value="" disabled selected>Pick a timeframe</option>
+                    <option>As soon as possible</option>
+                    <option>Within 2 to 4 weeks</option>
+                    <option>Next quarter</option>
+                    <option>Just exploring</option>
+                  </select>
+                  <div class="hint" data-default=""></div>
+                </div>
+                <div class="wstep" data-when="all">
+                  <label for="f-about">Anything else we should know?</label>
+                  <textarea class="ta" id="f-about" name="about" placeholder="Optional. A few words on what you&rsquo;re after."></textarea>
+                  <div class="hint" data-default=""></div>
+                </div>
               </div>
-              <div class="f">
-                <label for="f-business">Business name <span class="req">*</span></label>
-                <input class="inp" id="f-business" name="business" type="text" placeholder="Your business" autocomplete="organization">
-                <div class="hint" data-default=""></div>
+
+              <div class="wiz-actions">
+                <button type="button" class="btn btn-secondary" id="wiz-back">Back</button>
+                <button type="button" class="btn btn-primary" id="wiz-next">Next <span class="arr">&rarr;</span></button>
+                <button type="submit" class="btn btn-primary" id="wiz-submit" hidden>Request your call <span class="arr">&rarr;</span></button>
               </div>
-              <div class="f">
-                <label for="f-site">Website or main channel</label>
-                <input class="inp" id="f-site" name="website" type="text" placeholder="@yourhandle / yoursite.com">
-                <div class="hint" data-default=""></div>
-              </div>
-              <div class="f">
-                <label for="f-revenue">Monthly revenue <span class="req">*</span></label>
-                <select class="sel" id="f-revenue" name="revenue" required>
-                  <option value="" disabled selected>Select a range</option>
-                  <option>Under $30K / month</option>
-                  <option>$30 to 60K / month</option>
-                  <option>$50K+ / month</option>
-                  <option>$80K+ / month</option>
-                </select>
-                <div class="hint" data-default=""></div>
-              </div>
-              <div class="f">
-                <label for="f-timeframe">Preferred timeframe</label>
-                <select class="sel" id="f-timeframe" name="timeframe">
-                  <option value="" disabled selected>When would you start?</option>
-                  <option>As soon as possible</option>
-                  <option>Within 2 to 4 weeks</option>
-                  <option>Next quarter</option>
-                  <option>Just exploring</option>
-                </select>
-                <div class="hint" data-default=""></div>
-              </div>
-              <div class="f col-2">
-                <label for="f-service">Which service are you interested in? <span class="req">*</span></label>
-                <select class="sel" id="f-service" name="service" required>
-                  <option value="" disabled selected>Select a service</option>
-                  <option>Influencer Content</option>
-                  <option>Vacations</option>
-                  <option>Social Media Management</option>
-                  <option>Events</option>
-                  <option>Full Service Marketing</option>
-                  <option>E-commerce</option>
-                  <option>Not sure yet, help me decide</option>
-                </select>
-                <div class="hint" data-default=""></div>
-              </div>
-              <div class="f col-2">
-                <label for="f-plan">What do you need most?</label>
-                <select class="sel" id="f-plan" name="goal">
-                  <option value="" disabled selected>Choose what fits best</option>
-                  <option>Consistent content, done for me</option>
-                  <option>A full content team</option>
-                  <option>Content plus the systems that book clients</option>
-                  <option>Train my team to run it in house</option>
-                  <option>Not sure yet, help me figure it out</option>
-                </select>
-                <div class="hint" data-default=""></div>
-              </div>
-              <div class="f col-2">
-                <label for="f-about">Tell us about your business</label>
-                <textarea class="ta" id="f-about" name="about" placeholder="What you do, where you're stuck, and what growth would look like."></textarea>
-                <div class="hint" data-default=""></div>
-              </div>
-            </div>
-            <div class="form-actions">
-              <button class="btn btn-primary" type="submit">Request your call <span class="arr">&rarr;</span></button>
               <p class="form-fine">We cap intake at two new clients a month. No spam, no obligation.</p>
             </div>
           </form>

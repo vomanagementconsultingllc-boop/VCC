@@ -347,74 +347,123 @@
     });
   }
 
-  /* ---- Booking form ---- */
+  /* ---- Booking form: step-by-step wizard with service branching ---- */
   var form = document.getElementById('book-form');
   if (!form) return;
   var success = document.getElementById('book-success');
+  var steps = Array.prototype.slice.call(form.querySelectorAll('.wstep'));
+  var backBtn = document.getElementById('wiz-back');
+  var nextBtn = document.getElementById('wiz-next');
+  var submitBtn = document.getElementById('wiz-submit');
+  var bar = document.getElementById('wiz-bar');
+  var curEl = document.getElementById('wiz-cur');
+  var totalEl = document.getElementById('wiz-total');
+  var serviceInput = form.querySelector('[name="service"]');
+
+  var BIZ = ['E-commerce', 'Social Media Management', 'Full Service Marketing'];
+  function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+  function stepApplies(step) {
+    var w = step.getAttribute('data-when');
+    if (w === 'all') return true;
+    var service = serviceInput ? serviceInput.value : '';
+    if (w === 'biz') return BIZ.indexOf(service) !== -1;
+    return w.split(',').map(function (s) { return s.trim(); }).indexOf(service) !== -1;
+  }
+  function activeSteps() { return steps.filter(stepApplies); }
 
   /* Pre-select a service if arriving from a service page (?service=...) */
   try {
-    var params = new URLSearchParams(window.location.search);
-    var wanted = params.get('service');
-    if (wanted) {
-      var sel = form.querySelector('[name="service"]');
-      if (sel) {
-        Array.prototype.forEach.call(sel.options, function (opt) {
-          if (opt.value.toLowerCase() === wanted.toLowerCase()) { sel.value = opt.value; }
-        });
-      }
+    var wanted = new URLSearchParams(window.location.search).get('service');
+    if (wanted && serviceInput) {
+      Array.prototype.forEach.call(serviceInput.options, function (opt) {
+        if (opt.value.toLowerCase() === wanted.toLowerCase()) { serviceInput.value = opt.value; }
+      });
     }
   } catch (e) {}
 
-  function setError(field, msg) {
-    var input = form.querySelector('[name="' + field + '"]');
-    if (!input) return;
-    input.classList.add('err');
-    var hint = input.parentElement.querySelector('.hint');
-    if (hint) { hint.textContent = msg; hint.classList.add('err'); }
+  function stepInput(step) { return step.querySelector('.inp, .sel, .ta'); }
+  function stepHint(step) { return step.querySelector('.hint'); }
+  function clearErr(step) {
+    if (!step) return;
+    var i = stepInput(step); if (i) i.classList.remove('err');
+    var h = stepHint(step); if (h) { h.textContent = h.getAttribute('data-default') || ''; h.classList.remove('err'); }
   }
-  function clearError(input) {
-    input.classList.remove('err');
-    var hint = input.parentElement.querySelector('.hint');
-    if (hint) { hint.textContent = hint.getAttribute('data-default') || ''; hint.classList.remove('err'); }
+  function showErr(step, msg) {
+    var i = stepInput(step); if (i) i.classList.add('err');
+    var h = stepHint(step); if (h) { h.textContent = msg; h.classList.add('err'); }
   }
-  form.querySelectorAll('.inp, .sel, .ta').forEach(function (input) {
-    input.addEventListener('input', function () { clearError(input); });
-    input.addEventListener('change', function () { clearError(input); });
+
+  var pos = 0;
+
+  function render() {
+    var list = activeSteps();
+    if (pos < 0) pos = 0;
+    if (pos > list.length - 1) pos = list.length - 1;
+    steps.forEach(function (s) { s.classList.remove('active'); });
+    var current = list[pos];
+    current.classList.add('active');
+    var total = list.length;
+    if (curEl) curEl.textContent = pos + 1;
+    if (totalEl) totalEl.textContent = total;
+    if (bar) bar.style.width = Math.round((pos + 1) / total * 100) + '%';
+    if (backBtn) backBtn.style.visibility = pos === 0 ? 'hidden' : 'visible';
+    var last = pos === total - 1;
+    if (nextBtn) nextBtn.hidden = last;
+    if (submitBtn) submitBtn.hidden = !last;
+    var inp = stepInput(current);
+    if (inp) { setTimeout(function () { try { inp.focus({ preventScroll: true }); } catch (e) {} }, 40); }
+  }
+
+  function validateCurrent() {
+    var step = activeSteps()[pos];
+    var inp = stepInput(step);
+    if (!inp) return true;
+    var val = (inp.value || '').trim();
+    if (inp.hasAttribute('required') && !val) { showErr(step, 'This one is required to continue.'); return false; }
+    if (inp.type === 'email' && val && !isEmail(val)) { showErr(step, 'That email does not look right.'); return false; }
+    clearErr(step);
+    return true;
+  }
+
+  function goNext() { if (validateCurrent()) { pos += 1; render(); } }
+  function goBack() { pos -= 1; render(); }
+
+  if (nextBtn) nextBtn.addEventListener('click', goNext);
+  if (backBtn) backBtn.addEventListener('click', goBack);
+  if (serviceInput) serviceInput.addEventListener('change', function () {
+    clearErr(serviceInput.closest('.wstep'));
+    render();
   });
 
-  function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  steps.forEach(function (step) {
+    var inp = stepInput(step);
+    if (!inp) return;
+    inp.addEventListener('input', function () { clearErr(step); });
+    inp.addEventListener('change', function () { clearErr(step); });
+    inp.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && inp.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        if (pos === activeSteps().length - 1) { if (submitBtn) submitBtn.click(); }
+        else { goNext(); }
+      }
+    });
+  });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var ok = true;
+    if (!validateCurrent()) return;
+
     var data = {};
-    form.querySelectorAll('.inp, .sel, .ta').forEach(function (input) {
-      data[input.name] = (input.value || '').trim();
+    activeSteps().forEach(function (step) {
+      var i = stepInput(step);
+      if (i && i.name) data[i.name] = (i.value || '').trim();
     });
 
-    if (!data.name) { setError('name', 'Please tell us your name.'); ok = false; }
-    if (!data.email) { setError('email', 'We need an email to reach you.'); ok = false; }
-    else if (!isEmail(data.email)) { setError('email', 'That email doesn’t look right.'); ok = false; }
-    if (!data.business) { setError('business', 'What’s your business called?'); ok = false; }
-    if (!data.revenue) { setError('revenue', 'Pick a range so we point you to the right plan.'); ok = false; }
-    if (!data.service) { setError('service', 'Which service are you interested in?'); ok = false; }
-
-    if (!ok) {
-      var firstErr = form.querySelector('.err');
-      if (firstErr && firstErr.focus) firstErr.focus({ preventScroll: false });
-      return;
-    }
-
-    var serviceLabel = data.service ? data.service : 'Not sure yet';
-    var when = data.timeframe ? data.timeframe : 'Flexible';
     var echo = document.getElementById('success-echo');
-    if (echo) {
-      echo.textContent = data.name + ' · ' + data.business + '  ·  ' + serviceLabel + '  ·  ' + when;
-    }
+    if (echo) { echo.textContent = [data.name, data.service, data.timeframe].filter(Boolean).join('  ·  '); }
 
-    /* Primary capture: Netlify Forms (same-origin, always delivers, emails you).
-       Netlify detects the form in index.html and stores every submission. */
+    /* Netlify Forms capture (same-origin). */
     var nl = new URLSearchParams();
     nl.append('form-name', 'booking');
     Object.keys(data).forEach(function (k) { nl.append(k, data[k] || ''); });
@@ -429,6 +478,8 @@
     success.setAttribute('tabindex', '-1');
     success.focus({ preventScroll: true });
   });
+
+  render();
 })();
 
 /* "We fly with you" flyby: the plane sweeps diagonally across its own
