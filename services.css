@@ -339,10 +339,25 @@
 .docs-embed { max-width: 1080px; margin: clamp(8px, 3vw, 34px) auto 0; }
 .docs-embed video { display: block; width: 100%; }
 
-/* Landscape video carousel (Full Service examples) */
-.carousel.wide { max-width: 900px; }
-.vwork { position: relative; width: 100%; aspect-ratio: 3 / 2; border-radius: var(--r-lg); overflow: hidden; background: #0d0a07; box-shadow: var(--shadow-lg); }
-.vwork video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block; }
+/* Coverflow video carousel (Full Service examples) — portrait, 3-up, center focused */
+.carousel.coverflow { max-width: 860px; }
+.coverflow .car-viewport { overflow: hidden; }
+.coverflow .car-track { gap: clamp(8px, 1.6vw, 20px); align-items: center; }
+.coverflow .car-slide {
+  flex: 0 0 44%;
+  transform: scale(0.82);
+  filter: blur(5px) brightness(0.6);
+  opacity: 0.9;
+  transition: transform .5s var(--ease-out), filter .5s var(--ease-out), opacity .5s var(--ease-out);
+}
+.coverflow .car-slide.is-active { transform: scale(1); filter: none; opacity: 1; z-index: 2; }
+.vwork { position: relative; width: 100%; aspect-ratio: 9 / 16; border-radius: var(--r-lg); overflow: hidden; background: #0d0a07; box-shadow: var(--shadow-lg); }
+.vwork video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.coverflow .car-slide.is-active .vwork { box-shadow: 0 30px 60px rgba(0,0,0,0.35); cursor: pointer; }
+@media (max-width: 720px) {
+  .carousel.coverflow { max-width: 520px; }
+  .coverflow .car-slide { flex-basis: 62%; filter: blur(3px) brightness(0.62); }
+}
 
 /* Placeholder slide for the video carousel (awaiting a real clip) */
 .vtestimonial.ph { display: flex; align-items: center; justify-content: center; }
