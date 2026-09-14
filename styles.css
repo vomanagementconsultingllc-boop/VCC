@@ -416,6 +416,8 @@ a { color: inherit; }
 .wiz-actions { display: flex; align-items: center; gap: 14px; margin-top: 26px; }
 .wiz-actions .btn { padding: 13px 26px; }
 #wiz-next, #wiz-submit { margin-left: auto; }
+#wiz-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+#wiz-submit:disabled:hover { background: var(--primary); }
 @media (prefers-reduced-motion: reduce) { .wstep.active { animation: none; } }
 
 /* honeypot — hidden from real users */

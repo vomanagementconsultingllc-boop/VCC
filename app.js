@@ -411,8 +411,18 @@
     var last = pos === total - 1;
     if (nextBtn) nextBtn.hidden = last;
     if (submitBtn) submitBtn.hidden = !last;
+    updateSubmitState();
     var inp = stepInput(current);
     if (inp) { setTimeout(function () { try { inp.focus({ preventScroll: true }); } catch (e) {} }, 40); }
+  }
+
+  /* Keep "Request your call" disabled until the final question is answered. */
+  function updateSubmitState() {
+    if (!submitBtn || submitBtn.hidden) return;
+    var step = activeSteps()[pos];
+    var inp = stepInput(step);
+    var filled = inp ? (inp.value || '').trim().length > 0 : true;
+    submitBtn.disabled = !filled;
   }
 
   function validateCurrent() {
@@ -439,8 +449,8 @@
   steps.forEach(function (step) {
     var inp = stepInput(step);
     if (!inp) return;
-    inp.addEventListener('input', function () { clearErr(step); });
-    inp.addEventListener('change', function () { clearErr(step); });
+    inp.addEventListener('input', function () { clearErr(step); updateSubmitState(); });
+    inp.addEventListener('change', function () { clearErr(step); updateSubmitState(); });
     inp.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' && inp.tagName !== 'TEXTAREA') {
         e.preventDefault();
