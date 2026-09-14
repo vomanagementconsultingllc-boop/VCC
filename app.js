@@ -4,27 +4,6 @@
    booking form validation + success state.
    ============================================================= */
 
-/* Diagnostic panel — add ?debug=1 to the URL (e.g. vocreativeco.com/?debug=1#book)
-   to see, on screen, whether the form handler runs, the payload it sends, and
-   whether each request goes out. Invisible to normal visitors. */
-(function () {
-  if (!/[?&]debug=1/.test(location.search)) return;
-  function box() {
-    var d = document.getElementById('vcc-dbg');
-    if (d) return d;
-    d = document.createElement('pre');
-    d.id = 'vcc-dbg';
-    d.style.cssText = 'position:fixed;left:8px;bottom:8px;max-width:92vw;max-height:46vh;overflow:auto;margin:0;background:#0b0b0b;color:#4ade80;font:12px/1.45 ui-monospace,Menlo,monospace;padding:12px 14px;z-index:2147483647;white-space:pre-wrap;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.5)';
-    (document.body || document.documentElement).appendChild(d);
-    return d;
-  }
-  window.vccDbg = function (m) { try { box().textContent += m + '\n'; } catch (e) {} };
-  window.addEventListener('error', function (e) {
-    window.vccDbg('JS ERROR: ' + (e.message || e) + '  @ ' + (e.filename || '') + ':' + (e.lineno || ''));
-  });
-  document.addEventListener('DOMContentLoaded', function () { window.vccDbg('debug ready · ' + location.pathname); });
-})();
-
 (function () {
   'use strict';
 
@@ -434,8 +413,6 @@
       echo.textContent = data.name + ' · ' + data.business + '  ·  ' + serviceLabel + '  ·  ' + when;
     }
 
-    if (window.vccDbg) { window.vccDbg('booking submit fired'); window.vccDbg('payload: ' + JSON.stringify(data)); }
-
     /* Primary capture: Netlify Forms (same-origin, always delivers, emails you).
        Netlify detects the form in index.html and stores every submission. */
     var nl = new URLSearchParams();
@@ -445,8 +422,7 @@
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: nl.toString()
-    }).then(function (r) { if (window.vccDbg) window.vccDbg('Netlify POST -> HTTP ' + r.status); })
-      .catch(function (e) { if (window.vccDbg) window.vccDbg('Netlify POST failed: ' + e); });
+    }).catch(function () {});
 
     form.style.display = 'none';
     success.classList.add('show');
