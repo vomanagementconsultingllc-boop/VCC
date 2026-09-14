@@ -231,8 +231,11 @@
     var wrap = car.parentElement;
     var curEl = wrap ? wrap.querySelector('.car-count-cur') : null;
     var cover = car.classList.contains('coverflow');
+    var muteBtn = cover && wrap ? wrap.querySelector('.car-mute') : null;
     var i = 0;
-    var interacted = false;
+    var soundOn = false;
+
+    function fgOf(s) { return s.querySelector('.vwork-fg') || s.querySelector('video'); }
 
     function layout() {
       if (cover && viewport) {
@@ -246,40 +249,54 @@
       }
     }
 
+    function updateMuteUI() {
+      if (!muteBtn) return;
+      muteBtn.classList.toggle('is-on', soundOn);
+      muteBtn.setAttribute('aria-pressed', soundOn ? 'true' : 'false');
+      muteBtn.setAttribute('aria-label', soundOn ? 'Mute video' : 'Unmute video');
+      var lbl = muteBtn.querySelector('.car-mute-lbl');
+      if (lbl) lbl.textContent = soundOn ? 'Sound on' : 'Sound off';
+    }
+
     function show(n) {
       i = (n + slides.length) % slides.length;
       layout();
       slides.forEach(function (s, idx) {
-        var v = s.querySelector('video');
         if (cover) {
           var active = idx === i;
           var neighbor = Math.abs(idx - i) === 1;
           s.classList.toggle('is-active', active);
-          if (v) {
+          s.querySelectorAll('video').forEach(function (v) {
             if (active || neighbor) { v.play().catch(function () {}); }
             else { v.pause(); }
-            v.muted = !(active && interacted);
+            v.muted = true;
+          });
+          if (active && soundOn) {
+            var fg = fgOf(s);
+            if (fg) { fg.muted = false; fg.play().catch(function () {}); }
           }
-        } else if (v) {
-          if (idx === i) { v.play().catch(function () {}); }
-          else { v.pause(); try { v.currentTime = 0; } catch (e) {} }
+        } else {
+          var v = s.querySelector('video');
+          if (v) {
+            if (idx === i) { v.play().catch(function () {}); }
+            else { v.pause(); try { v.currentTime = 0; } catch (e) {} }
+          }
         }
       });
       if (curEl) curEl.textContent = i + 1;
     }
 
-    if (prev) prev.addEventListener('click', function () { interacted = true; show(i - 1); });
-    if (next) next.addEventListener('click', function () { interacted = true; show(i + 1); });
+    if (prev) prev.addEventListener('click', function () { show(i - 1); });
+    if (next) next.addEventListener('click', function () { show(i + 1); });
 
     if (cover) {
+      if (muteBtn) {
+        muteBtn.addEventListener('click', function () { soundOn = !soundOn; updateMuteUI(); show(i); });
+        updateMuteUI();
+      }
       slides.forEach(function (s, idx) {
-        var v = s.querySelector('video');
-        if (!v) return;
-        v.addEventListener('click', function () {
-          interacted = true;
-          if (idx !== i) { show(idx); }
-          else { v.muted = false; v.play().catch(function () {}); }
-        });
+        var fg = fgOf(s);
+        if (fg) fg.addEventListener('click', function () { if (idx !== i) show(idx); });
       });
       window.addEventListener('resize', layout, { passive: true });
     }

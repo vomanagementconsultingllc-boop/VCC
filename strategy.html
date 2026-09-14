@@ -148,19 +148,26 @@
         <button class="car-arrow car-prev" type="button" aria-label="Previous video">&#8249;</button>
         <div class="car-viewport">
           <div class="car-track">
-            <div class="car-slide"><div class="vwork"><video src="fswork-1.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <div class="car-slide"><div class="vwork"><video src="fswork-2.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <div class="car-slide"><div class="vwork"><video src="fswork-3.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <div class="car-slide"><div class="vwork"><video src="fswork-4.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <div class="car-slide"><div class="vwork"><video src="fswork-5.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <div class="car-slide"><div class="vwork"><video src="fswork-6.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <div class="car-slide"><div class="vwork"><video src="fswork-7.mp4" muted loop playsinline preload="metadata"></video></div></div>
-            <!-- To add another: copy a .car-slide line, point src to your file, and bump the total below. -->
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-1.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-1.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-2.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-2.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-3.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-3.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-4.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-4.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-5.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-5.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-6.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-6.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-7.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-7.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <!-- To add another: copy a .car-slide line, point both src to your file, and bump the total below. -->
           </div>
         </div>
         <button class="car-arrow car-next" type="button" aria-label="Next video">&#8250;</button>
       </div>
-      <p class="car-count"><span class="car-count-cur">1</span> / <span class="car-count-total">7</span></p>
+      <div class="car-tools">
+        <button class="car-mute" type="button" aria-pressed="false" aria-label="Unmute video">
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+          <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+          <span class="car-mute-lbl">Sound off</span>
+        </button>
+        <p class="car-count"><span class="car-count-cur">1</span> / <span class="car-count-total">7</span></p>
+      </div>
     </div>
   </section>
 
