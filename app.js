@@ -364,7 +364,7 @@
       fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: nl.toString() }).catch(function () {});
 
       /* Mirror to GoHighLevel */
-      fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/ef0ed3c3-e715-475d-ba1c-649a177f6037', {
+      fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/89f108a9-4721-45e5-8fc9-923d8546434e', {
         method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, keepalive: true,
         body: JSON.stringify({
           name: data.name, email: data.email, phone: data.phone,
@@ -464,7 +464,7 @@
        Content-Type text/plain keeps this a "simple" request so the browser
        doesn't fire a CORS preflight the webhook can't answer. GHL still
        parses the JSON body. keepalive lets it finish even as the UI updates. */
-    fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/ef0ed3c3-e715-475d-ba1c-649a177f6037', {
+    fetch('https://services.leadconnectorhq.com/hooks/83NztwuzwKcB7h8fQQkh/webhook-trigger/89f108a9-4721-45e5-8fc9-923d8546434e', {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       keepalive: true,
