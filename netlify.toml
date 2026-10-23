@@ -7,6 +7,52 @@
   status = 301
   force = true
 
+# Retired pages (site refocused on film for businesses)
+[[redirects]]
+  from = "/influencer.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/vacations.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/lifestyle.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/events.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/ecommerce.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/social.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/strategy.html"
+  to = "/services.html"
+  status = 301
+
+[[redirects]]
+  from = "/initiative.html"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/careers.html"
+  to = "/"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

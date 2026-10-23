@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Services | Vo Creative Co.</title>
-<meta name="description" content="Influencer content, vacations, social media management, events, business strategy execution, and e-commerce. Vo Creative Co.">
+<meta name="description" content="Commercials and ads, marketing campaigns, brand launches, and film series for businesses. Planned, shot, and finished by one team.">
 <link rel="stylesheet" href="tokens.css?v=2">
-<link rel="stylesheet" href="styles.css?v=2">
-<link rel="stylesheet" href="services.css?v=2">
+<link rel="stylesheet" href="styles.css?v=3">
+<link rel="stylesheet" href="services.css?v=3">
+<link rel="stylesheet" href="reviews.css?v=2">
 </head>
 <body>
 
@@ -16,18 +17,8 @@
   <div class="nav-inner">
     <a class="brand" href="index.html">Vo Creative Co.</a>
     <nav class="nav-links" aria-label="Primary">
-      <a class="link" href="index.html#founder">About</a>
-      <div class="nav-dd">
-        <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Services <span class="caret" aria-hidden="true">&#9660;</span></button>
-        <ul class="nav-dd-menu" role="menu">
-          <li role="none"><a href="influencer.html" role="menuitem">Influencer Content</a></li>
-          <li role="none"><a href="vacations.html" role="menuitem">Vacations</a></li>
-          <li role="none"><a href="events.html" role="menuitem">Events</a></li>
-          <li role="none"><a href="ecommerce.html" role="menuitem">E-commerce</a></li>
-          <li role="none"><a href="social.html" role="menuitem">Social Media Management</a></li>
-          <li role="none"><a href="strategy.html" role="menuitem">Full Service Marketing</a></li>
-        </ul>
-      </div>
+      <a class="link" href="index.html#about">About</a>
+      <a class="link" href="services.html">Services</a>
       <div class="nav-dd">
         <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">Our Work <span class="caret" aria-hidden="true">&#9660;</span></button>
         <ul class="nav-dd-menu" role="menu">
@@ -35,9 +26,7 @@
           <li role="none"><a href="reviews.html" role="menuitem">What People Are Saying</a></li>
         </ul>
       </div>
-      <a class="link" href="careers.html">Careers</a>
-      <a class="link" href="initiative.html">Our Initiative</a>
-      <a class="btn btn-primary" href="index.html#book">Talk to our team</a>
+      <a class="btn btn-primary" href="index.html#book">Start a project</a>
     </nav>
     <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -45,69 +34,143 @@
 
 <main>
 
-  <!-- PAGE HEADER -->
+  <!-- HEADER -->
   <section class="pg-header band-dark on-dark">
+    <video class="pg-bg" autoplay muted loop playsinline preload="auto" aria-hidden="true"><source src="strategy-bg.mp4" type="video/mp4"></video>
+    <div class="pg-bg-scrim"></div>
     <div class="wrap">
-      <div class="runhead"><span class="idx">&#9670;</span><span>What we do</span></div>
-      <h1 class="pg-title">What we do.</h1>
-      <p class="pg-lead">End-to-end content and systems for businesses that want to scale. Pick what you need or let us build the whole engine.</p>
+      <div class="runhead"><span class="idx">&#9670;</span><span>What we make</span></div>
+      <h1 class="pg-title">Films for<br>businesses.</h1>
+      <p class="pg-lead">Four kinds of film, one team. Every project is planned, shot, and finished by us.</p>
     </div>
   </section>
 
-  <!-- SERVICE CARDS -->
-  <section class="section">
+  <!-- 01 COMMERCIALS & ADS -->
+  <section class="mshow-over on-dark" id="commercials">
+    <video src="strategy-2.mp4" autoplay muted loop playsinline preload="metadata"></video>
+    <div class="mshow-scrim"></div>
     <div class="wrap">
-      <div class="svc-cards">
-        <a class="svc-card reveal" href="influencer.html">
-          <span class="n">01</span>
-          <h3>Influencer Content</h3>
-          <p>We embed a camera team with you and turn everything into short-form. You just create.</p>
-          <span class="go">Explore <span class="arr">&rarr;</span></span>
-        </a>
-        <a class="svc-card reveal" href="vacations.html">
-          <span class="n">02</span>
-          <h3>Vacations</h3>
-          <p>We travel with you and turn your trip into a cinematic video you will never forget.</p>
-          <span class="go">Explore <span class="arr">&rarr;</span></span>
-        </a>
-        <a class="svc-card reveal" href="events.html">
-          <span class="n">03</span>
-          <h3>Events</h3>
-          <p>A videographer or photographer for your event, captured clean. (No weddings.)</p>
-          <span class="go">Explore <span class="arr">&rarr;</span></span>
-        </a>
-        <a class="svc-card reveal" href="ecommerce.html">
-          <span class="n">04</span>
-          <h3>E-commerce</h3>
-          <p>Monthly studio sessions for new products, plus behind-the-scenes clips built for social.</p>
-          <span class="go">Explore <span class="arr">&rarr;</span></span>
-        </a>
-        <a class="svc-card reveal" href="social.html">
-          <span class="n">05</span>
-          <h3>Social Media Management</h3>
-          <p>The full back end, DMs, scheduling, stories, monthly content ideas, and scripting.</p>
-          <span class="go">Explore <span class="arr">&rarr;</span></span>
-        </a>
-        <a class="svc-card reveal" href="strategy.html">
-          <span class="n">06</span>
-          <h3>Full Service Marketing</h3>
-          <p>Full service marketing, website, content, ads, SEO, automations, to make you the premium option.</p>
-          <span class="go">Explore <span class="arr">&rarr;</span></span>
-        </a>
+      <p class="eyebrow">01 &middot; Commercials &amp; Ads</p>
+      <h2>Ads people actually watch.</h2>
+      <p>Short, sharp commercials built around one idea about your business. Cut for TV, web, and social, so the same shoot works everywhere you run it.</p>
+      <a class="btn btn-primary" href="index.html?service=Commercials%20%26%20Ads#book">Start a commercial <span class="arr">&rarr;</span></a>
+    </div>
+  </section>
+
+  <!-- 02 MARKETING CAMPAIGNS -->
+  <section class="mshow-side section" id="campaigns">
+    <div class="wrap">
+      <div class="mshow-body reveal">
+        <p class="eyebrow">02 &middot; Marketing Campaigns</p>
+        <h2>One story, told across a whole campaign.</h2>
+        <p>A campaign is more than one video. We plan a set of films that share a look and a message, then cut them for every place your customers will see them.</p>
+        <a class="btn btn-primary" href="index.html?service=Marketing%20Campaign#book">Plan a campaign <span class="arr">&rarr;</span></a>
+      </div>
+      <div class="mshow-media reveal"><video src="ecom-1.mp4" autoplay muted loop playsinline preload="metadata"></video></div>
+    </div>
+  </section>
+
+  <!-- 03 BRAND LAUNCHES -->
+  <section class="mshow-side section band-soft" id="launches">
+    <div class="wrap">
+      <div class="mshow-media portrait reveal"><img src="event-2.jpg" alt="Brand launch filmed by Vo Creative Co."></div>
+      <div class="mshow-body reveal">
+        <p class="eyebrow">03 &middot; Brand Launches</p>
+        <h2>Launch with a film, not a flyer.</h2>
+        <p>New business, new product, or a new location. We make the launch film that introduces you, and we can capture the launch day itself.</p>
+        <a class="btn btn-primary" href="index.html?service=Brand%20Launch#book">Plan a launch <span class="arr">&rarr;</span></a>
       </div>
     </div>
   </section>
 
-  <!-- CTA BAND -->
+  <!-- 04 FILM SERIES -->
+  <section class="mshow-over on-dark" id="series">
+    <video src="influencer-1.mp4" autoplay muted loop playsinline preload="metadata"></video>
+    <div class="mshow-scrim"></div>
+    <div class="wrap">
+      <p class="eyebrow">04 &middot; Film Series</p>
+      <h2>A series that keeps people coming back.</h2>
+      <p>A run of episodes built around your business, your people, or your customers. Each one stands on its own, and together they build a brand people follow.</p>
+      <a class="btn btn-primary" href="index.html?service=Film%20Series#book">Plan a series <span class="arr">&rarr;</span></a>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="work-head reveal">
+        <div class="runhead"><span class="idx">&#9670;</span><span>How every film gets made</span></div>
+        <h2 class="sec-title" style="margin-top:14px;">Four steps, start to finish.</h2>
+      </div>
+      <div class="svc-cards steps">
+        <div class="svc-card reveal">
+          <span class="n">01</span>
+          <h3>Concept</h3>
+          <p>We learn your business and land on the one idea the film needs to get across.</p>
+        </div>
+        <div class="svc-card reveal">
+          <span class="n">02</span>
+          <h3>Plan</h3>
+          <p>A written plan for every shoot: the story, the shots, the schedule. You approve it first.</p>
+        </div>
+        <div class="svc-card reveal">
+          <span class="n">03</span>
+          <h3>Production</h3>
+          <p>Our crew shoots it with professional cameras, lighting, and direction.</p>
+        </div>
+        <div class="svc-card reveal">
+          <span class="n">04</span>
+          <h3>Post</h3>
+          <p>Edit, color, and sound, then delivery in every format you need.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECENT WORK -->
+  <section class="section band-soft" id="work">
+    <div class="wrap">
+      <div class="work-head reveal">
+        <div class="runhead"><span class="idx">&#9670;</span><span>Recent work</span></div>
+        <h2 class="sec-title" style="margin-top:14px;">Some of what we&rsquo;ve made.</h2>
+      </div>
+      <div class="carousel coverflow reveal" data-carousel="fswork">
+        <button class="car-arrow car-prev" type="button" aria-label="Previous video">&#8249;</button>
+        <div class="car-viewport">
+          <div class="car-track">
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-1.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-1.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-2.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-2.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-3.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-3.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-4.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-4.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-5.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-5.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-6.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-6.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <div class="car-slide"><div class="vwork"><video class="vwork-bg" src="fswork-7.mp4" muted loop playsinline preload="metadata" aria-hidden="true"></video><video class="vwork-fg" src="fswork-7.mp4" muted loop playsinline preload="metadata"></video></div></div>
+            <!-- To add another: copy a .car-slide line, point both src to your file, and bump the total below. -->
+          </div>
+        </div>
+        <button class="car-arrow car-next" type="button" aria-label="Next video">&#8250;</button>
+      </div>
+      <div class="car-tools">
+        <button class="car-mute" type="button" aria-pressed="false" aria-label="Unmute video">
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+          <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg>
+          <span class="car-mute-lbl">Sound off</span>
+        </button>
+        <p class="car-count"><span class="car-count-cur">1</span> / <span class="car-count-total">7</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
   <section class="band-dark on-dark section">
     <div class="wrap cs-cta">
       <div>
-        <div class="runhead"><span class="idx">&#9670;</span><span>Let&rsquo;s build it</span></div>
-        <p class="statement" style="margin-top: 18px; max-width: 22em;">Not sure which service fits? Let&rsquo;s figure it out together.</p>
+        <div class="runhead"><span class="idx">&#9670;</span><span>Start a project</span></div>
+        <p class="statement" style="margin-top: 18px; max-width: 20em;">Have something to launch, sell, or say?</p>
       </div>
       <div class="cs-cta-side">
-        <p class="statement-sig">We start with a 30-minute call to understand your business, your goals, and where the real leverage is. No pitch, no pressure, just a straight answer on what makes sense.</p>
-        <a class="btn btn-primary" href="index.html#book">Talk to our team <span class="arr">&rarr;</span></a>
+        <p class="statement-sig">Tell us about it. We&rsquo;ll set up a 30 minute call and come back with an idea for the film.</p>
+        <a class="btn btn-primary" href="index.html#book">Start a project <span class="arr">&rarr;</span></a>
       </div>
     </div>
   </section>
@@ -120,18 +183,16 @@
     <div class="f-top">
       <div>
         <p class="brand-lg">Vo Creative Co.</p>
-        <p class="f-tag">The content studio and the operating system behind businesses that want to scale.</p>
+        <p class="f-tag">A film studio for businesses. Commercials, campaigns, brand launches, and film series.</p>
       </div>
       <div class="f-links">
         <div class="f-col">
           <h5>Explore</h5>
-          <a href="index.html#founder">About</a>
+          <a href="index.html#about">About</a>
           <a href="services.html">Services</a>
           <a href="work.html">Our Work</a>
           <a href="reviews.html">What People Are Saying</a>
-          <a href="careers.html">Careers</a>
-          <a href="initiative.html">Our Initiative</a>
-          <a href="index.html#book">Talk to our team</a>
+          <a href="index.html#book">Start a project</a>
         </div>
         <div class="f-col">
           <h5>The studio</h5>
@@ -143,11 +204,11 @@
     </div>
     <div class="f-bottom">
       <p>&copy; 2026 Vo Creative Co. All rights reserved.</p>
-      <p class="f-cap">Two new clients a month &middot; intake capped</p>
+      <p class="f-cap">Commercials &middot; Campaigns &middot; Launches &middot; Film series</p>
     </div>
   </div>
 </footer>
 
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

@@ -305,49 +305,7 @@
     show(0);
   });
 
-  /* ---- Initiative (non-profit) application form ---- */
-  var initForm = document.getElementById('initiative-form');
-  if (initForm) {
-    var initSuccess = document.getElementById('initiative-success');
-    function initEmailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-    function initSetErr(field, msg) {
-      var input = initForm.querySelector('[name="' + field + '"]');
-      if (!input) return;
-      input.classList.add('err');
-      var hint = input.parentElement.querySelector('.hint');
-      if (hint) { hint.textContent = msg; hint.classList.add('err'); }
-    }
-    initForm.querySelectorAll('.inp, .ta').forEach(function (input) {
-      input.addEventListener('input', function () {
-        input.classList.remove('err');
-        var hint = input.parentElement.querySelector('.hint');
-        if (hint) { hint.textContent = ''; hint.classList.remove('err'); }
-      });
-    });
-    initForm.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var data = {};
-      initForm.querySelectorAll('.inp, .ta').forEach(function (i) { data[i.name] = (i.value || '').trim(); });
-      var ok = true;
-      if (!data.org) { initSetErr('org', 'What&rsquo;s your organization called?'); ok = false; }
-      if (!data.name) { initSetErr('name', 'Please tell us your name.'); ok = false; }
-      if (!data.email) { initSetErr('email', 'We need an email to reach you.'); ok = false; }
-      else if (!initEmailOk(data.email)) { initSetErr('email', 'That email doesn’t look right.'); ok = false; }
-      if (!data.cause) { initSetErr('cause', 'Tell us a little about your cause.'); ok = false; }
-      if (!ok) { var fe = initForm.querySelector('.err'); if (fe && fe.focus) fe.focus(); return; }
-
-      /* Netlify Forms capture (same-origin) */
-      var nl = new URLSearchParams();
-      nl.append('form-name', 'initiative');
-      Object.keys(data).forEach(function (k) { nl.append(k, data[k] || ''); });
-      fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: nl.toString() }).catch(function () {});
-
-      initForm.style.display = 'none';
-      if (initSuccess) { initSuccess.classList.add('show'); initSuccess.setAttribute('tabindex', '-1'); initSuccess.focus({ preventScroll: true }); }
-    });
-  }
-
-  /* ---- Booking form: step-by-step wizard with service branching ---- */
+  /* ---- Booking form: one question per step ---- */
   var form = document.getElementById('book-form');
   if (!form) return;
   var success = document.getElementById('book-success');
@@ -360,14 +318,12 @@
   var totalEl = document.getElementById('wiz-total');
   var serviceInput = form.querySelector('[name="service"]');
 
-  var BIZ = ['E-commerce', 'Social Media Management', 'Full Service Marketing'];
   function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
   function stepApplies(step) {
     var w = step.getAttribute('data-when');
     if (w === 'all') return true;
     var service = serviceInput ? serviceInput.value : '';
-    if (w === 'biz') return BIZ.indexOf(service) !== -1;
     return w.split(',').map(function (s) { return s.trim(); }).indexOf(service) !== -1;
   }
   function activeSteps() { return steps.filter(stepApplies); }
@@ -490,45 +446,4 @@
   });
 
   render();
-})();
-
-/* "We fly with you" flyby: the plane sweeps diagonally across its own
-   section (bottom-left to top-right) as that section passes through the
-   viewport. No-op on other pages and under prefers-reduced-motion. */
-(function () {
-  var plane = document.querySelector('.flyby-plane');
-  if (!plane) return;
-  var section = plane.closest('.flyby');
-  if (!section) return;
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var ticking = false;
-
-  function draw() {
-    ticking = false;
-    var vh = window.innerHeight;
-    var rect = section.getBoundingClientRect();
-    var W = section.offsetWidth;
-    var H = section.offsetHeight;
-    var pw = plane.offsetWidth;
-    var ph = plane.offsetHeight;
-    // 0 as the section enters from the bottom, 1 as it leaves past the top.
-    var p = (vh - rect.top) / (vh + H);
-    p = Math.min(1, Math.max(0, p));
-
-    // Full-screen plane flying straight across, left to right, no vertical
-    // movement (vertically centered in the section).
-    var x = -pw + p * (W + 2 * pw);
-    var y = (H - ph) / 2;
-
-    plane.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)';
-  }
-
-  function onScroll() {
-    if (!ticking) { ticking = true; requestAnimationFrame(draw); }
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  window.addEventListener('resize', onScroll, { passive: true });
-  draw();
 })();

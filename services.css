@@ -138,6 +138,8 @@
               box-shadow var(--dur-med) var(--ease-out),
               transform var(--dur-med) var(--ease-out);
 }
+.svc-cards.steps { grid-template-columns: repeat(4, 1fr); }
+.svc-cards.steps .svc-card:hover { border-color: var(--line); box-shadow: none; transform: none; }
 .svc-card:hover {
   border-color: var(--primary);
   box-shadow: var(--shadow-lg);
@@ -292,6 +294,7 @@
 .mshow-over p { font-size: var(--fs-body-lg); line-height: 1.6; color: rgba(255,255,255,0.9); margin: 18px 0 0; max-width: 34em; }
 .mshow-over.center { text-align: center; }
 .mshow-over.center h2, .mshow-over.center p { margin-left: auto; margin-right: auto; }
+.mshow-over .btn { margin-top: 26px; }
 .mshow-over.center .btn { margin-top: 28px; }
 
 /* "We fly with you" flyby section */
@@ -489,7 +492,7 @@
   .cs-cta { grid-template-columns: 1fr; }
   .svc-detail { grid-template-columns: 1fr; gap: 36px; }
   .svc-detail .svc-includes { position: static; }
-  .svc-cards { grid-template-columns: repeat(2, 1fr); }
+  .svc-cards, .svc-cards.steps { grid-template-columns: repeat(2, 1fr); }
   .svc-other-grid { grid-template-columns: repeat(2, 1fr); }
   .work-stories { grid-template-columns: repeat(3, 1fr); }
   .work-products { grid-template-columns: repeat(3, 1fr); }
@@ -500,7 +503,7 @@
     padding-block: clamp(104px, 22vh, 180px) clamp(56px, 12vh, 110px);
   }
   .pg-lead { font-size: var(--fs-body); }
-  .svc-cards { grid-template-columns: 1fr; }
+  .svc-cards, .svc-cards.steps { grid-template-columns: 1fr; }
   .svc-other-grid { grid-template-columns: 1fr; }
   .work-reel { grid-template-columns: repeat(2, 1fr); }
   .work-reel .wtile:nth-child(even) { transform: none; }
