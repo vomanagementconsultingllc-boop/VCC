@@ -243,9 +243,11 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   left: 0;
   top: 0;
   width: 100%;
-  height: max(100vw, 135vh);
+  height: 118vh;
+  height: 118lvh;
   object-fit: cover;
-  object-position: 17% 0;
+  object-position: 20% 0;
+  transform-origin: 50% 0;
   will-change: transform, opacity;
 }
 .stage-lines { opacity: 0; mix-blend-mode: screen; }
@@ -861,6 +863,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   .mark-sub { font-size: 9.5px; }
   .nav { padding-block: 14px; }
 
+  .stage-img { object-position: 29% 0; }
   .stage-scrim {
     background:
       linear-gradient(180deg, rgba(10,13,18,.6) 0%, rgba(10,13,18,.5) 28%, rgba(10,13,18,.78) 58%, rgba(10,13,18,.94) 100%);

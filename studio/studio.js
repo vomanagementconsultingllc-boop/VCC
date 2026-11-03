@@ -49,8 +49,10 @@
     nav.classList.toggle('is-solid', y > 24);
     nav.classList.toggle('on-sheet', p > .9 || y + nav.offsetHeight >= m.sheetTop);
     // 0 → .78: ride down the tower. .66 → .86: lines draw in. .80 → .97: flood blue.
-    var pan = reduceMotion ? 0 : -(m.imgH - m.stageH) * ease(seg(p, 0, .78));
-    var t = 'translate3d(0,' + pan.toFixed(1) + 'px,0)';
+    // drift down the tower while the camera slowly pulls back
+    var k = reduceMotion ? 1 : ease(seg(p, 0, .78));
+    var pan = -(m.imgH - m.stageH) * k;
+    var t = 'translate3d(0,' + pan.toFixed(1) + 'px,0) scale(' + (1.06 - .06 * k).toFixed(4) + ')';
     photo.style.transform = t;
     lines.style.transform = t;
 

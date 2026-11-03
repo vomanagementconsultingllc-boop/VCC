@@ -16,8 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<link rel="preload" as="image" href="img/detroit-night-2000.jpg" imagesrcset="img/detroit-night-1200.jpg 1200w, img/detroit-night-2000.jpg 2000w" imagesizes="(orientation: portrait) 135vh, 100vw">
-<link rel="stylesheet" href="studio.css?v=2">
+<link rel="preload" as="image" href="img/detroit-night-2400.jpg" imagesrcset="img/detroit-night-1400.jpg 1400w, img/detroit-night-2400.jpg 2400w" imagesizes="233vh">
+<link rel="stylesheet" href="studio.css?v=3">
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
@@ -36,16 +36,16 @@
 
   <div class="city" id="city">
 
-    <!-- One continuous background for screens 1 and 2: the photo pans down the tower,
+    <!-- One continuous background for screens 1 and 2: the photo drifts down the tower,
          then turns into a line drawing and floods blueprint blue. -->
     <div class="stage" id="stage" aria-hidden="true">
-      <img class="stage-img stage-photo" src="img/detroit-night-1200.jpg"
-           srcset="img/detroit-night-1200.jpg 1200w, img/detroit-night-2000.jpg 2000w"
-           sizes="(orientation: portrait) 135vh, 100vw" alt="" fetchpriority="high" decoding="async">
+      <img class="stage-img stage-photo" src="img/detroit-night-1400.jpg"
+           srcset="img/detroit-night-1400.jpg 1400w, img/detroit-night-2400.jpg 2400w"
+           sizes="233vh" alt="" fetchpriority="high" decoding="async">
       <div class="stage-blue"></div>
       <img class="stage-img stage-lines" alt="" decoding="async"
            data-srcset="img/detroit-lines-1000.jpg 1000w, img/detroit-lines-1600.jpg 1600w"
-           sizes="(orientation: portrait) 135vh, 100vw">
+           sizes="233vh">
       <div class="stage-scrim"></div>
     </div>
 
@@ -232,6 +232,6 @@
 
 </main>
 
-<script src="studio.js?v=2" defer></script>
+<script src="studio.js?v=3" defer></script>
 </body>
 </html>
