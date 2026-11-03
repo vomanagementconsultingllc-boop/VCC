@@ -3,7 +3,7 @@
   'use strict';
 
   /* Paste the Discord invite link here to show a "join now" button after signup. */
-  var DISCORD_INVITE_URL = '';
+  var DISCORD_INVITE_URL = 'https://discord.gg/jSfpvGcPmA';
 
   var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
