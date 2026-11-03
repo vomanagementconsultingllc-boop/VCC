@@ -1,0 +1,13 @@
+# Config for the standalone waitlist site at studio.vocreativeco.com.
+# That Netlify site uses "studio" as its base directory, so this folder
+# is the whole site and this file is its config. The main Vo Creative Co.
+# site keeps using the netlify.toml at the repo root.
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
