@@ -388,8 +388,8 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .offer-copy, .hero-inner { text-shadow: 0 1px 14px rgba(10, 13, 18, .55); }
 .offer-copy .btn, .hero-inner .btn { text-shadow: none; }
 
-/* form card */
-.form-card {
+/* form card + invite card */
+.form-card, .invite-card {
   position: relative;
   padding: clamp(28px, 3.4vw, 48px);
   background: rgba(10, 13, 18, .74);
@@ -398,7 +398,8 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   backdrop-filter: blur(18px) saturate(1.1);
 }
 /* registration marks on the corners */
-.form-card::after {
+.marks { position: relative; }
+.marks::after {
   content: "";
   position: absolute;
   inset: -8px;
@@ -420,6 +421,10 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   font-size: clamp(28px, 2.6vw, 38px);
   line-height: 1.05;
 }
+.fc-sub { margin: -18px 0 28px; font-size: 15px; color: var(--stone-2); }
+.invite-card { align-self: center; }
+.invite-copy { margin: -14px 0 28px; color: var(--stone-2); }
+.invite-card .fine { margin-top: 14px; }
 .field { margin-bottom: 24px; }
 .field label {
   display: block;
@@ -504,6 +509,67 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
 .success > p:not(.eyebrow) { color: var(--stone-2); margin-bottom: 26px; }
 .success strong { color: var(--stone); font-weight: 500; }
 .success .fc-title { margin-bottom: 18px; }
+
+/* ---------- waitlist pop-up ---------- */
+
+html.is-locked { overflow: hidden; }
+
+.join-modal {
+  width: min(540px, calc(100vw - 32px));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--stone);
+  overflow: visible;
+}
+.join-modal::backdrop {
+  background: rgba(6, 8, 11, .76);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.join-modal[open] .modal-frame { animation: modal-in .5s var(--ease); }
+.join-modal[open]::backdrop { animation: fade .35s ease; }
+.join-modal.is-closing .modal-frame { animation: modal-out .22s ease forwards; }
+.join-modal.is-closing::backdrop { animation: fade-out .22s ease forwards; }
+@keyframes modal-in { from { opacity: 0; transform: translateY(18px) scale(.985); } }
+@keyframes modal-out { to { opacity: 0; transform: translateY(10px) scale(.99); } }
+@keyframes fade-out { to { opacity: 0; } }
+
+.modal-card {
+  max-height: calc(100vh - 48px);
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: rgba(12, 15, 20, .97);
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--hair-2);
+  border-radius: 0;
+  color: var(--stone-2);
+  cursor: pointer;
+  transition: border-color .25s, color .25s;
+}
+.modal-close:hover { border-color: var(--lamp); color: var(--lamp); }
+.modal-close svg { width: 14px; height: 14px; }
+.modal-card .eyebrow { padding-right: 56px; }
+
+@media (max-width: 700px) {
+  .join-modal { width: calc(100vw - 20px); }
+  .modal-card { max-height: calc(100dvh - 20px); padding: 26px 22px 24px; }
+  .modal-close { top: 12px; right: 12px; }
+}
 
 /* ---------- the beat between photo and drawing ---------- */
 
@@ -874,7 +940,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   .pillars i { width: 12px; }
 
   .perks li { grid-template-columns: 40px 1fr; }
-  .form-card::after { inset: -6px; }
+  .marks::after { inset: -6px; }
 
   .plan-svg .t-name, .plan-svg .t-area { display: none; }
   .plan-svg .tag { transform-box: fill-box; transform-origin: center; transform: scale(2.1); }

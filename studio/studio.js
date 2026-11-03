@@ -251,6 +251,7 @@
     body.append('marketing_opt_in', fOptin.checked ? 'yes' : 'no');
     body.append('consent_language', fOptin.checked ? optinLabel.textContent.trim() : '');
     body.append('source', (window.location.search.slice(1) || document.referrer || 'direct').slice(0, 300));
+    body.append('cta', openedFrom);
     body.append('bot-field', hp ? hp.value : '');
 
     submitBtn.disabled = true;
@@ -281,4 +282,59 @@
     success.focus({ preventScroll: true });
     measure();
   }
+
+  /* ---------- waitlist pop-up ---------- */
+  var modal = document.getElementById('join-modal');
+  var root = document.documentElement;
+  var finePointer = window.matchMedia('(pointer: fine)').matches;
+  var lastTrigger = null;
+  var openedFrom = 'direct';
+
+  function openJoin(trigger) {
+    if (modal.open) return;
+    lastTrigger = trigger || null;
+    openedFrom = (trigger && trigger.getAttribute('data-join')) || 'link';
+    root.classList.add('is-locked');
+    if (typeof modal.showModal === 'function') modal.showModal();
+    else modal.setAttribute('open', '');
+    if (!success.hidden) success.focus({ preventScroll: true });
+    else if (finePointer) fName.focus({ preventScroll: true });
+  }
+  function closeJoin(then) {
+    if (!modal.open || modal.classList.contains('is-closing')) return;
+    modal.classList.add('is-closing');
+    window.setTimeout(function () {
+      modal.classList.remove('is-closing');
+      if (typeof modal.close === 'function') modal.close();
+      else modal.removeAttribute('open');
+      root.classList.remove('is-locked');
+      if (then) then();
+      else if (lastTrigger && lastTrigger.focus) lastTrigger.focus({ preventScroll: true });
+    }, reduceMotion ? 0 : 220);
+  }
+
+  document.querySelectorAll('[data-join]').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); openJoin(a); });
+  });
+  modal.querySelectorAll('[data-close]').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var href = el.getAttribute('href');
+      e.preventDefault();
+      if (href && href.charAt(0) === '#' && href.length > 1) {
+        closeJoin(function () {
+          var target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+        });
+      } else {
+        closeJoin();
+      }
+    });
+  });
+  // Esc key and clicks on the dimmed backdrop close it
+  modal.addEventListener('cancel', function (e) { e.preventDefault(); closeJoin(); });
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeJoin(); });
+  modal.addEventListener('close', function () { root.classList.remove('is-locked'); });
+
+  // Share /studio/#join (or ?join) to open the pop-up straight away
+  if (window.location.hash === '#join' || /(^|[?&])join(=|&|$)/.test(window.location.search)) openJoin(null);
 })();
