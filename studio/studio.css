@@ -115,6 +115,7 @@ h1, h2, h3 { margin: 0; font-weight: 400; }
   line-height: .95;
   letter-spacing: -.025em;
   max-width: 10.5em;
+  text-wrap: balance;
 }
 .display em,
 .display-2 em {
