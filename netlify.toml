@@ -7,6 +7,20 @@
   status = 301
   force = true
 
+# studio.vocreativeco.com is a short link to the waitlist (keeps any #join).
+# Needs studio.vocreativeco.com added as a domain alias on this site.
+[[redirects]]
+  from = "https://studio.vocreativeco.com/*"
+  to = "https://vocreativeco.com/studio/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://studio.vocreativeco.com/*"
+  to = "https://vocreativeco.com/studio/:splat"
+  status = 301
+  force = true
+
 # Retired pages (site refocused on film for businesses)
 [[redirects]]
   from = "/influencer.html"
