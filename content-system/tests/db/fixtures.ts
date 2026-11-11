@@ -119,13 +119,58 @@ export async function seed(db: Db) {
     await db.query("update public.scripts set stage = 'sent_to_client' where id = $1", [sentId]);
   }
 
-  return { ...ids, ...scripts, tag };
+  // --- Step 3: a script that is waiting for footage, with one clip already in.
+  const shoot = {
+    shootA: randomUUID(),
+    shootB: randomUUID(),
+    shotA1: randomUUID(),
+    shotA2: randomUUID(),
+    shotB1: randomUUID(),
+    shotB2: randomUUID(),
+    uploadA: randomUUID(),
+    uploadB: randomUUID(),
+  };
+  for (const [clientId, label, scriptId, shot1, shot2, uploadId] of [
+    [ids.clientA, "A", shoot.shootA, shoot.shotA1, shoot.shotA2, shoot.uploadA],
+    [ids.clientB, "B", shoot.shootB, shoot.shotB1, shoot.shotB2, shoot.uploadB],
+  ] as const) {
+    await db.query(
+      "insert into public.scripts (id, client_id, title, body, stage, created_by) values ($1, $2, $3, 'shoot body', 'scripted', null)",
+      [scriptId, clientId, `Shoot ${label}`],
+    );
+    await db.query(
+      `insert into public.shots (id, script_id, client_id, shot_number, instruction, min_duration_seconds) values
+         ($1, $3, $4, 1, 'Talk to camera', 5), ($2, $3, $4, 2, 'Show the product', 5)`,
+      [shot1, shot2, scriptId, clientId],
+    );
+    await db.query("update public.scripts set stage = 'sent_to_client' where id = $1", [scriptId]);
+    await db.query("update public.scripts set stage = 'awaiting_footage', client_approved = true where id = $1", [
+      scriptId,
+    ]);
+    const path = footagePath(clientId, scriptId, shot1, uploadId);
+    await db.query("insert into storage.objects (bucket_id, name) values ('footage', $1)", [path]);
+    await db.query(
+      `insert into public.footage_uploads
+         (id, script_id, shot_id, client_id, storage_path, uploaded_by, duration_seconds, width, height, has_audio, check_status, checked_at)
+       values ($1, $2, $3, $4, $5, null, 12, 1080, 1920, true, 'passed', now())`,
+      [uploadId, scriptId, shot1, clientId, path],
+    );
+  }
+
+  return { ...ids, ...scripts, ...shoot, tag };
+}
+
+export function footagePath(clientId: string, scriptId: string, shotId: string, uploadId: string) {
+  return `${clientId}/${scriptId}/${shotId}/${uploadId}.mp4`;
 }
 
 /** Remove everything a seed() created. Only matters on a shared database. */
 export async function cleanup(db: Db, fx: Fixture) {
   const clientIds = [fx.clientA, fx.clientB];
   const userIds = [fx.admin, fx.team, fx.editor, fx.otherEditor, fx.userA, fx.userB];
+  for (const clientId of clientIds) {
+    await db.query("delete from storage.objects where name like $1", [`${clientId}/%`]);
+  }
   await db.query("delete from public.clients where id = any($1::uuid[])", [clientIds]);
   await db.query("delete from auth.users where id = any($1::uuid[])", [userIds]);
   await db.query("delete from public.audit_log where client_id = any($1::uuid[]) or actor_id = any($2::uuid[])", [

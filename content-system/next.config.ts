@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // mediainfo.js loads a WebAssembly file from its own folder at runtime, so
+  // it has to stay a real node_modules package on the server (not bundled),
+  // and the .wasm has to be shipped with the deployment.
+  serverExternalPackages: ["mediainfo.js"],
+  outputFileTracingIncludes: {
+    "/**": ["./node_modules/mediainfo.js/dist/**/*.wasm"],
+  },
   turbopack: {
     rules: {
       "*.css": {

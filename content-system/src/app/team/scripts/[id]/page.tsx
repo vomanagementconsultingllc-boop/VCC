@@ -8,6 +8,7 @@ import { Badge, Card, CardTitle, PageHeader, Textarea } from "@/components/ui";
 import { STAGES, formatDateTime } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 import { addTeamComment, deleteScript, pullBackScript, sendToClient } from "../actions";
+import { FootageCard } from "./footage-card";
 import { ScriptEditor } from "./script-editor";
 
 export const metadata: Metadata = { title: "Script" };
@@ -21,8 +22,15 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
   const { data: script } = await supabase.from("scripts").select("*").eq("id", id).maybeSingle();
   if (!script) notFound();
 
-  const [{ data: client }, { data: internal }, { data: brief }, { data: shots }, { data: voice }, { data: comments }] =
-    await Promise.all([
+  const [
+    { data: client },
+    { data: internal },
+    { data: brief },
+    { data: shots },
+    { data: voice },
+    { data: comments },
+    { data: uploads },
+  ] = await Promise.all([
       supabase.from("clients").select("id, name, business").eq("id", script.client_id).maybeSingle(),
       supabase.from("script_internal").select("*").eq("script_id", id).maybeSingle(),
       supabase.from("shooting_briefs").select("*").eq("script_id", id).maybeSingle(),
@@ -37,7 +45,9 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
         .select("id, body, kind, created_at, author:profiles!script_comments_author_id_fkey(full_name, role)")
         .eq("script_id", id)
         .order("created_at"),
+      supabase.from("footage_uploads").select("*").eq("script_id", id).order("uploaded_at", { ascending: false }),
     ]);
+  const footageStage = ["awaiting_footage", "footage_received", "in_edit", "review"].includes(script.stage);
 
   const stage = STAGES[script.stage];
   const isDraft = script.stage === "scripted" || script.stage === "research";
@@ -60,7 +70,14 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="space-y-5 lg:col-span-2">
+          {(footageStage || (uploads?.length ?? 0) > 0) && (
+            <FootageCard
+              shots={shots ?? []}
+              uploads={uploads ?? []}
+              canUpload={script.stage === "awaiting_footage" || script.stage === "footage_received"}
+            />
+          )}
           <ScriptEditor
             key={`${script.id}-${script.updated_at}`}
             neverSay={voice?.phrases_never ?? []}

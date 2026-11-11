@@ -124,10 +124,35 @@ export async function createWorld() {
   };
 }
 
+/** A script for client A or B that is approved and waiting for footage, with two shots. */
+export async function addShoot(world: World, which: "A" | "B") {
+  const clientId = which === "A" ? world.clientA : world.clientB;
+  const { data: script, error } = await service
+    .from("scripts")
+    .insert({ client_id: clientId, title: `Shoot ${which}`, body: "words to say", created_by: null })
+    .select("id")
+    .single();
+  if (error || !script) throw new Error(`insert script: ${error?.message}`);
+  const { data: shots, error: shotError } = await service
+    .from("shots")
+    .insert([
+      { script_id: script.id, client_id: clientId, shot_number: 1, instruction: "Talk to camera", min_duration_seconds: 5 },
+      { script_id: script.id, client_id: clientId, shot_number: 2, instruction: "Show the product", min_duration_seconds: 5 },
+    ])
+    .select("id, shot_number")
+    .order("shot_number");
+  if (shotError || !shots) throw new Error(`insert shots: ${shotError?.message}`);
+  for (const stage of ["sent_to_client", "awaiting_footage"] as const) {
+    const { error: stageError } = await service.from("scripts").update({ stage }).eq("id", script.id);
+    if (stageError) throw new Error(`move script to ${stage}: ${stageError.message}`);
+  }
+  return { scriptId: script.id, shot1: shots[0].id, shot2: shots[1].id, clientId };
+}
+
 export async function destroyWorld(world: World) {
   const clientIds = [world.clientA, world.clientB];
   const userIds = [world.admin, world.team, world.editor, world.otherEditor, world.userA, world.userB];
-  for (const bucket of ["footage", "deliverables", "voice"]) {
+  for (const bucket of ["footage", "deliverables"]) {
     for (const clientId of clientIds) {
       await removeFolder(bucket, clientId);
     }

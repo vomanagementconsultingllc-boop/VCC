@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { StageChecklist } from "@/components/stage-checklist";
 import { Teleprompter } from "@/components/teleprompter";
+import { UploadSlot, type SlotUpload } from "@/components/upload-slot";
+import { describeFlag } from "@/lib/footage/checks";
 import { Badge, Card, CardTitle, Field, Textarea } from "@/components/ui";
 import { formatDate, formatDateTime } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
@@ -27,7 +29,7 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
     .maybeSingle();
   if (!script) notFound();
 
-  const [{ data: shots }, { data: brief }, { data: comments }] = await Promise.all([
+  const [{ data: shots }, { data: brief }, { data: comments }, { data: uploads }] = await Promise.all([
     supabase.from("shots").select("*").eq("script_id", id).order("shot_number"),
     supabase.from("shooting_briefs").select("reference_url, notes, due_date").eq("script_id", id).maybeSingle(),
     supabase
@@ -35,7 +37,34 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
       .select("id, body, kind, created_at, author_id")
       .eq("script_id", id)
       .order("created_at"),
+    supabase
+      .from("footage_uploads")
+      .select("shot_id, check_status, flags, duration_seconds")
+      .eq("script_id", id)
+      .eq("superseded", false),
   ]);
+
+  // The current clip for each shot, with any problems spelled out.
+  const slotFor = new Map<string, SlotUpload>();
+  for (const shot of shots ?? []) {
+    const upload = uploads?.find((u) => u.shot_id === shot.id);
+    if (!upload) continue;
+    slotFor.set(shot.id, {
+      status: upload.check_status,
+      durationSeconds: upload.duration_seconds,
+      problems: upload.flags.map((flag) =>
+        describeFlag(
+          flag,
+          { orientation: shot.orientation, minDurationSeconds: shot.min_duration_seconds },
+          { durationSeconds: upload.duration_seconds },
+        ),
+      ),
+    });
+  }
+  const footageOpen = script.stage === "awaiting_footage";
+  const showSlots = !["sent_to_client", "approved"].includes(script.stage);
+  const toReshoot = (shots ?? []).filter((shot) => slotFor.get(shot.id)?.status === "failed");
+  const missing = (shots ?? []).filter((shot) => !slotFor.has(shot.id));
 
   const spoken = [script.hook, script.body].filter((part) => part.trim()).join("\n\n");
   const waitingForApproval = script.stage === "sent_to_client";
@@ -81,6 +110,32 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
         </Card>
       )}
 
+      {footageOpen && (
+        <Card className="border-gold">
+          <CardTitle>Time to record</CardTitle>
+          {toReshoot.length > 0 ? (
+            <p className="text-sm text-danger" role="alert">
+              {toReshoot.length === 1
+                ? `Shot ${toReshoot[0].shot_number} needs to be recorded again.`
+                : `Shots ${toReshoot.map((s) => s.shot_number).join(", ")} need to be recorded again.`}{" "}
+              The reason is shown on each one below.
+            </p>
+          ) : (
+            <p className="text-sm text-ink-2">
+              {missing.length === 0
+                ? "All clips are in. We are checking them now."
+                : `Read from the teleprompter, then upload one clip per shot below. ${missing.length} of ${shots?.length ?? 0} still to go.`}
+            </p>
+          )}
+        </Card>
+      )}
+      {script.stage === "footage_received" && (
+        <Card className="border-success">
+          <p className="font-semibold text-success">All your footage is in. Thank you.</p>
+          <p className="mt-1 text-sm text-ink-2">We will let you know when your video is ready.</p>
+        </Card>
+      )}
+
       <Card className="p-0">
         <div className="px-5 pt-5">
           <CardTitle>Teleprompter</CardTitle>
@@ -92,7 +147,7 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
       </Card>
 
       <Card>
-        <CardTitle>Shooting brief</CardTitle>
+        <CardTitle>{showSlots ? "Your shots" : "Shooting brief"}</CardTitle>
         {brief?.due_date && (
           <p className="mb-3 text-sm">
             <Badge tone="warning">Footage due {formatDate(brief.due_date)}</Badge>
@@ -143,6 +198,18 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
                   </>
                 )}
               </dl>
+              {showSlots && (
+                <UploadSlot
+                  shot={{
+                    id: shot.id,
+                    number: shot.shot_number,
+                    orientation: shot.orientation,
+                    minDurationSeconds: shot.min_duration_seconds,
+                  }}
+                  current={slotFor.get(shot.id) ?? null}
+                  canUpload={footageOpen}
+                />
+              )}
             </li>
           ))}
         </ol>

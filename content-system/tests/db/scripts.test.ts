@@ -31,9 +31,9 @@ async function expectError(promise: Promise<unknown>, code: string, message?: Re
 }
 
 describe("what a client sees", () => {
-  it("is their sent script, not their drafts, and nothing of another client", async () => {
+  it("is their sent scripts, not their drafts, and nothing of another client", async () => {
     const rows = await asUser(db, fx.userA, (s) => s.query<{ id: string }>("select id from public.scripts"));
-    expect(rows.map((r) => r.id)).toEqual([fx.sentA]);
+    expect(new Set(rows.map((r) => r.id))).toEqual(new Set([fx.sentA, fx.shootA]));
   });
 
   it("includes the shots, brief and comments of the sent script only", async () => {
@@ -41,8 +41,10 @@ describe("what a client sees", () => {
       const rows = await asUser(db, fx.userA, (s) =>
         s.query<{ script_id: string }>(`select script_id from public.${table}`),
       );
-      expect(rows.length, table).toBeGreaterThan(0);
-      expect(new Set(rows.map((r) => r.script_id)), table).toEqual(new Set([fx.sentA]));
+      const seen = new Set(rows.map((r) => r.script_id));
+      expect(seen.has(fx.sentA), table).toBe(true);
+      expect(seen.has(fx.draftA), `${table} leaked a draft`).toBe(false);
+      for (const id of seen) expect([fx.sentA, fx.shootA], table).toContain(id);
     }
   });
 
@@ -158,8 +160,8 @@ describe("what a client can change", () => {
       [fx.sentB],
     );
     expect(comments).toEqual([{ kind: "change_request", author_id: fx.userB }]);
-    const visible = await asUser(db, fx.userB, (s) => s.query("select id from public.scripts"));
-    expect(visible).toEqual([]);
+    const visible = await asUser(db, fx.userB, (s) => s.query<{ id: string }>("select id from public.scripts"));
+    expect(visible.map((r) => r.id)).not.toContain(fx.sentB);
   });
 });
 
