@@ -167,8 +167,9 @@
   .err:empty { display: none; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-  .done { outline: none; }
-  .done .tick {
+  /* after the email: confirmation + studio waitlist question */
+  .panel { width: 100%; max-width: 560px; outline: none; }
+  .tick {
     display: grid;
     place-items: center;
     width: 56px;
@@ -180,9 +181,78 @@
     font-size: 26px;
     font-weight: 800;
   }
-  .done h2 { margin: 0 0 8px; font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -.02em; }
-  .done p { margin: 0; font-size: 17px; color: var(--muted); }
-  .done b { color: var(--ink); }
+  .panel h2 { margin: 0 0 8px; font-size: clamp(26px, 3.6vw, 36px); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; outline: none; }
+  .panel p { margin: 0; font-size: 17px; line-height: 1.45; color: var(--muted); }
+  .panel .tick { margin: 0 auto 14px; color: #fff; }
+  .panel b { color: var(--ink); }
+  .ask { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .ask h3 { margin: 0 0 6px; font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .ask > p { margin-bottom: 16px; font-size: 15px; }
+  .yn { display: flex; gap: 10px; }
+  .btn {
+    flex: 1;
+    height: 56px;
+    padding: 0 20px;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    font: inherit;
+    font-size: 17px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s;
+  }
+  .btn-dark { background: var(--ink); color: #fff; }
+  @media (hover: hover) { .btn-dark:hover { background: #333; border-color: #333; } .btn-light:hover { background: var(--soft); } }
+  .btn-light { background: #fff; color: var(--ink); }
+  .btn[disabled] { opacity: .6; cursor: progress; }
+
+  /* the studio waitlist questions */
+  body.quiz-mode .intro { display: none; }
+  .quiz { width: 100%; max-width: 560px; text-align: left; }
+  .progress { display: flex; gap: 6px; margin: 0 0 24px; }
+  .progress span { flex: 1; height: 5px; border-radius: 3px; background: var(--soft); transition: background-color .25s; }
+  .progress span.on { background: var(--ink); }
+  .step-label { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .quiz h2 { margin: 0 0 22px; font-size: clamp(28px, 4.4vw, 42px); font-weight: 800; line-height: 1.06; letter-spacing: -.025em; outline: none; }
+  .options { display: grid; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-height: 60px;
+    padding: 12px 16px;
+    border: 2px solid var(--line);
+    border-radius: 14px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s, background-color .15s, color .15s;
+  }
+  @media (hover: hover) { .opt:hover { border-color: var(--ink); } }
+  .opt .key {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--muted);
+  }
+  .opt[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: #fff; }
+  .opt[aria-pressed="true"] .key { border-color: rgba(255, 255, 255, .45); color: #fff; }
+  .quiz-nav { display: flex; justify-content: space-between; align-items: center; min-height: 40px; margin-top: 14px; }
+  .link { padding: 8px 0; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .link:hover { color: var(--ink); }
+  .end { text-align: center; }
 
   footer { padding: 18px 16px 24px; text-align: center; font-size: 13px; color: var(--muted); }
 
@@ -195,6 +265,7 @@
     .row { flex-direction: column; }
     .row input { flex: none; width: 100%; }
     .row button { width: 100%; }
+    .opt { font-size: 16px; min-height: 56px; }
   }
   @media (max-width: 600px) and (max-height: 700px) {
     h1 { font-size: 36px; }
@@ -208,16 +279,19 @@
 <body>
 
 <main>
-  <p class="pill">Free &middot; Instant access</p>
-  <h1>Steal the 3 AI Prompts I Use to Grow My Business.</h1>
+  <div class="intro">
+    <p class="pill">Free &middot; Instant access</p>
+    <h1>Steal the 3 AI Prompts I Use to Grow My Business.</h1>
 
-  <div class="cards" aria-hidden="true">
-    <div class="card c1"><p class="title">My AI Video Editor</p><span class="num">Prompt 01</span><i></i><i class="m"></i><i></i><i class="s"></i><i class="m"></i></div>
-    <div class="card c2"><p class="title">My Viral Video Researcher</p><span class="num">Prompt 02</span><i></i><i class="m"></i><i class="s"></i><i></i><i class="m"></i></div>
-    <div class="card c3"><p class="title">AI Outreach System</p><span class="num">Prompt 03</span><i class="m"></i><i></i><i class="s"></i><i></i><i class="m"></i></div>
+    <div class="cards" aria-hidden="true">
+      <div class="card c1"><p class="title">My AI Video Editor</p><span class="num">Prompt 01</span><i></i><i class="m"></i><i></i><i class="s"></i><i class="m"></i></div>
+      <div class="card c2"><p class="title">My Viral Video Researcher</p><span class="num">Prompt 02</span><i></i><i class="m"></i><i class="s"></i><i></i><i class="m"></i></div>
+      <div class="card c3"><p class="title">AI Outreach System</p><span class="num">Prompt 03</span><i class="m"></i><i></i><i class="s"></i><i></i><i class="m"></i></div>
+    </div>
+    <p class="sr-only">You get: My AI Video Editor, My Viral Video Researcher and AI Outreach System.</p>
   </div>
-  <p class="sr-only">You get: My AI Video Editor, My Viral Video Researcher and AI Outreach System.</p>
 
+  <!-- Step 1: the email -->
   <form id="get" name="prompts" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
     <input type="hidden" name="form-name" value="prompts">
     <input type="hidden" name="source" id="f-source" value="">
@@ -231,11 +305,49 @@
     <p class="micro">Free. Sent straight to your inbox. <a href="privacy/">Privacy</a></p>
   </form>
 
-  <div class="done" id="done" tabindex="-1" hidden>
+  <!-- Step 2: sent + "join the studio waitlist too?" -->
+  <section class="panel" id="sent" hidden>
     <p class="tick" aria-hidden="true">&#10003;</p>
-    <h2>Done. Check your inbox.</h2>
-    <p>Your prompts are on the way to <b id="d-email">your email</b>.</p>
-  </div>
+    <h2 tabindex="-1" id="sent-title">Done! I sent the prompts to your email.</h2>
+    <p>Check <b id="s-email">your inbox</b>. If you don&rsquo;t see them in a few minutes, look in spam.</p>
+    <div class="ask" id="ask">
+      <h3>Want to join the waitlist for my creative studio too?</h3>
+      <p>A studio and community in Detroit where founders learn AI, content and marketing together.</p>
+      <div class="yn">
+        <button type="button" class="btn btn-dark" id="yes">Yes, add me</button>
+        <button type="button" class="btn btn-light" id="no">No thanks</button>
+      </div>
+    </div>
+    <p id="no-msg" hidden>No problem. Enjoy the prompts!</p>
+  </section>
+
+  <!-- Step 3: name (optional) + 4 questions -->
+  <section class="quiz" id="quiz" hidden aria-live="polite">
+    <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="step-label" id="q-label"></p>
+    <h2 id="q-title" tabindex="-1"></h2>
+    <div id="q-body"></div>
+    <div class="quiz-nav">
+      <button type="button" class="link" id="q-back">Back</button>
+      <span></span>
+    </div>
+  </section>
+
+  <!-- Step 4: done -->
+  <section class="panel end" id="end" hidden>
+    <p class="tick" aria-hidden="true">&#10003;</p>
+    <h2 tabindex="-1" id="end-title">You&rsquo;re now on the waitlist for my creative studio.</h2>
+    <p id="end-msg">I&rsquo;ll email you first when the doors open.</p>
+    <p class="err" id="end-err" role="alert"></p>
+    <button type="button" class="btn btn-dark" id="end-retry" hidden>Try again</button>
+  </section>
+
+  <!-- So Netlify registers the waitlist form and its fields at deploy time. -->
+  <form name="waitlist" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="waitlist">
+    <input name="email"><input name="name"><input name="why"><input name="content">
+    <input name="struggle"><input name="help"><input name="source"><input name="bot-field">
+  </form>
 </main>
 
 <footer>&copy; <span id="year">2026</span> Vo Creative Studio &middot; <a href="privacy/">Privacy</a></footer>
@@ -243,18 +355,46 @@
 <script>
 (function () {
   'use strict';
-  var form = document.getElementById('get');
-  var email = document.getElementById('f-email');
-  var btn = document.getElementById('f-btn');
-  var err = document.getElementById('f-err');
-  var done = document.getElementById('done');
-  var label = btn.textContent;
-  document.getElementById('year').textContent = String(new Date().getFullYear());
-  document.getElementById('f-source').value = (location.search.slice(1) || document.referrer || 'direct').slice(0, 300);
 
-  // Old links ended in #join: put the cursor straight in the email box.
+  // The studio waitlist questions. Edit the wording or options here.
+  var QUESTIONS = [
+    { key: 'why', title: 'Why are you looking to post content?',
+      options: ['To build a personal brand', 'To promote my business', 'To generate sales', 'To get opportunities'] },
+    { key: 'content', title: 'What sort of content do you want to post?',
+      options: ['Talking to camera: tips and opinions', 'Behind the scenes of my business', 'Stories from my journey', 'Showing off my product or service'] },
+    { key: 'struggle', title: 'What are you struggling with most right now?',
+      options: ['Knowing what to post', 'Getting views and followers', 'Editing takes too long', 'Turning views into customers'] },
+    { key: 'help', title: 'What would help you most from the studio?',
+      options: ['Learning the AI tools', 'Someone to make content with', 'A community of founders', 'A space to film'] }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('get'), email = $('f-email'), btn = $('f-btn'), err = $('f-err');
+  var label = btn.textContent;
+  var source = (location.search.slice(1) || document.referrer || 'direct').slice(0, 300);
+  var answers = { email: '', name: '' };
+  var step = 0; // 0 = name, 1..4 = questions
+
+  $('year').textContent = String(new Date().getFullYear());
+  $('f-source').value = source;
   if (location.hash === '#join' && window.matchMedia('(pointer: fine)').matches) email.focus();
 
+  function post(fields) {
+    return fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(fields).toString()
+    }).then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); });
+  }
+  function show(el) {
+    ['get', 'sent', 'quiz', 'end'].forEach(function (id) { $(id).hidden = $(id) !== el; });
+  }
+  function top(focusEl) {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+    if (focusEl) focusEl.focus({ preventScroll: true });
+  }
+
+  // 1. Email -> prompts
   function bad(msg) {
     err.textContent = msg;
     email.setAttribute('aria-invalid', 'true');
@@ -263,33 +403,132 @@
   email.addEventListener('input', function () {
     if (err.textContent) { err.textContent = ''; email.removeAttribute('aria-invalid'); }
   });
-
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var value = email.value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) return bad('Enter a valid email, like you@yourbusiness.com.');
-
-    var body = new URLSearchParams(new FormData(form));
-    body.set('email', value);
     btn.disabled = true;
     btn.textContent = 'Sending…';
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: body.toString()
-    }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      document.getElementById('d-email').textContent = value;
-      form.hidden = true;
-      done.hidden = false;
-      done.focus({ preventScroll: true });
+    var fields = new URLSearchParams(new FormData(form));
+    fields.set('email', value);
+    post(fields).then(function () {
+      answers.email = value;
+      $('s-email').textContent = value;
+      document.body.classList.add('quiz-mode');
+      show($('sent'));
+      top($('sent-title'));
     }).catch(function () {
       btn.disabled = false;
       btn.textContent = label;
       bad('That didn’t go through. Check your connection and try again.');
     });
   });
+
+  // 2. Join the studio waitlist too?
+  $('no').addEventListener('click', function () {
+    $('ask').hidden = true;
+    $('no-msg').hidden = false;
+  });
+  $('yes').addEventListener('click', function () {
+    show($('quiz'));
+    render();
+  });
+
+  // 3. Name (optional) + four questions
+  function setProgress(n) {
+    Array.prototype.forEach.call(document.querySelectorAll('.progress span'), function (bar, i) {
+      bar.classList.toggle('on', i < n);
+    });
+  }
+  function render() {
+    var body = $('q-body');
+    body.innerHTML = '';
+    $('q-back').style.visibility = step === 0 ? 'hidden' : 'visible';
+
+    if (step === 0) {
+      setProgress(0);
+      $('q-label').textContent = 'Before we start';
+      $('q-title').textContent = 'What should I call you?';
+      var row = document.createElement('form');
+      row.className = 'row';
+      row.noValidate = true;
+      row.innerHTML = '<label class="sr-only" for="q-name">Your first name</label>' +
+        '<input id="q-name" type="text" autocomplete="given-name" placeholder="Your first name">' +
+        '<button type="submit">Next</button>';
+      body.appendChild(row);
+      var skip = document.createElement('button');
+      skip.type = 'button';
+      skip.className = 'link';
+      skip.textContent = 'Skip';
+      body.appendChild(skip);
+      var input = row.querySelector('input');
+      input.value = answers.name;
+      row.addEventListener('submit', function (e) { e.preventDefault(); answers.name = input.value.trim(); next(); });
+      skip.addEventListener('click', function () { answers.name = ''; next(); });
+      top($('q-title'));
+      return;
+    }
+
+    var q = QUESTIONS[step - 1];
+    setProgress(step);
+    $('q-label').textContent = 'Question ' + step + ' of ' + QUESTIONS.length;
+    $('q-title').textContent = q.title;
+    var list = document.createElement('div');
+    list.className = 'options';
+    q.options.forEach(function (text, i) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'opt';
+      b.setAttribute('aria-pressed', answers[q.key] === text ? 'true' : 'false');
+      b.innerHTML = '<span class="key">' + 'ABCD'.charAt(i) + '</span><span></span>';
+      b.lastChild.textContent = text;
+      b.addEventListener('click', function () { choose(q, text, b); });
+      list.appendChild(b);
+    });
+    body.appendChild(list);
+    top($('q-title'));
+  }
+  function choose(q, text, el) {
+    answers[q.key] = text;
+    Array.prototype.forEach.call(el.parentNode.children, function (o) { o.setAttribute('aria-pressed', o === el ? 'true' : 'false'); });
+    window.setTimeout(next, 220);
+  }
+  function next() {
+    if (step < QUESTIONS.length) { step += 1; render(); }
+    else finish();
+  }
+  $('q-back').addEventListener('click', function () { if (step > 0) { step -= 1; render(); } });
+  document.addEventListener('keydown', function (e) {
+    if ($('quiz').hidden || step === 0) return;
+    var i = 'abcd1234'.indexOf(e.key.toLowerCase()) % 4;
+    if (i < 0 || e.metaKey || e.ctrlKey || e.altKey) return;
+    var opts = document.querySelectorAll('#q-body .opt');
+    if (opts[i]) opts[i].click();
+  });
+
+  // 4. Save to the "waitlist" form
+  function finish() {
+    show($('end'));
+    $('end-err').textContent = '';
+    $('end-retry').hidden = true;
+    $('end-title').textContent = 'Saving…';
+    top();
+    post({
+      'form-name': 'waitlist', 'bot-field': '', email: answers.email, name: answers.name,
+      why: answers.why || '', content: answers.content || '', struggle: answers.struggle || '', help: answers.help || '',
+      source: source
+    }).then(function () {
+      $('end-title').textContent = 'You’re now on the waitlist for my creative studio.';
+      $('end-msg').textContent = 'I’ll email you first when the doors open' + (answers.name ? ', ' + answers.name : '') + '.';
+      $('end-title').focus({ preventScroll: true });
+    }).catch(function () {
+      $('end-title').textContent = 'Almost there.';
+      $('end-msg').textContent = '';
+      $('end-err').textContent = 'That didn’t save. Check your connection and try again.';
+      $('end-retry').hidden = false;
+    });
+  }
+  $('end-retry').addEventListener('click', finish);
 })();
 </script>
 </body>

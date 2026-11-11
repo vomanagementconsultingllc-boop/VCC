@@ -10,7 +10,7 @@
 //   SHEETS_TOKEN        shared secret; must match TOKEN in the Apps Script
 // If either is missing the function does nothing, so signups are never blocked.
 
-const TABS = { prompts: 'Prompts', 'studio-waitlist': 'Waitlist', booking: 'Booking' };
+const TABS = { prompts: 'Prompts', waitlist: 'Studio Waitlist', 'studio-waitlist': 'Waitlist', booking: 'Booking' };
 
 function detroitTime(value) {
   return new Date(value).toLocaleString('en-US', {
@@ -34,6 +34,18 @@ function rowFor(form, d, submitted) {
   const v = (key) => (d[key] == null ? '' : String(d[key]));
   if (form === 'prompts') {
     return { 'Submitted': submitted, 'Email': v('email'), 'Source': tidySource(v('source')) };
+  }
+  if (form === 'waitlist') {
+    return {
+      'Submitted': submitted,
+      'Name': v('name'),
+      'Email': v('email'),
+      'Why post content': v('why'),
+      'Content they want to post': v('content'),
+      'Struggling with': v('struggle'),
+      'Wants from the studio': v('help'),
+      'Source': tidySource(v('source')),
+    };
   }
   if (form === 'studio-waitlist') {
     return {
