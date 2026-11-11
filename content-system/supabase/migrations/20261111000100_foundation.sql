@@ -142,7 +142,7 @@ begin
     coalesce((select private.user_role())::text, current_setting('role', true)),
     case when tg_table_name = 'clients' then (rec ->> 'id')::uuid else (rec ->> 'client_id')::uuid end,
     tg_table_name,
-    coalesce(rec ->> 'id', rec ->> 'client_id'),
+    coalesce(rec ->> 'id', rec ->> 'script_id', rec ->> 'client_id'),
     lower(tg_op),
     case when tg_op = 'UPDATE' then jsonb_build_object('changed', to_jsonb(changed)) else '{}'::jsonb end
   );

@@ -12,6 +12,9 @@ export function ClientTabs({ clientId }: { clientId: string }) {
       <NavLink href={`${base}/voice`} className={tab} activeClassName={active}>
         Voice profile
       </NavLink>
+      <NavLink href={`${base}/scripts`} className={tab} activeClassName={active}>
+        Scripts
+      </NavLink>
     </nav>
   );
 }

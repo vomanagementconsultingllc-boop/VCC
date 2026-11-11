@@ -6,6 +6,7 @@ import { PageLoading } from "@/components/ui";
 
 const NAV = [
   { href: "/team", label: "Clients", exact: true, adminOnly: false },
+  { href: "/team/pipeline", label: "Pipeline", exact: false, adminOnly: false },
   { href: "/team/settings", label: "Settings", exact: false, adminOnly: true },
 ];
 

@@ -137,6 +137,148 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"script_comments": {
+                  Row: {
+                    "author_id": string | null,"body": string,"client_id": string,"created_at": string,"id": string,"kind": string,"script_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"body": string,"client_id": string,"created_at"?: string,"id"?: string,"kind"?: string,"script_id": string
+                  }
+                  Update: {
+                    "author_id"?: string | null,"body"?: string,"client_id"?: string,"created_at"?: string,"id"?: string,"kind"?: string,"script_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "script_comments_author_id_fkey"
+      columns: ["author_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "script_comments_client_id_fkey"
+      columns: ["client_id"]
+isOneToOne: false
+      referencedRelation: "clients"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "script_comments_script_id_client_id_fkey"
+      columns: ["script_id","client_id"]
+isOneToOne: false
+      referencedRelation: "scripts"
+      referencedColumns: ["id","client_id"]
+    }
+                  ]
+                },"script_internal": {
+                  Row: {
+                    "ai_drafted": boolean,"client_id": string,"footage_reminders_sent": number,"hook_id": string | null,"internal_notes": string,"last_reminder_at": string | null,"reviewed_at": string | null,"reviewed_by": string | null,"script_id": string,"source_research_item_id": string | null,"style_notes": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "ai_drafted"?: boolean,"client_id": string,"footage_reminders_sent"?: number,"hook_id"?: string | null,"internal_notes"?: string,"last_reminder_at"?: string | null,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"script_id": string,"source_research_item_id"?: string | null,"style_notes"?: string
+                  }
+                  Update: {
+                    "ai_drafted"?: boolean,"client_id"?: string,"footage_reminders_sent"?: number,"hook_id"?: string | null,"internal_notes"?: string,"last_reminder_at"?: string | null,"reviewed_at"?: string | null,"reviewed_by"?: string | null,"script_id"?: string,"source_research_item_id"?: string | null,"style_notes"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "script_internal_client_id_fkey"
+      columns: ["client_id"]
+isOneToOne: false
+      referencedRelation: "clients"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "script_internal_reviewed_by_fkey"
+      columns: ["reviewed_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "script_internal_script_id_client_id_fkey"
+      columns: ["script_id","client_id"]
+isOneToOne: false
+      referencedRelation: "scripts"
+      referencedColumns: ["id","client_id"]
+    }
+                  ]
+                },"scripts": {
+                  Row: {
+                    "body": string,"client_approved": boolean,"client_approved_at": string | null,"client_id": string,"created_at": string,"created_by": string | null,"delivered_at": string | null,"footage_received_at": string | null,"footage_requested_at": string | null,"format": Database["public"]['Enums']["video_format"],"hook": string,"id": string,"posted_at": string | null,"sent_at": string | null,"stage": Database["public"]['Enums']["script_stage"],"title": string,"updated_at": string,"version": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "body"?: string,"client_approved"?: boolean,"client_approved_at"?: string | null,"client_id": string,"created_at"?: string,"created_by"?: string | null,"delivered_at"?: string | null,"footage_received_at"?: string | null,"footage_requested_at"?: string | null,"format"?: Database["public"]['Enums']["video_format"],"hook"?: string,"id"?: string,"posted_at"?: string | null,"sent_at"?: string | null,"stage"?: Database["public"]['Enums']["script_stage"],"title": string,"updated_at"?: string,"version"?: number
+                  }
+                  Update: {
+                    "body"?: string,"client_approved"?: boolean,"client_approved_at"?: string | null,"client_id"?: string,"created_at"?: string,"created_by"?: string | null,"delivered_at"?: string | null,"footage_received_at"?: string | null,"footage_requested_at"?: string | null,"format"?: Database["public"]['Enums']["video_format"],"hook"?: string,"id"?: string,"posted_at"?: string | null,"sent_at"?: string | null,"stage"?: Database["public"]['Enums']["script_stage"],"title"?: string,"updated_at"?: string,"version"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "scripts_client_id_fkey"
+      columns: ["client_id"]
+isOneToOne: false
+      referencedRelation: "clients"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "scripts_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"shooting_briefs": {
+                  Row: {
+                    "client_id": string,"due_date": string | null,"notes": string,"reference_url": string,"script_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "client_id": string,"due_date"?: string | null,"notes"?: string,"reference_url"?: string,"script_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "client_id"?: string,"due_date"?: string | null,"notes"?: string,"reference_url"?: string,"script_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "shooting_briefs_client_id_fkey"
+      columns: ["client_id"]
+isOneToOne: false
+      referencedRelation: "clients"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shooting_briefs_script_id_client_id_fkey"
+      columns: ["script_id","client_id"]
+isOneToOne: false
+      referencedRelation: "scripts"
+      referencedColumns: ["id","client_id"]
+    }
+                  ]
+                },"shots": {
+                  Row: {
+                    "client_id": string,"framing": string,"id": string,"instruction": string,"lighting_notes": string,"lines": string,"min_duration_seconds": number,"orientation": Database["public"]['Enums']["shot_orientation"],"script_id": string,"shot_number": number,"where_to_look": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "client_id": string,"framing"?: string,"id"?: string,"instruction"?: string,"lighting_notes"?: string,"lines"?: string,"min_duration_seconds"?: number,"orientation"?: Database["public"]['Enums']["shot_orientation"],"script_id": string,"shot_number": number,"where_to_look"?: string
+                  }
+                  Update: {
+                    "client_id"?: string,"framing"?: string,"id"?: string,"instruction"?: string,"lighting_notes"?: string,"lines"?: string,"min_duration_seconds"?: number,"orientation"?: Database["public"]['Enums']["shot_orientation"],"script_id"?: string,"shot_number"?: number,"where_to_look"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "shots_client_id_fkey"
+      columns: ["client_id"]
+isOneToOne: false
+      referencedRelation: "clients"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "shots_script_id_client_id_fkey"
+      columns: ["script_id","client_id"]
+isOneToOne: false
+      referencedRelation: "scripts"
+      referencedColumns: ["id","client_id"]
+    }
+                  ]
                 },"voice_corrections": {
                   Row: {
                     "body": string,"client_id": string,"created_at": string,"created_by": string | null,"id": string,"resolved_at": string | null,"resolved_by": string | null
@@ -195,7 +337,13 @@ isOneToOne: true
             [_ in never]: never
           }
           Functions: {
-            "log_event":
+            "client_approve_script":
+{ Args: { "p_script_id": string }; Returns: undefined
+                           },
+"client_request_changes":
+{ Args: { "p_comment": string,"p_script_id": string }; Returns: undefined
+                           },
+"log_event":
 { Args: { "p_action": string,"p_client_id": string,"p_details"?: Json,"p_record_id": string,"p_table": string }; Returns: undefined
                            },
 "my_voice_summary":
@@ -205,7 +353,7 @@ isOneToOne: true
                            }
           }
           Enums: {
-            "app_role": "admin"|"team"|"editor"|"client","client_status": "onboarding"|"active"|"paused"|"offboarded"
+            "app_role": "admin"|"team"|"editor"|"client","client_status": "onboarding"|"active"|"paused"|"offboarded","script_stage": "research"|"scripted"|"sent_to_client"|"approved"|"awaiting_footage"|"footage_received"|"in_edit"|"review"|"delivered"|"posted","shot_orientation": "portrait"|"landscape","video_format": "talking_head"|"voiceover_broll"|"skit"|"listicle"|"reaction"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -325,7 +473,7 @@ export const Constants = {
           }
         },"public": {
           Enums: {
-            "app_role": ["admin", "team", "editor", "client"],"client_status": ["onboarding", "active", "paused", "offboarded"]
+            "app_role": ["admin", "team", "editor", "client"],"client_status": ["onboarding", "active", "paused", "offboarded"],"script_stage": ["research", "scripted", "sent_to_client", "approved", "awaiting_footage", "footage_received", "in_edit", "review", "delivered", "posted"],"shot_orientation": ["portrait", "landscape"],"video_format": ["talking_head", "voiceover_broll", "skit", "listicle", "reaction"]
           }
         }
 } as const

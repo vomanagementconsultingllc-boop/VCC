@@ -84,7 +84,42 @@ export async function seed(db: Db) {
     ]);
   }
 
-  return { ...ids, tag };
+  // --- Step 2: scripts. Each client gets a draft (not yet sent) and a sent script.
+  const scripts = {
+    draftA: randomUUID(),
+    sentA: randomUUID(),
+    draftB: randomUUID(),
+    sentB: randomUUID(),
+  };
+  for (const [clientId, label, draftId, sentId] of [
+    [ids.clientA, "A", scripts.draftA, scripts.sentA],
+    [ids.clientB, "B", scripts.draftB, scripts.sentB],
+  ] as const) {
+    await db.query(
+      `insert into public.scripts (id, client_id, title, hook, body, stage, created_by) values
+         ($1, $3, $4, 'draft hook', 'draft body', 'scripted', null),
+         ($2, $3, $5, 'sent hook', $6, 'scripted', null)`,
+      [draftId, sentId, clientId, `Draft ${label}`, `Sent ${label}`, `sent body ${label}`],
+    );
+    for (const scriptId of [draftId, sentId]) {
+      await db.query(
+        `insert into public.shots (script_id, client_id, shot_number, instruction) values
+           ($1, $2, 1, 'Talk to camera'), ($1, $2, 2, 'Show the product')`,
+        [scriptId, clientId],
+      );
+      await db.query(
+        "insert into public.script_comments (script_id, client_id, author_id, body) values ($1, $2, null, $3)",
+        [scriptId, clientId, `team comment ${label}`],
+      );
+      await db.query("update public.script_internal set internal_notes = $2 where script_id = $1", [
+        scriptId,
+        `INTERNAL script note ${label}`,
+      ]);
+    }
+    await db.query("update public.scripts set stage = 'sent_to_client' where id = $1", [sentId]);
+  }
+
+  return { ...ids, ...scripts, tag };
 }
 
 /** Remove everything a seed() created. Only matters on a shared database. */
