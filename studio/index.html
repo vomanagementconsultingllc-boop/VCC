@@ -129,7 +129,8 @@
   .c3 { transform: translateY(12px) rotate(4deg); }
 
   /* the one action */
-  form, .done { width: 100%; max-width: 560px; }
+  form { width: 100%; max-width: 720px; }
+  .row input.f-name { flex: 0 0 170px; }
   .row { display: flex; gap: 10px; }
   .row input {
     flex: 1;
@@ -263,7 +264,7 @@
   }
   @media (max-width: 600px) {
     .row { flex-direction: column; }
-    .row input { flex: none; width: 100%; }
+    .row input, .row input.f-name { flex: none; width: 100%; }
     .row button { width: 100%; }
     .opt { font-size: 16px; min-height: 56px; }
   }
@@ -296,8 +297,10 @@
     <input type="hidden" name="form-name" value="prompts">
     <input type="hidden" name="source" id="f-source" value="">
     <p class="hp" aria-hidden="true"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
-    <label class="sr-only" for="f-email">Your email</label>
     <div class="row">
+      <label class="sr-only" for="f-name">First name</label>
+      <input id="f-name" class="f-name" name="name" type="text" autocomplete="given-name" placeholder="First name">
+      <label class="sr-only" for="f-email">Your email</label>
       <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required aria-describedby="f-err">
       <button type="submit" id="f-btn">Give me your prompts</button>
     </div>
@@ -373,7 +376,7 @@
   var label = btn.textContent;
   var source = (location.search.slice(1) || document.referrer || 'direct').slice(0, 300);
   var answers = { email: '', name: '' };
-  var step = 0; // 0 = name, 1..4 = questions
+  var step = 1; // 1..4 = questions
 
   $('year').textContent = String(new Date().getFullYear());
   $('f-source').value = source;
@@ -411,9 +414,12 @@
     btn.textContent = 'Sending…';
     var fields = new URLSearchParams(new FormData(form));
     fields.set('email', value);
+    fields.set('name', $('f-name').value.trim());
     post(fields).then(function () {
       answers.email = value;
+      answers.name = $('f-name').value.trim();
       $('s-email').textContent = value;
+      if (answers.name) $('sent-title').textContent = 'Done, ' + answers.name + '! I sent the prompts to your email.';
       document.body.classList.add('quiz-mode');
       show($('sent'));
       top($('sent-title'));
@@ -430,6 +436,7 @@
     $('no-msg').hidden = false;
   });
   $('yes').addEventListener('click', function () {
+    step = 1;
     show($('quiz'));
     render();
   });
@@ -443,31 +450,7 @@
   function render() {
     var body = $('q-body');
     body.innerHTML = '';
-    $('q-back').style.visibility = step === 0 ? 'hidden' : 'visible';
-
-    if (step === 0) {
-      setProgress(0);
-      $('q-label').textContent = 'Before we start';
-      $('q-title').textContent = 'What should I call you?';
-      var row = document.createElement('form');
-      row.className = 'row';
-      row.noValidate = true;
-      row.innerHTML = '<label class="sr-only" for="q-name">Your first name</label>' +
-        '<input id="q-name" type="text" autocomplete="given-name" placeholder="Your first name">' +
-        '<button type="submit">Next</button>';
-      body.appendChild(row);
-      var skip = document.createElement('button');
-      skip.type = 'button';
-      skip.className = 'link';
-      skip.textContent = 'Skip';
-      body.appendChild(skip);
-      var input = row.querySelector('input');
-      input.value = answers.name;
-      row.addEventListener('submit', function (e) { e.preventDefault(); answers.name = input.value.trim(); next(); });
-      skip.addEventListener('click', function () { answers.name = ''; next(); });
-      top($('q-title'));
-      return;
-    }
+    $('q-back').style.visibility = step === 1 ? 'hidden' : 'visible';
 
     var q = QUESTIONS[step - 1];
     setProgress(step);
@@ -497,9 +480,9 @@
     if (step < QUESTIONS.length) { step += 1; render(); }
     else finish();
   }
-  $('q-back').addEventListener('click', function () { if (step > 0) { step -= 1; render(); } });
+  $('q-back').addEventListener('click', function () { if (step > 1) { step -= 1; render(); } });
   document.addEventListener('keydown', function (e) {
-    if ($('quiz').hidden || step === 0) return;
+    if ($('quiz').hidden) return;
     var i = 'abcd1234'.indexOf(e.key.toLowerCase()) % 4;
     if (i < 0 || e.metaKey || e.ctrlKey || e.altKey) return;
     var opts = document.querySelectorAll('#q-body .opt');

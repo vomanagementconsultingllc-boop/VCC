@@ -33,7 +33,7 @@ function tidySource(source) {
 function rowFor(form, d, submitted) {
   const v = (key) => (d[key] == null ? '' : String(d[key]));
   if (form === 'prompts') {
-    return { 'Submitted': submitted, 'Email': v('email'), 'Source': tidySource(v('source')) };
+    return { 'Submitted': submitted, 'Name': v('name'), 'Email': v('email'), 'Source': tidySource(v('source')) };
   }
   if (form === 'waitlist') {
     return {
