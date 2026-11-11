@@ -46,15 +46,6 @@
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
-  .top { padding: 20px clamp(16px, 4vw, 40px); }
-  .mark {
-    font-stretch: 125%;
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-    text-decoration: none;
-  }
 
   main {
     flex: 1;
@@ -65,7 +56,7 @@
     width: 100%;
     max-width: 980px;
     margin: 0 auto;
-    padding: 8px 16px 40px;
+    padding: 40px 16px 40px;
     text-align: center;
   }
 
@@ -201,7 +192,6 @@
     .card { height: 168px; }
   }
   @media (max-width: 600px) {
-    .top { padding-block: 16px; }
     .row { flex-direction: column; }
     .row input { flex: none; width: 100%; }
     .row button { width: 100%; }
@@ -216,10 +206,6 @@
 </style>
 </head>
 <body>
-
-<header class="top">
-  <a class="mark" href="https://vocreativeco.com/">Vo Creative Studio</a>
-</header>
 
 <main>
   <p class="pill">Free &middot; Instant access</p>
