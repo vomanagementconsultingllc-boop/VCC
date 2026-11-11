@@ -1,5 +1,9 @@
 [build]
   publish = "."
+  # This site publishes the repo root as-is. content-system/ is the source of
+  # a separate app (deployed on its own), so drop it from the published copy
+  # rather than serve its source files from the marketing site.
+  command = "rm -rf content-system"
 
 [[redirects]]
   from = "http://vocreativeco.netlify.app/*"

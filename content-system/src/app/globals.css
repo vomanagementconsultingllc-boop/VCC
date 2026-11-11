@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* Vo Creative Co. "Roman Gold": white-led surfaces, antique gold accents,
+   espresso ink. Same tokens as the marketing site. */
+@theme {
+  --color-ink: #251d16;
+  --color-ink-2: #70604d;
+  --color-ink-3: #9c8c76;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f3ef;
+  --color-band: #eceae4;
+  --color-line: #eae7e0;
+  --color-line-strong: #dbd7ce;
+  --color-gold: #a77b3e;
+  --color-gold-hover: #8a6430;
+  --color-gold-soft: #efe2c6;
+  --color-on-gold: #faf5ec;
+  --color-success: #5c7355;
+  --color-success-soft: #e1e9dd;
+  --color-warning: #b58227;
+  --color-warning-soft: #f3e7c9;
+  --color-danger: #a6432f;
+  --color-danger-soft: #f1ddd7;
+  --color-info: #5b6e7a;
+  --color-info-soft: #e1e7ea;
+
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-marcellus), Georgia, serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-surface-2);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Inputs at 16px so iOS Safari does not zoom the page on focus. */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
