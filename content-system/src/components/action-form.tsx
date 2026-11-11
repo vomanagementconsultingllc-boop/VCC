@@ -39,7 +39,7 @@ export function ActionForm({
         </p>
       )}
       {state?.ok && (
-        <p role="status" className="mt-3 rounded-lg bg-success-soft px-3 py-2 text-sm text-success">
+        <p role="status" className="mt-3 break-words rounded-lg bg-success-soft px-3 py-2 text-sm text-success">
           {state.ok}
         </p>
       )}

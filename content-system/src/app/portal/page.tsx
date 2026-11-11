@@ -44,7 +44,7 @@ export default async function PortalHome() {
             {waiting.map((s) => (
               <li key={s.id}>
                 <Link
-                  href={`/portal/scripts/${s.id}`}
+                  href={s.stage === "delivered" ? "/portal/delivered" : `/portal/scripts/${s.id}`}
                   className="flex min-h-20 items-center justify-between gap-3 rounded-xl border border-gold bg-surface p-4"
                 >
                   <span>

@@ -4,6 +4,7 @@ import { refresh } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { inviteUser, removeUser } from "@/lib/users";
+import { generateKey } from "@/lib/agent-auth";
 import { dollarsToCents, intOrNull, isEmail, isUuid, text, type ActionState } from "@/lib/forms";
 import type { Role } from "@/lib/auth";
 
@@ -45,4 +46,32 @@ export async function saveSettings(_prev: ActionState, formData: FormData): Prom
   if (error) return { error: "Could not save settings." };
   refresh();
   return { ok: "Settings saved." };
+}
+
+/** Create an access key for an editor seat. The key is shown once and only its hash is kept. */
+export async function createAccessKey(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireAdmin();
+  const editorId = text(formData, "editor_id");
+  if (!isUuid(editorId)) return { error: "Pick an editor seat." };
+
+  const supabase = await createClient();
+  const { data: editor } = await supabase.from("profiles").select("id, role").eq("id", editorId).maybeSingle();
+  if (!editor || editor.role !== "editor") return { error: "Access keys are only for editor seats." };
+
+  const { key, hash, prefix } = generateKey();
+  const { error } = await supabase
+    .from("editor_access_keys")
+    .insert({ editor_id: editorId, label: text(formData, "label"), key_hash: hash, key_prefix: prefix });
+  if (error) return { error: "Could not create the key." };
+  refresh();
+  return { ok: `Copy this key now, it will not be shown again: ${key}` };
+}
+
+export async function revokeAccessKey(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const id = text(formData, "key_id");
+  if (!isUuid(id)) return;
+  const supabase = await createClient();
+  await supabase.from("editor_access_keys").update({ revoked_at: new Date().toISOString() }).eq("id", id);
+  refresh();
 }

@@ -192,6 +192,257 @@ export type Database = {
           },
         ]
       }
+      deliverables: {
+        Row: {
+          alt_file_path: string | null
+          caption_draft: string
+          client_downloaded_at: string | null
+          client_id: string
+          created_by: string | null
+          delivered_at: string
+          edit_job_id: string
+          file_path: string
+          id: string
+          script_id: string
+        }
+        ComputedFields: never
+        Insert: {
+          alt_file_path?: string | null
+          caption_draft?: string
+          client_downloaded_at?: string | null
+          client_id: string
+          created_by?: string | null
+          delivered_at?: string
+          edit_job_id: string
+          file_path: string
+          id?: string
+          script_id: string
+        }
+        Update: {
+          alt_file_path?: string | null
+          caption_draft?: string
+          client_downloaded_at?: string | null
+          client_id?: string
+          created_by?: string | null
+          delivered_at?: string
+          edit_job_id?: string
+          file_path?: string
+          id?: string
+          script_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deliverables_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliverables_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deliverables_edit_job_id_client_id_fkey"
+            columns: ["edit_job_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "edit_jobs"
+            referencedColumns: ["id", "client_id"]
+          },
+          {
+            foreignKeyName: "deliverables_script_id_client_id_fkey"
+            columns: ["script_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "scripts"
+            referencedColumns: ["id", "client_id"]
+          },
+        ]
+      }
+      edit_job_costs: {
+        Row: {
+          client_id: string
+          cost_cents: number
+          job_id: string
+          updated_at: string
+        }
+        ComputedFields: never
+        Insert: {
+          client_id: string
+          cost_cents?: number
+          job_id: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          cost_cents?: number
+          job_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edit_job_costs_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edit_job_costs_job_id_client_id_fkey"
+            columns: ["job_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "edit_jobs"
+            referencedColumns: ["id", "client_id"]
+          },
+        ]
+      }
+      edit_jobs: {
+        Row: {
+          client_id: string
+          client_label: string
+          completed_at: string | null
+          created_at: string
+          created_by: string | null
+          deliverable_alt_path: string | null
+          deliverable_path: string | null
+          due_date: string | null
+          editor_id: string | null
+          editor_notes: string
+          id: string
+          revision_count: number
+          script_id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["job_status"]
+          style_notes: string
+          submitted_at: string | null
+          updated_at: string
+        }
+        ComputedFields: never
+        Insert: {
+          client_id: string
+          client_label?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          deliverable_alt_path?: string | null
+          deliverable_path?: string | null
+          due_date?: string | null
+          editor_id?: string | null
+          editor_notes?: string
+          id?: string
+          revision_count?: number
+          script_id: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+          style_notes?: string
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          client_label?: string
+          completed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          deliverable_alt_path?: string | null
+          deliverable_path?: string | null
+          due_date?: string | null
+          editor_id?: string | null
+          editor_notes?: string
+          id?: string
+          revision_count?: number
+          script_id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["job_status"]
+          style_notes?: string
+          submitted_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "edit_jobs_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edit_jobs_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edit_jobs_editor_id_fkey"
+            columns: ["editor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "edit_jobs_script_id_client_id_fkey"
+            columns: ["script_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "scripts"
+            referencedColumns: ["id", "client_id"]
+          },
+        ]
+      }
+      editor_access_keys: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          editor_id: string
+          id: string
+          key_hash: string
+          key_prefix: string
+          label: string
+          last_used_at: string | null
+          revoked_at: string | null
+        }
+        ComputedFields: never
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          editor_id: string
+          id?: string
+          key_hash: string
+          key_prefix: string
+          label?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          editor_id?: string
+          id?: string
+          key_hash?: string
+          key_prefix?: string
+          label?: string
+          last_used_at?: string | null
+          revoked_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_access_keys_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "editor_access_keys_editor_id_fkey"
+            columns: ["editor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       footage_uploads: {
         Row: {
           check_status: Database["public"]["Enums"]["footage_check"]
@@ -282,6 +533,59 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      job_messages: {
+        Row: {
+          author_id: string | null
+          body: string
+          client_id: string
+          created_at: string
+          id: string
+          job_id: string
+          kind: string
+        }
+        ComputedFields: never
+        Insert: {
+          author_id?: string | null
+          body?: string
+          client_id: string
+          created_at?: string
+          id?: string
+          job_id: string
+          kind?: string
+        }
+        Update: {
+          author_id?: string | null
+          body?: string
+          client_id?: string
+          created_at?: string
+          id?: string
+          job_id?: string
+          kind?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "job_messages_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_messages_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "job_messages_job_id_client_id_fkey"
+            columns: ["job_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "edit_jobs"
+            referencedColumns: ["id", "client_id"]
           },
         ]
       }
@@ -743,12 +1047,34 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      approve_cut: {
+        Args: { p_caption: string; p_job_id: string }
+        Returns: string
+      }
       client_approve_script: {
         Args: { p_script_id: string }
         Returns: undefined
       }
+      client_mark_downloaded: {
+        Args: { p_deliverable_id: string }
+        Returns: undefined
+      }
       client_request_changes: {
         Args: { p_comment: string; p_script_id: string }
+        Returns: undefined
+      }
+      create_edit_job: {
+        Args: { p_due_date: string; p_editor_id: string; p_script_id: string }
+        Returns: string
+      }
+      editor_start_job: { Args: { p_job_id: string }; Returns: undefined }
+      editor_submit_cut: {
+        Args: {
+          p_alt_path: string
+          p_job_id: string
+          p_notes: string
+          p_path: string
+        }
         Returns: undefined
       }
       log_event: {
@@ -773,11 +1099,16 @@ export type Database = {
           updated_at: string
         }[]
       }
+      request_revision: {
+        Args: { p_job_id: string; p_note: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "team" | "editor" | "client"
       client_status: "onboarding" | "active" | "paused" | "offboarded"
       footage_check: "pending" | "passed" | "failed"
+      job_status: "queued" | "in_progress" | "submitted" | "revision" | "done"
       script_stage:
         | "research"
         | "scripted"
@@ -926,6 +1257,7 @@ export const Constants = {
       app_role: ["admin", "team", "editor", "client"],
       client_status: ["onboarding", "active", "paused", "offboarded"],
       footage_check: ["pending", "passed", "failed"],
+      job_status: ["queued", "in_progress", "submitted", "revision", "done"],
       script_stage: [
         "research",
         "scripted",

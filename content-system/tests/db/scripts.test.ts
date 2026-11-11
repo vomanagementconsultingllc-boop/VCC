@@ -33,7 +33,7 @@ async function expectError(promise: Promise<unknown>, code: string, message?: Re
 describe("what a client sees", () => {
   it("is their sent scripts, not their drafts, and nothing of another client", async () => {
     const rows = await asUser(db, fx.userA, (s) => s.query<{ id: string }>("select id from public.scripts"));
-    expect(new Set(rows.map((r) => r.id))).toEqual(new Set([fx.sentA, fx.shootA]));
+    expect(new Set(rows.map((r) => r.id))).toEqual(new Set([fx.sentA, fx.shootA, fx.editA, fx.doneA]));
   });
 
   it("includes the shots, brief and comments of the sent script only", async () => {
@@ -44,7 +44,7 @@ describe("what a client sees", () => {
       const seen = new Set(rows.map((r) => r.script_id));
       expect(seen.has(fx.sentA), table).toBe(true);
       expect(seen.has(fx.draftA), `${table} leaked a draft`).toBe(false);
-      for (const id of seen) expect([fx.sentA, fx.shootA], table).toContain(id);
+      for (const id of seen) expect([fx.sentA, fx.shootA, fx.editA, fx.doneA], table).toContain(id);
     }
   });
 
@@ -241,7 +241,7 @@ describe("team rules enforced by the database", () => {
 describe("editors", () => {
   it("see no scripts until a job is assigned to them", async () => {
     for (const table of ["scripts", "shots", "shooting_briefs", "script_comments", "script_internal"]) {
-      const rows = await asUser(db, fx.editor, (s) => s.query(`select * from public.${table}`));
+      const rows = await asUser(db, fx.idleEditor, (s) => s.query(`select * from public.${table}`));
       expect(rows, table).toEqual([]);
     }
   });

@@ -2,10 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import * as tus from "tus-js-client";
 import { beginFootageUpload, completeFootageUpload } from "@/app/actions/footage";
-import { createClient } from "@/lib/supabase/browser";
-import { publicEnv } from "@/lib/env";
+import { createResumableUpload, type ResumableUpload } from "@/lib/resumable-upload";
 import { Badge, buttonClass, cn } from "@/components/ui";
 import { formatBytes } from "@/lib/storage";
 
@@ -90,7 +88,7 @@ export function UploadSlot({
   const router = useRouter();
   const [phase, setPhase] = useState<Phase>({ name: "idle" });
   const [fresh, setFresh] = useState<SlotUpload | null>(null);
-  const uploadRef = useRef<tus.Upload | null>(null);
+  const uploadRef = useRef<ResumableUpload | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Show the result of an upload made on this screen until the server render catches up.
@@ -113,62 +111,38 @@ export function UploadSlot({
       return;
     }
 
-    const supabase = createClient();
-    const token = async () => (await supabase.auth.getSession()).data.session?.access_token ?? "";
-
-    const upload = new tus.Upload(file, {
-      endpoint: ticket.endpoint,
-      // Supabase requires exactly 6 MB chunks for resumable uploads.
-      chunkSize: 6 * 1024 * 1024,
-      retryDelays: [0, 2000, 5000, 10000, 20000, 30000],
-      uploadDataDuringCreation: true,
-      storeFingerprintForResuming: false,
-      headers: { apikey: publicEnv.supabaseKey, "x-upsert": "false" },
-      metadata: {
-        bucketName: ticket.bucket,
-        objectName: ticket.path,
-        contentType: file.type || "video/mp4",
-        cacheControl: "3600",
+    const upload = createResumableUpload(
+      file,
+      { endpoint: ticket.endpoint, bucket: ticket.bucket, path: ticket.path },
+      {
+        onProgress: (percent) => setPhase({ name: "uploading", percent, fileName: file.name, size: file.size }),
+        onStalled: () =>
+          setPhase((p) => ({
+            name: "stalled",
+            percent: p.name === "uploading" ? p.percent : 0,
+            size: file.size,
+            message: "The connection dropped. Your progress is saved.",
+          })),
+        onDone: async () => {
+          setPhase({ name: "checking" });
+          const outcome = await completeFootageUpload({
+            uploadId: ticket.uploadId,
+            shotId: shot.id,
+            path: ticket.path,
+            fileName: file.name,
+            sizeBytes: file.size,
+          });
+          uploadRef.current = null;
+          if ("error" in outcome) {
+            setPhase({ name: "error", message: outcome.error });
+            return;
+          }
+          setFresh({ status: outcome.status, problems: outcome.problems, durationSeconds: null });
+          setPhase({ name: "idle" });
+          router.refresh();
+        },
       },
-      // A long upload can outlive the hour-long access token: refresh it per request.
-      onBeforeRequest: async (req) => {
-        req.setHeader("authorization", `Bearer ${await token()}`);
-      },
-      onProgress: (sent, total) => {
-        setPhase({
-          name: "uploading",
-          percent: total ? Math.floor((sent / total) * 100) : 0,
-          fileName: file.name,
-          size: file.size,
-        });
-      },
-      onError: () => {
-        setPhase((p) => ({
-          name: "stalled",
-          percent: p.name === "uploading" ? p.percent : 0,
-          size: file.size,
-          message: "The connection dropped. Your progress is saved.",
-        }));
-      },
-      onSuccess: async () => {
-        setPhase({ name: "checking" });
-        const outcome = await completeFootageUpload({
-          uploadId: ticket.uploadId,
-          shotId: shot.id,
-          path: ticket.path,
-          fileName: file.name,
-          sizeBytes: file.size,
-        });
-        uploadRef.current = null;
-        if ("error" in outcome) {
-          setPhase({ name: "error", message: outcome.error });
-          return;
-        }
-        setFresh({ status: outcome.status, problems: outcome.problems, durationSeconds: null });
-        setPhase({ name: "idle" });
-        router.refresh();
-      },
-    });
+    );
     uploadRef.current = upload;
     upload.start();
   }

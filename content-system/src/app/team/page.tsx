@@ -3,7 +3,8 @@ import Link from "next/link";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { Badge, ButtonLink, EmptyState, PageHeader } from "@/components/ui";
-import { CLIENT_STATUS } from "@/lib/labels";
+import { CLIENT_STATUS, one } from "@/lib/labels";
+import { pipelineHealth } from "@/lib/pipeline-health";
 
 export const metadata: Metadata = { title: "Clients" };
 
@@ -16,11 +17,18 @@ export default async function ClientsPage() {
     .order("status")
     .order("name");
 
+  // Pipeline health per client: what is stuck, and on whom.
+  const { data: scripts } = await supabase
+    .from("scripts")
+    .select("client_id, stage, footage_requested_at, brief:shooting_briefs(due_date)")
+    .in("stage", ["sent_to_client", "awaiting_footage", "footage_received", "in_edit", "review"]);
+  const health = pipelineHealth(scripts ?? [], new Date());
+
   return (
     <>
       <PageHeader
         title="Clients"
-        subtitle="Everyone on the done-with-you offer."
+        subtitle="Everyone on the done-with-you offer, and what is stuck where."
         actions={<ButtonLink href="/team/clients/new">New client</ButtonLink>}
       />
       {!clients?.length ? (
@@ -42,7 +50,15 @@ export default async function ClientsPage() {
                 </div>
                 <p className="mt-3 text-sm text-ink-2">{c.niche_tags.join(" · ") || "No niche tags yet"}</p>
                 <p className="mt-1 text-xs text-ink-3">
-                  {c.assigned ? `Assigned to ${c.assigned.full_name || c.assigned.email}` : "Unassigned"}
+                  {one(c.assigned) ? `Assigned to ${one(c.assigned)?.full_name || one(c.assigned)?.email}` : "Unassigned"}
+                </p>
+                <p className="mt-3 flex flex-wrap gap-1.5">
+                  {health.get(c.id)?.waiting ? (
+                    <Badge tone="warning">{health.get(c.id)?.waiting} waiting on client</Badge>
+                  ) : null}
+                  {health.get(c.id)?.overdue ? <Badge tone="danger">{health.get(c.id)?.overdue} footage overdue</Badge> : null}
+                  {health.get(c.id)?.editing ? <Badge tone="gold">{health.get(c.id)?.editing} in the edit queue</Badge> : null}
+                  {!health.get(c.id) && <Badge>Nothing in progress</Badge>}
                 </p>
               </Link>
             </li>

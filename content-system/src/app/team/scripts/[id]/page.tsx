@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
-import { Badge, Card, CardTitle, PageHeader, Textarea } from "@/components/ui";
+import { Badge, ButtonLink, Card, CardTitle, PageHeader, Textarea } from "@/components/ui";
 import { STAGES, formatDateTime } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 import { addTeamComment, deleteScript, pullBackScript, sendToClient } from "../actions";
@@ -30,6 +30,7 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
     { data: voice },
     { data: comments },
     { data: uploads },
+    { data: job },
   ] = await Promise.all([
       supabase.from("clients").select("id, name, business").eq("id", script.client_id).maybeSingle(),
       supabase.from("script_internal").select("*").eq("script_id", id).maybeSingle(),
@@ -46,6 +47,7 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
         .eq("script_id", id)
         .order("created_at"),
       supabase.from("footage_uploads").select("*").eq("script_id", id).order("uploaded_at", { ascending: false }),
+      supabase.from("edit_jobs").select("id").eq("script_id", id).maybeSingle(),
     ]);
   const footageStage = ["awaiting_footage", "footage_received", "in_edit", "review"].includes(script.stage);
 
@@ -119,6 +121,16 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
                 script.stage !== "awaiting_footage" &&
                 `In progress: ${stage.label.toLowerCase()}.`}
             </p>
+            {script.stage === "footage_received" && (
+              <ButtonLink href="/team/jobs" className="w-full">
+                Assign an editor
+              </ButtonLink>
+            )}
+            {job && (
+              <ButtonLink href={`/team/jobs/${job.id}`} variant="secondary" className="w-full">
+                Open the edit job
+              </ButtonLink>
+            )}
             {isDraft && (
               <ActionForm action={sendToClient}>
                 <input type="hidden" name="script_id" value={script.id} />

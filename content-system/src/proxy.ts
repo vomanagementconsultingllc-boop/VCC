@@ -8,7 +8,8 @@ import { publicEnv } from "@/lib/env";
  * page and action re-checks the user, and the database enforces row level
  * security regardless of what gets through here.
  */
-const PUBLIC_PREFIXES = ["/login", "/auth", "/api/inngest"];
+// /api/agent authenticates with an editor access key, /api/inngest with a signing key.
+const PUBLIC_PREFIXES = ["/login", "/auth", "/api/inngest", "/api/agent"];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });

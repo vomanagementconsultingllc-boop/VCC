@@ -78,7 +78,7 @@ describe("the footage bucket", () => {
     );
     expect(n).toBe(1);
 
-    const editorRows = await asUser(db, fx.editor, (s) => s.query("select * from storage.objects"));
+    const editorRows = await asUser(db, fx.idleEditor, (s) => s.query("select * from storage.objects"));
     expect(editorRows).toEqual([]);
     const anonRows = await asUser(db, null, (s) => s.query("select * from storage.objects"));
     expect(anonRows).toEqual([]);
@@ -230,7 +230,7 @@ describe("recording an upload", () => {
 
 describe("editors", () => {
   it("see no footage until a job is assigned to them", async () => {
-    const rows = await asUser(db, fx.editor, (s) => s.query("select * from public.footage_uploads"));
+    const rows = await asUser(db, fx.idleEditor, (s) => s.query("select * from public.footage_uploads"));
     expect(rows).toEqual([]);
   });
 });

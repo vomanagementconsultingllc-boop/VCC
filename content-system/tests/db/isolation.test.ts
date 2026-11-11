@@ -26,7 +26,8 @@ afterAll(async () => {
 });
 
 /** Tables that are deliberately not tied to one client. */
-const NOT_CLIENT_SCOPED = new Set(["app_settings"]);
+// editor_access_keys belongs to an editor seat, not a client; it is admin-only.
+const NOT_CLIENT_SCOPED = new Set(["app_settings", "editor_access_keys"]);
 
 async function clientScopedTables(): Promise<string[]> {
   const rows = await db.query<{ table_name: string }>(

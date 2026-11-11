@@ -88,3 +88,23 @@ export const CLIENT_STEPS: Array<{ label: string; doneFrom: Stage }> = [
   { label: "Video delivered", doneFrom: "delivered" },
   { label: "Posted", doneFrom: "posted" },
 ];
+
+export type JobStatus = Enums["job_status"];
+
+export const JOB_STATUS: Record<JobStatus, { label: string; tone: Tone }> = {
+  queued: { label: "Queued", tone: "neutral" },
+  in_progress: { label: "In progress", tone: "gold" },
+  submitted: { label: "Needs review", tone: "warning" },
+  revision: { label: "Revision requested", tone: "danger" },
+  done: { label: "Done", tone: "success" },
+};
+
+export function isOverdue(dueDate: string | null | undefined): boolean {
+  return dueDate != null && dueDate < new Date().toISOString().slice(0, 10);
+}
+
+/** A joined row can arrive as one object or a list of one, depending on how the relation is detected. */
+export function one<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}

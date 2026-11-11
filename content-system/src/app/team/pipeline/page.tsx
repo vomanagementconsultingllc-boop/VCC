@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { PageHeader, Select, buttonClass } from "@/components/ui";
-import { BOARD_STAGES, STAGES, formatDate, type Stage } from "@/lib/labels";
+import { BOARD_STAGES, STAGES, formatDate, one, type Stage } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 
 export const metadata: Metadata = { title: "Pipeline" };
@@ -16,12 +16,6 @@ type Card = {
   client: { name: string; business: string } | null;
   dueDate: string | null;
 };
-
-/** A joined row can arrive as one object or a list of one, depending on how the relation is detected. */
-function one<T>(value: T | T[] | null | undefined): T | null {
-  if (Array.isArray(value)) return value[0] ?? null;
-  return value ?? null;
-}
 
 export default async function PipelinePage({ searchParams }: PageProps<"/team/pipeline">) {
   await requireStaff();

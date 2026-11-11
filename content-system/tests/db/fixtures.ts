@@ -15,6 +15,7 @@ export async function seed(db: Db) {
     team: randomUUID(),
     editor: randomUUID(),
     otherEditor: randomUUID(),
+    idleEditor: randomUUID(),
     userA: randomUUID(),
     userB: randomUUID(),
     clientA: randomUUID(),
@@ -28,6 +29,7 @@ export async function seed(db: Db) {
     [ids.team, email("team")],
     [ids.editor, email("editor")],
     [ids.otherEditor, email("other-editor")],
+    [ids.idleEditor, email("idle-editor")],
     [ids.userA, email("client-a")],
     [ids.userB, email("client-b")],
   ];
@@ -49,11 +51,13 @@ export async function seed(db: Db) {
        ($3, 'editor', null, 'Editor One',   $9),
        ($4, 'editor', null, 'Editor Two',   $10),
        ($5, 'client', $11,  'A Owner',      $12),
-       ($6, 'client', $13,  'B Owner',      $14)`,
+       ($6, 'client', $13,  'B Owner',      $14),
+       ($15, 'editor', null, 'Editor Idle', $16)`,
     [
       ids.admin, ids.team, ids.editor, ids.otherEditor, ids.userA, ids.userB,
       email("admin"), email("team"), email("editor"), email("other-editor"),
       ids.clientA, email("client-a"), ids.clientB, email("client-b"),
+      ids.idleEditor, email("idle-editor"),
     ],
   );
 
@@ -157,17 +161,78 @@ export async function seed(db: Db) {
     );
   }
 
-  return { ...ids, ...scripts, ...shoot, tag };
+  // --- Step 4: one script in edit (job assigned) and one already delivered, per client.
+  // Client A's jobs belong to `editor`, client B's to `otherEditor`.
+  const edit = {
+    editA: randomUUID(),
+    editB: randomUUID(),
+    editShotA: randomUUID(),
+    editShotB: randomUUID(),
+    editClipA: randomUUID(),
+    editClipB: randomUUID(),
+    editJobA: randomUUID(),
+    editJobB: randomUUID(),
+    doneA: randomUUID(),
+    doneB: randomUUID(),
+    doneJobA: randomUUID(),
+    doneJobB: randomUUID(),
+    deliverableA: randomUUID(),
+    deliverableB: randomUUID(),
+  };
+  for (const [clientId, label, editorId, e] of [
+    [ids.clientA, "A", ids.editor, { script: edit.editA, shot: edit.editShotA, clip: edit.editClipA, job: edit.editJobA, done: edit.doneA, doneJob: edit.doneJobA, deliverable: edit.deliverableA }],
+    [ids.clientB, "B", ids.otherEditor, { script: edit.editB, shot: edit.editShotB, clip: edit.editClipB, job: edit.editJobB, done: edit.doneB, doneJob: edit.doneJobB, deliverable: edit.deliverableB }],
+  ] as const) {
+    await db.query(
+      `insert into public.scripts (id, client_id, title, body, stage, created_by) values
+         ($1, $3, $4, 'edit body', 'in_edit', null), ($2, $3, $5, 'done body', 'delivered', null)`,
+      [e.script, e.done, clientId, `In edit ${label}`, `Delivered ${label}`],
+    );
+    await db.query(
+      "insert into public.shots (id, script_id, client_id, shot_number, instruction) values ($1, $2, $3, 1, 'Talk to camera')",
+      [e.shot, e.script, clientId],
+    );
+    const clipPath = footagePath(clientId, e.script, e.shot, e.clip);
+    await db.query("insert into storage.objects (bucket_id, name) values ('footage', $1)", [clipPath]);
+    await db.query(
+      `insert into public.footage_uploads (id, script_id, shot_id, client_id, storage_path, uploaded_by, check_status)
+       values ($1, $2, $3, $4, $5, null, 'passed')`,
+      [e.clip, e.script, e.shot, clientId, clipPath],
+    );
+    const finalPath = deliverablePath(clientId, e.doneJob, "final");
+    await db.query("insert into storage.objects (bucket_id, name) values ('deliverables', $1)", [finalPath]);
+    await db.query(
+      `insert into public.edit_jobs (id, script_id, client_id, editor_id, status, client_label, style_notes, deliverable_path, created_by) values
+         ($1, $3, $5, $6, 'queued', $7, 'fast cuts', null, null),
+         ($2, $4, $5, $6, 'done', $7, '', $8, null)`,
+      [e.job, e.doneJob, e.script, e.done, clientId, editorId, `Business ${label}`, finalPath],
+    );
+    await db.query(
+      "insert into public.job_messages (job_id, client_id, author_id, kind, body) values ($1, $2, null, 'note', $3)",
+      [e.job, clientId, `job note ${label}`],
+    );
+    await db.query(
+      `insert into public.deliverables (id, edit_job_id, script_id, client_id, file_path, caption_draft, created_by)
+       values ($1, $2, $3, $4, $5, $6, null)`,
+      [e.deliverable, e.doneJob, e.done, clientId, finalPath, `caption ${label}`],
+    );
+  }
+
+  return { ...ids, ...scripts, ...shoot, ...edit, tag };
 }
 
 export function footagePath(clientId: string, scriptId: string, shotId: string, uploadId: string) {
   return `${clientId}/${scriptId}/${shotId}/${uploadId}.mp4`;
 }
 
+export function deliverablePath(clientId: string, jobId: string, name: string) {
+  return `${clientId}/${jobId}/${name}.mp4`;
+}
+
 /** Remove everything a seed() created. Only matters on a shared database. */
 export async function cleanup(db: Db, fx: Fixture) {
   const clientIds = [fx.clientA, fx.clientB];
-  const userIds = [fx.admin, fx.team, fx.editor, fx.otherEditor, fx.userA, fx.userB];
+  const userIds = [fx.admin, fx.team, fx.editor, fx.otherEditor, fx.idleEditor, fx.userA, fx.userB];
   for (const clientId of clientIds) {
     await db.query("delete from storage.objects where name like $1", [`${clientId}/%`]);
   }
