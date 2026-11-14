@@ -8,7 +8,9 @@ import { Badge, ButtonLink, Card, CardTitle, PageHeader, Textarea } from "@/comp
 import { STAGES, formatDateTime } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 import { addTeamComment, deleteScript, pullBackScript, sendToClient } from "../actions";
+import { aiConfigured } from "@/lib/ai/client";
 import { FootageCard } from "./footage-card";
+import { ResearchCard } from "./research-card";
 import { ScriptEditor } from "./script-editor";
 
 export const metadata: Metadata = { title: "Script" };
@@ -49,6 +51,25 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
       supabase.from("footage_uploads").select("*").eq("script_id", id).order("uploaded_at", { ascending: false }),
       supabase.from("edit_jobs").select("id").eq("script_id", id).maybeSingle(),
     ]);
+  // Research context: the source outlier (if any) and proven hooks for this client's niches.
+  const { data: source } = internal?.source_research_item_id
+    ? await supabase
+        .from("research_items")
+        .select("transcript, source_url, creator_handle")
+        .eq("id", internal.source_research_item_id)
+        .maybeSingle()
+    : { data: null };
+  const { data: clientNiches } = await supabase.from("clients").select("niche_tags").eq("id", script.client_id).maybeSingle();
+  const { data: hookOptions } = clientNiches?.niche_tags.length
+    ? await supabase
+        .from("hook_rankings")
+        .select("id, text, score")
+        .eq("archived", false)
+        .overlaps("niche_tags", clientNiches.niche_tags)
+        .order("score", { ascending: false })
+        .limit(25)
+    : { data: [] };
+
   const footageStage = ["awaiting_footage", "footage_received", "in_edit", "review"].includes(script.stage);
 
   const stage = STAGES[script.stage];
@@ -80,6 +101,16 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
               canUpload={script.stage === "awaiting_footage" || script.stage === "footage_received"}
             />
           )}
+          <ResearchCard
+            scriptId={script.id}
+            isDraft={script.stage === "scripted" || script.stage === "research"}
+            aiReady={aiConfigured()}
+            aiDrafted={internal?.ai_drafted ?? false}
+            reviewed={internal?.reviewed_at != null}
+            hooks={hookOptions ?? []}
+            source={source ? { transcript: source.transcript, url: source.source_url, handle: source.creator_handle } : null}
+            clientVersion={[script.hook, script.body].filter((part) => part.trim()).join("\n\n")}
+          />
           <ScriptEditor
             key={`${script.id}-${script.updated_at}`}
             neverSay={voice?.phrases_never ?? []}

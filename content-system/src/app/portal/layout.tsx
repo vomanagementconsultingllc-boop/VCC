@@ -2,6 +2,7 @@ import { Suspense, type ReactNode } from "react";
 import { requireClient } from "@/lib/auth";
 import { NavLink } from "@/components/nav-link";
 import { PageLoading } from "@/components/ui";
+import { Logo } from "@/components/logo";
 
 const NAV = [
   { href: "/portal", label: "To do", exact: true },
@@ -25,7 +26,7 @@ async function PortalShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex w-full max-w-2xl items-center justify-between px-4 py-3">
-          <span className="font-display text-lg text-ink">Vo Creative Co.</span>
+          <Logo />
         </div>
       </header>
       <main className="mx-auto w-full max-w-2xl flex-1 px-4 pb-28 pt-5">{children}</main>

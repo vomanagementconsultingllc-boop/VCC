@@ -3,10 +3,13 @@ import { requireStaff } from "@/lib/auth";
 import { NavLink } from "@/components/nav-link";
 import { SignOutButton } from "@/components/sign-out";
 import { PageLoading } from "@/components/ui";
+import { Logo } from "@/components/logo";
 
 const NAV = [
   { href: "/team", label: "Clients", exact: true, adminOnly: false },
   { href: "/team/pipeline", label: "Pipeline", exact: false, adminOnly: false },
+  { href: "/team/research", label: "Research", exact: false, adminOnly: false },
+  { href: "/team/hooks", label: "Hooks", exact: false, adminOnly: false },
   { href: "/team/jobs", label: "Edit jobs", exact: false, adminOnly: false },
   { href: "/team/settings", label: "Settings", exact: false, adminOnly: true },
 ];
@@ -26,7 +29,7 @@ async function TeamShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-          <span className="font-display text-lg text-ink">Vo Creative Co.</span>
+          <Logo />
           <nav className="flex flex-1 flex-wrap gap-1" aria-label="Main">
             {items.map((item) => (
               <NavLink

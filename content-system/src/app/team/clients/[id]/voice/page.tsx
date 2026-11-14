@@ -8,6 +8,7 @@ import { formatDateTime } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 import { INTAKE_FIELDS, LOGISTICS_QUESTIONS, VOICE_QUESTIONS, type IntakeAnswers } from "@/lib/onboarding";
 import { resolveCorrection, saveVoiceProfile } from "../../actions";
+import { buildVoiceProfile, importFireflies } from "../../../research/actions";
 import { ClientTabs } from "../client-tabs";
 
 export const metadata: Metadata = { title: "Voice profile" };
@@ -46,7 +47,33 @@ export default async function VoicePage({ params }: PageProps<"/team/clients/[id
         <div className="space-y-5 lg:col-span-2">
           <Card>
             <CardTitle>Voice profile</CardTitle>
-            <ActionForm action={saveVoiceProfile} className="space-y-4">
+            <div className="mb-5 grid gap-4 rounded-lg bg-surface-2 p-4 sm:grid-cols-2">
+              <ActionForm action={importFireflies}>
+                <input type="hidden" name="client_id" value={client.id} />
+                <Field label="Import the onboarding call" hint="Fireflies meeting link or id.">
+                  <Input name="meeting" placeholder="https://app.fireflies.ai/view/…" />
+                </Field>
+                <div className="mt-3">
+                  <SubmitButton variant="secondary" pendingLabel="Importing…">
+                    Import transcript
+                  </SubmitButton>
+                </div>
+              </ActionForm>
+              <ActionForm action={buildVoiceProfile}>
+                <input type="hidden" name="client_id" value={client.id} />
+                <p className="text-sm font-semibold text-ink">Build the profile from the transcript</p>
+                <p className="mt-1 text-xs text-ink-2">
+                  Reads the saved transcript and fills in the phrase bank, never-say list, offer, audience and the
+                  summary the client sees. Overwrites those fields. Check it before relying on it.
+                </p>
+                <div className="mt-3">
+                  <SubmitButton variant="secondary" pendingLabel="Reading the call…" confirm="Fill the profile from the transcript? This overwrites the current phrase bank and summary.">
+                    Build with AI
+                  </SubmitButton>
+                </div>
+              </ActionForm>
+            </div>
+            <ActionForm key={voice?.updated_at ?? "new"} action={saveVoiceProfile} className="space-y-4">
               <input type="hidden" name="client_id" value={client.id} />
               <Field
                 label="Onboarding call transcript"

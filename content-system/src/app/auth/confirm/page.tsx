@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { confirmSignIn } from "./actions";
+import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = { title: "Confirm sign-in" };
 
@@ -15,7 +16,7 @@ export default function ConfirmPage({ searchParams }: PageProps<"/auth/confirm">
   return (
     <main className="flex flex-1 flex-col">
       <header className="bg-ink px-6 py-5">
-        <p className="font-display text-xl tracking-wide text-gold-soft">Vo Creative Co.</p>
+        <Logo tone="gold" size="lg" />
       </header>
       <div className="flex flex-1 items-start justify-center bg-surface px-6 py-10 sm:items-center">
         <div className="w-full max-w-sm">

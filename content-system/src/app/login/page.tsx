@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { publicEnv } from "@/lib/env";
 import { LoginForm } from "./login-form";
+import { Logo } from "@/components/logo";
 
 export const metadata: Metadata = { title: "Client sign in" };
 
@@ -19,7 +20,7 @@ export default function LoginPage() {
   return (
     <main className="flex flex-1 flex-col lg:flex-row">
       <section className="bg-ink px-6 py-8 text-white lg:flex lg:w-1/2 lg:flex-col lg:justify-between lg:px-14 lg:py-14">
-        <p className="font-display text-xl tracking-wide text-gold-soft">Vo Creative Co.</p>
+        <Logo tone="gold" size="lg" />
         <div className="mt-6 lg:mt-0">
           <h1 className="font-display text-3xl leading-tight sm:text-4xl lg:text-5xl">
             Your scripts, shoots and finished videos, in one place.
