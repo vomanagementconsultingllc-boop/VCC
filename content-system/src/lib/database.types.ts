@@ -897,6 +897,125 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          body: string
+          client_id: string | null
+          created_at: string
+          email_status: string
+          id: string
+          kind: string
+          link: string
+          recipient_id: string
+          sent_at: string | null
+          subject: string
+        }
+        ComputedFields: never
+        Insert: {
+          body?: string
+          client_id?: string | null
+          created_at?: string
+          email_status?: string
+          id?: string
+          kind: string
+          link?: string
+          recipient_id: string
+          sent_at?: string | null
+          subject: string
+        }
+        Update: {
+          body?: string
+          client_id?: string | null
+          created_at?: string
+          email_status?: string
+          id?: string
+          kind?: string
+          link?: string
+          recipient_id?: string
+          sent_at?: string | null
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_recipient_id_fkey"
+            columns: ["recipient_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      performance_logs: {
+        Row: {
+          client_id: string
+          comments: number | null
+          deliverable_id: string
+          id: string
+          platform: string
+          post_url: string
+          posted_at: string
+          saves: number | null
+          source: string
+          updated_at: string
+          views_24h: number | null
+          views_72h: number | null
+          views_7d: number | null
+        }
+        ComputedFields: never
+        Insert: {
+          client_id: string
+          comments?: number | null
+          deliverable_id: string
+          id?: string
+          platform: string
+          post_url?: string
+          posted_at?: string
+          saves?: number | null
+          source?: string
+          updated_at?: string
+          views_24h?: number | null
+          views_72h?: number | null
+          views_7d?: number | null
+        }
+        Update: {
+          client_id?: string
+          comments?: number | null
+          deliverable_id?: string
+          id?: string
+          platform?: string
+          post_url?: string
+          posted_at?: string
+          saves?: number | null
+          source?: string
+          updated_at?: string
+          views_24h?: number | null
+          views_72h?: number | null
+          views_7d?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "performance_logs_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "performance_logs_deliverable_id_client_id_fkey"
+            columns: ["deliverable_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "deliverables"
+            referencedColumns: ["id", "client_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           client_id: string | null
@@ -1489,6 +1608,14 @@ export type Database = {
       }
       client_mark_downloaded: {
         Args: { p_deliverable_id: string }
+        Returns: undefined
+      }
+      client_mark_posted: {
+        Args: {
+          p_deliverable_id: string
+          p_platform: string
+          p_post_url?: string
+        }
         Returns: undefined
       }
       client_request_changes: {

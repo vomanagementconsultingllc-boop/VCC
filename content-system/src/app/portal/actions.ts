@@ -46,3 +46,23 @@ export async function addClientComment(_prev: ActionState, formData: FormData): 
   refresh();
   return { ok: "Sent to the team." };
 }
+
+const PLATFORMS = ["instagram", "tiktok", "youtube", "facebook", "linkedin", "other"];
+
+/** The client tells us a delivered video has gone out. */
+export async function markPosted(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireClient();
+  const id = text(formData, "deliverable_id");
+  const platform = text(formData, "platform");
+  if (!isUuid(id)) return { error: "Unknown video." };
+  if (!PLATFORMS.includes(platform)) return { error: "Choose where you posted it." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("client_mark_posted", {
+    p_deliverable_id: id,
+    p_platform: platform,
+    p_post_url: text(formData, "post_url"),
+  });
+  if (error) return { error: error.code === "23514" ? error.message : "Could not save that. Try again." };
+  refresh();
+  return { ok: "Marked as posted. Nice work." };
+}

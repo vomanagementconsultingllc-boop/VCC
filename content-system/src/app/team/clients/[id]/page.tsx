@@ -4,12 +4,13 @@ import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { ClientFields } from "@/components/client-form";
-import { Badge, Card, CardTitle, Field, Input, PageHeader, Textarea } from "@/components/ui";
+import { Badge, Card, CardTitle, Field, Input, PageHeader, Textarea, buttonClass } from "@/components/ui";
 import { CLIENT_STATUS, formatDateTime } from "@/lib/labels";
 import { centsToDollars, isUuid } from "@/lib/forms";
 import {
   addClientNote,
   inviteClientLogin,
+  offboardClient,
   removeClientLogin,
   saveFinancials,
   updateClientRecord,
@@ -148,6 +149,36 @@ export default async function ClientPage({ params }: PageProps<"/team/clients/[i
             </ul>
           ) : null}
         </Card>
+        {user.role === "admin" && (
+          <Card className="border-danger lg:col-span-3">
+            <CardTitle>Offboarding</CardTitle>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div>
+                <p className="mb-3 text-sm text-ink-2">
+                  Download everything held about this client as one file: their profile, scripts, comments, job history
+                  and a list of their files.
+                </p>
+                <a href={`/team/clients/${client.id}/export`} className={buttonClass("secondary")}>
+                  Export this client&rsquo;s data
+                </a>
+              </div>
+              <ActionForm action={offboardClient}>
+                <input type="hidden" name="client_id" value={client.id} />
+                <Field
+                  label={`Delete this client. Type "${client.business || client.name}" to confirm.`}
+                  hint="Removes their logins, scripts, footage, b-roll and finished videos. This cannot be undone. Export first."
+                >
+                  <Input name="confirm" autoComplete="off" />
+                </Field>
+                <div className="mt-3">
+                  <SubmitButton variant="danger" pendingLabel="Deleting…" confirm="Delete this client and all of their data for good?">
+                    Delete client and all data
+                  </SubmitButton>
+                </div>
+              </ActionForm>
+            </div>
+          </Card>
+        )}
       </div>
     </>
   );

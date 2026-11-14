@@ -279,6 +279,14 @@ export async function seed(db: Db) {
     );
   }
 
+  // --- Steps 6 and 7: a posted video per client. (Notifications are created by triggers during the seed above.)
+  for (const [clientId, deliverableId] of [[ids.clientA, edit.deliverableA], [ids.clientB, edit.deliverableB]] as const) {
+    await db.query(
+      "insert into public.performance_logs (deliverable_id, client_id, platform) values ($1, $2, 'instagram')",
+      [deliverableId, clientId],
+    );
+  }
+
   return { ...ids, ...scripts, ...shoot, ...edit, ...research, ...broll, tag };
 }
 

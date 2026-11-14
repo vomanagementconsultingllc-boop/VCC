@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { requireAdmin, requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { inviteUser, removeUser } from "@/lib/users";
+import { deleteClient } from "@/lib/offboarding";
 import { dollarsToCents, isEmail, isUuid, list, tags, text, type ActionState } from "@/lib/forms";
 import { INTAKE_FIELDS } from "@/lib/onboarding";
 import type { Database } from "@/lib/database.types";
@@ -152,4 +153,21 @@ export async function saveFinancials(_prev: ActionState, formData: FormData): Pr
   if (error) return { error: "Could not save." };
   refresh();
   return { ok: "Saved." };
+}
+
+/** Offboarding: delete a client and everything held about them. Admin only, and they must type the name. */
+export async function offboardClient(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  const user = await requireAdmin();
+  const clientId = text(formData, "client_id");
+  if (!isUuid(clientId)) return { error: "Unknown client." };
+  const supabase = await createClient();
+  const { data: client } = await supabase.from("clients").select("name, business").eq("id", clientId).maybeSingle();
+  if (!client) return { error: "That client no longer exists." };
+  const expected = (client.business || client.name).trim().toLowerCase();
+  if (text(formData, "confirm").toLowerCase() !== expected) {
+    return { error: `Type "${client.business || client.name}" exactly to confirm.` };
+  }
+  const result = await deleteClient(user, clientId);
+  if (result.error) return { error: result.error };
+  redirect("/team");
 }

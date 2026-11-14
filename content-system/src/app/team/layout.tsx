@@ -11,6 +11,7 @@ const NAV = [
   { href: "/team/research", label: "Research", exact: false, adminOnly: false },
   { href: "/team/hooks", label: "Hooks", exact: false, adminOnly: false },
   { href: "/team/jobs", label: "Edit jobs", exact: false, adminOnly: false },
+  { href: "/team/performance", label: "Performance", exact: false, adminOnly: false },
   { href: "/team/settings", label: "Settings", exact: false, adminOnly: true },
 ];
 

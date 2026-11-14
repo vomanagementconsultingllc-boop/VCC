@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { requireClient } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { ActionForm, SubmitButton } from "@/components/action-form";
 import { CopyButton } from "@/components/copy-button";
-import { Badge, Card, EmptyState, buttonClass } from "@/components/ui";
+import { Badge, Card, EmptyState, Input, Select, buttonClass } from "@/components/ui";
+import { markPosted } from "../actions";
 import { formatDate, one } from "@/lib/labels";
 
 export const metadata: Metadata = { title: "Delivered" };
@@ -66,6 +68,26 @@ export default async function DeliveredPage() {
                   <CopyButton text={video.caption_draft} />
                 </div>
               )}
+              <ActionForm action={markPosted} className="mt-4 border-t border-line pt-4">
+                <input type="hidden" name="deliverable_id" value={video.id} />
+                <p className="mb-2 text-sm font-semibold text-ink">
+                  {script?.stage === "posted" ? "Posted it somewhere else too?" : "Posted it? Tell us where."}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Select name="platform" aria-label="Where you posted it" className="w-auto flex-1" defaultValue="instagram">
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="other">Somewhere else</option>
+                  </Select>
+                  <SubmitButton variant="secondary" pendingLabel="Saving…">
+                    Mark as posted
+                  </SubmitButton>
+                </div>
+                <Input name="post_url" type="url" className="mt-2" placeholder="Link to the post (optional)" aria-label="Link to the post" />
+              </ActionForm>
               <details className="mt-4">
                 <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-ink">
                   Posting checklist
