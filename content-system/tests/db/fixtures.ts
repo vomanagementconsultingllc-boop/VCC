@@ -251,11 +251,43 @@ export async function seed(db: Db) {
     );
   }
 
-  return { ...ids, ...scripts, ...shoot, ...edit, ...research, tag };
+  // --- B-roll drop box: one open request and one accepted (with its clip) per client.
+  const broll = {
+    brollOpenA: randomUUID(),
+    brollOpenB: randomUUID(),
+    brollDoneA: randomUUID(),
+    brollDoneB: randomUUID(),
+    brollClipA: randomUUID(),
+    brollClipB: randomUUID(),
+  };
+  for (const [clientId, label, openId, doneId, clipId] of [
+    [ids.clientA, "A", broll.brollOpenA, broll.brollDoneA, broll.brollClipA],
+    [ids.clientB, "B", broll.brollOpenB, broll.brollDoneB, broll.brollClipB],
+  ] as const) {
+    await db.query(
+      `insert into public.broll_requests (id, client_id, title, instructions, created_by) values
+         ($1, $3, $4, 'Slow pan, phone upright, near a window', null),
+         ($2, $3, $5, 'Hold still for ten seconds', null)`,
+      [openId, doneId, clientId, `Hands at work ${label}`, `Shop front ${label}`],
+    );
+    const path = brollPath(clientId, doneId, clipId);
+    await db.query("insert into storage.objects (bucket_id, name) values ('broll', $1)", [path]);
+    await db.query(
+      `insert into public.broll_submissions (id, request_id, client_id, storage_path, uploaded_by, check_status, reviewed_by)
+       values ($1, $2, $3, $4, null, 'passed', 'team')`,
+      [clipId, doneId, clientId, path],
+    );
+  }
+
+  return { ...ids, ...scripts, ...shoot, ...edit, ...research, ...broll, tag };
 }
 
 export function footagePath(clientId: string, scriptId: string, shotId: string, uploadId: string) {
   return `${clientId}/${scriptId}/${shotId}/${uploadId}.mp4`;
+}
+
+export function brollPath(clientId: string, requestId: string, submissionId: string, suffix = ".mp4") {
+  return `${clientId}/${requestId}/${submissionId}${suffix}`;
 }
 
 export function deliverablePath(clientId: string, jobId: string, name: string) {

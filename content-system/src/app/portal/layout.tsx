@@ -5,6 +5,7 @@ import { PageLoading } from "@/components/ui";
 
 const NAV = [
   { href: "/portal", label: "To do", exact: true },
+  { href: "/portal/broll", label: "B-roll", exact: false },
   { href: "/portal/delivered", label: "Delivered", exact: false },
   { href: "/portal/settings", label: "Settings", exact: false },
 ];

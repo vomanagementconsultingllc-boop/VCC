@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { editorFromRequest } from "@/lib/agent-auth";
 import { isUuid } from "@/lib/forms";
+import { one } from "@/lib/labels";
 import { BUCKETS, SIGNED_URL_SECONDS, videoExtension } from "@/lib/storage";
 
 /**
@@ -67,6 +68,36 @@ export async function GET(request: Request, { params }: RouteContext<"/api/agent
     });
   }
 
+  // Accepted b-roll from this client's drop box.
+  const { data: brollRows } = await supabase
+    .from("broll_submissions")
+    .select("id, storage_path, duration_seconds, request:broll_requests(title, instructions)")
+    .eq("client_id", job.client_id)
+    .order("uploaded_at");
+  const broll = [];
+  for (const clip of brollRows ?? []) {
+    const ext = clip.storage_path.split(".").pop() ?? "mp4";
+    const { data: signed } = await supabase.storage
+      .from(BUCKETS.broll)
+      .createSignedUrl(clip.storage_path, SIGNED_URL_SECONDS, { download: `broll-${clip.id.slice(0, 8)}.${ext}` });
+    if (!signed?.signedUrl) continue;
+    await supabase.rpc("log_event", {
+      p_client_id: job.client_id,
+      p_table: "broll_submissions",
+      p_record_id: clip.id,
+      p_action: "download_link",
+      p_details: { via: "access_key" },
+    });
+    const request = one(clip.request);
+    broll.push({
+      title: request?.title ?? "",
+      instructions: request?.instructions ?? "",
+      duration_seconds: clip.duration_seconds,
+      download_url: signed.signedUrl,
+      expires_in_seconds: SIGNED_URL_SECONDS,
+    });
+  }
+
   return Response.json({
     job: {
       id: job.id,
@@ -79,6 +110,7 @@ export async function GET(request: Request, { params }: RouteContext<"/api/agent
     script: script ?? null,
     shots: shots ?? [],
     footage,
+    broll,
     thread: messages ?? [],
   });
 }

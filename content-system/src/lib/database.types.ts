@@ -123,6 +123,156 @@ export type Database = {
         }
         Relationships: []
       }
+      broll_requests: {
+        Row: {
+          client_id: string
+          created_at: string
+          created_by: string | null
+          due_date: string | null
+          id: string
+          instructions: string
+          min_duration_seconds: number
+          orientation: Database["public"]["Enums"]["shot_orientation"]
+          reference_url: string
+          sort_order: number
+          status: Database["public"]["Enums"]["broll_status"]
+          title: string
+          updated_at: string
+        }
+        ComputedFields: never
+        Insert: {
+          client_id: string
+          created_at?: string
+          created_by?: string | null
+          due_date?: string | null
+          id?: string
+          instructions?: string
+          min_duration_seconds?: number
+          orientation?: Database["public"]["Enums"]["shot_orientation"]
+          reference_url?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["broll_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          created_by?: string | null
+          due_date?: string | null
+          id?: string
+          instructions?: string
+          min_duration_seconds?: number
+          orientation?: Database["public"]["Enums"]["shot_orientation"]
+          reference_url?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["broll_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broll_requests_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broll_requests_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      broll_submissions: {
+        Row: {
+          check_status: Database["public"]["Enums"]["footage_check"]
+          checked_at: string | null
+          client_id: string
+          duration_seconds: number | null
+          feedback: string
+          flags: string[]
+          frame_paths: string[]
+          height: number | null
+          id: string
+          original_name: string
+          request_id: string
+          reviewed_by: string
+          size_bytes: number | null
+          storage_path: string
+          superseded: boolean
+          uploaded_at: string
+          uploaded_by: string | null
+          width: number | null
+        }
+        ComputedFields: never
+        Insert: {
+          check_status?: Database["public"]["Enums"]["footage_check"]
+          checked_at?: string | null
+          client_id: string
+          duration_seconds?: number | null
+          feedback?: string
+          flags?: string[]
+          frame_paths?: string[]
+          height?: number | null
+          id?: string
+          original_name?: string
+          request_id: string
+          reviewed_by?: string
+          size_bytes?: number | null
+          storage_path: string
+          superseded?: boolean
+          uploaded_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Update: {
+          check_status?: Database["public"]["Enums"]["footage_check"]
+          checked_at?: string | null
+          client_id?: string
+          duration_seconds?: number | null
+          feedback?: string
+          flags?: string[]
+          frame_paths?: string[]
+          height?: number | null
+          id?: string
+          original_name?: string
+          request_id?: string
+          reviewed_by?: string
+          size_bytes?: number | null
+          storage_path?: string
+          superseded?: boolean
+          uploaded_at?: string
+          uploaded_by?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "broll_submissions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "broll_submissions_request_id_client_id_fkey"
+            columns: ["request_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "broll_requests"
+            referencedColumns: ["id", "client_id"]
+          },
+          {
+            foreignKeyName: "broll_submissions_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_financials: {
         Row: {
           client_id: string
@@ -1392,6 +1542,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "team" | "editor" | "client"
+      broll_status: "open" | "submitted" | "needs_reshoot" | "accepted"
       client_status: "onboarding" | "active" | "paused" | "offboarded"
       footage_check: "pending" | "passed" | "failed"
       hook_format:
@@ -1548,6 +1699,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "team", "editor", "client"],
+      broll_status: ["open", "submitted", "needs_reshoot", "accepted"],
       client_status: ["onboarding", "active", "paused", "offboarded"],
       footage_check: ["pending", "passed", "failed"],
       hook_format: [

@@ -15,6 +15,9 @@ export function ClientTabs({ clientId }: { clientId: string }) {
       <NavLink href={`${base}/scripts`} className={tab} activeClassName={active}>
         Scripts
       </NavLink>
+      <NavLink href={`${base}/broll`} className={tab} activeClassName={active}>
+        B-roll drop box
+      </NavLink>
     </nav>
   );
 }

@@ -24,7 +24,7 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
   const { data: job } = await supabase.from("edit_jobs").select("*").eq("id", id).maybeSingle();
   if (!job) notFound();
 
-  const [{ data: script }, { data: shots }, { data: clips }, { data: messages }] = await Promise.all([
+  const [{ data: script }, { data: shots }, { data: clips }, { data: messages }, { data: broll }] = await Promise.all([
     supabase.from("scripts").select("title, hook, body, format").eq("id", job.script_id).maybeSingle(),
     supabase.from("shots").select("id, shot_number, instruction, lines").eq("script_id", job.script_id).order("shot_number"),
     supabase
@@ -39,6 +39,12 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
       .select("id, kind, body, created_at, author:profiles!job_messages_author_id_fkey(full_name, role)")
       .eq("job_id", id)
       .order("created_at"),
+    // Accepted b-roll from this client's drop box (row level security: only while this job is open).
+    supabase
+      .from("broll_submissions")
+      .select("id, size_bytes, duration_seconds, request:broll_requests(title)")
+      .eq("client_id", job.client_id)
+      .order("uploaded_at"),
   ]);
 
   const status = JOB_STATUS[job.status];
@@ -149,6 +155,33 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
                 );
               })}
             </ol>
+          </Card>
+        )}
+
+        {job.status !== "done" && (broll?.length ?? 0) > 0 && (
+          <Card>
+            <CardTitle
+              action={<DownloadAll urls={(broll ?? []).map((b) => `/api/media/broll/${b.id}?download=1`)} />}
+            >
+              B-roll library
+            </CardTitle>
+            <p className="mb-4 text-sm text-ink-2">Extra clips this client filmed. Use what fits.</p>
+            <ul className="space-y-3">
+              {broll?.map((b) => (
+                <li key={b.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-line p-3 text-sm">
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-semibold text-ink">{one(b.request)?.title ?? "B-roll"}</span>
+                    <span className="text-ink-3">
+                      {formatBytes(b.size_bytes)}
+                      {b.duration_seconds != null && ` · ${Math.round(b.duration_seconds)}s`}
+                    </span>
+                  </span>
+                  <a href={`/api/media/broll/${b.id}?download=1`} className={buttonClass("secondary")}>
+                    Download
+                  </a>
+                </li>
+              ))}
+            </ul>
           </Card>
         )}
 

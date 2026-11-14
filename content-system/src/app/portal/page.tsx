@@ -22,6 +22,10 @@ export default async function PortalHome() {
     .select("id, title, stage, updated_at")
     .order("updated_at", { ascending: false });
 
+  const { data: broll } = await supabase.from("broll_requests").select("id, status").neq("status", "accepted");
+  const brollToSend = (broll ?? []).filter((b) => b.status === "open").length;
+  const brollToRedo = (broll ?? []).filter((b) => b.status === "needs_reshoot").length;
+
   const waiting = (scripts ?? []).filter((s) => CLIENT_TASK[s.stage]);
   const inProgress = (scripts ?? []).filter((s) => !CLIENT_TASK[s.stage] && s.stage !== "posted");
 
@@ -35,7 +39,30 @@ export default async function PortalHome() {
         <h2 id="waiting-heading" className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-2">
           Waiting on you
         </h2>
-        {waiting.length === 0 ? (
+        {(brollToSend > 0 || brollToRedo > 0) && (
+          <Link
+            href="/portal/broll"
+            className="mb-3 flex min-h-20 items-center justify-between gap-3 rounded-xl border border-gold bg-surface p-4"
+          >
+            <span>
+              <span className="block font-semibold text-ink">
+                {brollToRedo > 0 ? "Re-film some b-roll" : "Film your b-roll"}
+              </span>
+              <span className="text-sm text-ink-2">
+                {[
+                  brollToRedo > 0 ? `${brollToRedo} to film again` : "",
+                  brollToSend > 0 ? `${brollToSend} still to send` : "",
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </span>
+            </span>
+            <span aria-hidden className="text-2xl text-gold">
+              ›
+            </span>
+          </Link>
+        )}
+        {waiting.length === 0 && brollToSend === 0 && brollToRedo === 0 ? (
           <EmptyState title="Nothing is waiting on you">
             We will email you as soon as your next script is ready.
           </EmptyState>

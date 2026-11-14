@@ -1,5 +1,5 @@
 /** Private buckets. Nothing in them is ever public; access is by signed URL only. */
-export const BUCKETS = { footage: "footage", deliverables: "deliverables" } as const;
+export const BUCKETS = { footage: "footage", deliverables: "deliverables", broll: "broll" } as const;
 
 /** Every media link we hand out stops working after 15 minutes. */
 export const SIGNED_URL_SECONDS = 15 * 60;
@@ -30,3 +30,6 @@ export function formatBytes(bytes: number | null | undefined): string {
   if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
+
+/** How many still frames the browser takes from a b-roll clip for review. */
+export const BROLL_FRAMES = 6;
