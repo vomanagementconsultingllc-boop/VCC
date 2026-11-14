@@ -27,7 +27,8 @@ afterAll(async () => {
 
 /** Tables that are deliberately not tied to one client. */
 // editor_access_keys belongs to an editor seat, not a client; it is admin-only.
-const NOT_CLIENT_SCOPED = new Set(["app_settings", "editor_access_keys"]);
+// research_items and hooks are pulled per niche and shared by every client in it: staff only.
+const NOT_CLIENT_SCOPED = new Set(["app_settings", "editor_access_keys", "research_items", "hooks"]);
 
 async function clientScopedTables(): Promise<string[]> {
   const rows = await db.query<{ table_name: string }>(
@@ -44,6 +45,15 @@ describe("schema guards", () => {
     const rows = await db.query<{ relname: string }>(
       `select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace
         where n.nspname = 'public' and c.relkind = 'r' and not c.relrowsecurity`,
+    );
+    expect(rows.map((r) => r.relname)).toEqual([]);
+  });
+
+  it("makes every view run with the caller's rights, so row level security still applies", async () => {
+    const rows = await db.query<{ relname: string }>(
+      `select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace
+        where n.nspname = 'public' and c.relkind = 'v'
+          and not coalesce(c.reloptions::text[] @> array['security_invoker=true'], false)`,
     );
     expect(rows.map((r) => r.relname)).toEqual([]);
   });

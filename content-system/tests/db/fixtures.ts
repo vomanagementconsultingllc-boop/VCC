@@ -218,7 +218,40 @@ export async function seed(db: Db) {
     );
   }
 
-  return { ...ids, ...scripts, ...shoot, ...edit, tag };
+  // --- Step 5: research is shared across clients (per niche); hook use and AI calls are per client.
+  const research = {
+    outlier: randomUUID(),
+    staleOutlier: randomUUID(),
+    hook: randomUUID(),
+    spareHook: randomUUID(),
+  };
+  await db.query(
+    `insert into public.research_items
+       (id, source_url, platform, creator_handle, view_count, creator_median_views, posted_at, hook_text, niche_tags, added_by)
+     values
+       ($1, $3, 'tiktok', 'bakerjoe', 300000, 60000, now() - interval '10 days', 'Nobody tells you this about sourdough', '{bakery}', null),
+       ($2, $4, 'tiktok', 'pipeguy', 800000, 100000, now() - interval '120 days', 'Stop pouring this down your drain', '{plumbing}', null)`,
+    [research.outlier, research.staleOutlier, `https://example.test/v/${tag}-1`, `https://example.test/v/${tag}-2`],
+  );
+  await db.query(
+    `insert into public.hooks (id, text, format_type, research_item_id, niche_tags, created_by) values
+       ($1, 'Nobody tells you this about sourdough', 'bold_claim', $3, '{bakery}', null),
+       ($2, 'Stop pouring this down your drain', 'contrarian', $4, '{plumbing}', null)`,
+    [research.hook, research.spareHook, research.outlier, research.staleOutlier],
+  );
+  for (const [clientId, scriptId] of [[ids.clientA, scripts.sentA], [ids.clientB, scripts.sentB]] as const) {
+    await db.query("insert into public.hook_uses (hook_id, script_id, client_id) values ($1, $2, $3)", [
+      research.hook,
+      scriptId,
+      clientId,
+    ]);
+    await db.query(
+      "insert into public.ai_calls (client_id, purpose, model, input_hash, created_by) values ($1, 'draft_script', 'claude-opus-5-5', 'abc123', null)",
+      [clientId],
+    );
+  }
+
+  return { ...ids, ...scripts, ...shoot, ...edit, ...research, tag };
 }
 
 export function footagePath(clientId: string, scriptId: string, shotId: string, uploadId: string) {
@@ -237,6 +270,8 @@ export async function cleanup(db: Db, fx: Fixture) {
     await db.query("delete from storage.objects where name like $1", [`${clientId}/%`]);
   }
   await db.query("delete from public.clients where id = any($1::uuid[])", [clientIds]);
+  await db.query("delete from public.hooks where id = any($1::uuid[])", [[fx.hook, fx.spareHook]]);
+  await db.query("delete from public.research_items where id = any($1::uuid[])", [[fx.outlier, fx.staleOutlier]]);
   await db.query("delete from auth.users where id = any($1::uuid[])", [userIds]);
   await db.query("delete from public.audit_log where client_id = any($1::uuid[]) or actor_id = any($2::uuid[])", [
     clientIds,

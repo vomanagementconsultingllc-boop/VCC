@@ -9,6 +9,61 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ai_calls: {
+        Row: {
+          client_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          input_chars: number
+          input_hash: string
+          model: string
+          output_chars: number
+          purpose: string
+          status: string
+        }
+        ComputedFields: never
+        Insert: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          input_chars?: number
+          input_hash: string
+          model: string
+          output_chars?: number
+          purpose: string
+          status?: string
+        }
+        Update: {
+          client_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          input_chars?: number
+          input_hash?: string
+          model?: string
+          output_chars?: number
+          purpose?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_calls_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_calls_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_settings: {
         Row: {
           default_edit_cost_cents: number
@@ -536,6 +591,109 @@ export type Database = {
           },
         ]
       }
+      hook_uses: {
+        Row: {
+          client_id: string
+          hook_id: string
+          id: string
+          script_id: string
+          used_at: string
+        }
+        ComputedFields: never
+        Insert: {
+          client_id: string
+          hook_id: string
+          id?: string
+          script_id: string
+          used_at?: string
+        }
+        Update: {
+          client_id?: string
+          hook_id?: string
+          id?: string
+          script_id?: string
+          used_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hook_uses_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hook_uses_hook_id_fkey"
+            columns: ["hook_id"]
+            isOneToOne: false
+            referencedRelation: "hook_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hook_uses_hook_id_fkey"
+            columns: ["hook_id"]
+            isOneToOne: false
+            referencedRelation: "hooks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hook_uses_script_id_client_id_fkey"
+            columns: ["script_id", "client_id"]
+            isOneToOne: false
+            referencedRelation: "scripts"
+            referencedColumns: ["id", "client_id"]
+          },
+        ]
+      }
+      hooks: {
+        Row: {
+          archived: boolean
+          created_at: string
+          created_by: string | null
+          format_type: Database["public"]["Enums"]["hook_format"]
+          id: string
+          niche_tags: string[]
+          research_item_id: string | null
+          text: string
+        }
+        ComputedFields: never
+        Insert: {
+          archived?: boolean
+          created_at?: string
+          created_by?: string | null
+          format_type: Database["public"]["Enums"]["hook_format"]
+          id?: string
+          niche_tags?: string[]
+          research_item_id?: string | null
+          text: string
+        }
+        Update: {
+          archived?: boolean
+          created_at?: string
+          created_by?: string | null
+          format_type?: Database["public"]["Enums"]["hook_format"]
+          id?: string
+          niche_tags?: string[]
+          research_item_id?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hooks_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hooks_research_item_id_fkey"
+            columns: ["research_item_id"]
+            isOneToOne: false
+            referencedRelation: "research_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       job_messages: {
         Row: {
           author_id: string | null
@@ -624,6 +782,81 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      research_items: {
+        Row: {
+          added_by: string | null
+          captured_at: string
+          comments: number | null
+          creator_handle: string
+          creator_median_views: number | null
+          follower_count: number | null
+          format_label: Database["public"]["Enums"]["video_format"] | null
+          hook_text: string
+          id: string
+          likes: number | null
+          niche_tags: string[]
+          performance_ratio: number | null
+          platform: string
+          posted_at: string | null
+          source: string
+          source_url: string
+          status: Database["public"]["Enums"]["research_status"]
+          transcript: string
+          view_count: number
+        }
+        ComputedFields: never
+        Insert: {
+          added_by?: string | null
+          captured_at?: string
+          comments?: number | null
+          creator_handle?: string
+          creator_median_views?: number | null
+          follower_count?: number | null
+          format_label?: Database["public"]["Enums"]["video_format"] | null
+          hook_text?: string
+          id?: string
+          likes?: number | null
+          niche_tags?: string[]
+          performance_ratio?: never
+          platform: string
+          posted_at?: string | null
+          source?: string
+          source_url: string
+          status?: Database["public"]["Enums"]["research_status"]
+          transcript?: string
+          view_count?: number
+        }
+        Update: {
+          added_by?: string | null
+          captured_at?: string
+          comments?: number | null
+          creator_handle?: string
+          creator_median_views?: number | null
+          follower_count?: number | null
+          format_label?: Database["public"]["Enums"]["video_format"] | null
+          hook_text?: string
+          id?: string
+          likes?: number | null
+          niche_tags?: string[]
+          performance_ratio?: never
+          platform?: string
+          posted_at?: string | null
+          source?: string
+          source_url?: string
+          status?: Database["public"]["Enums"]["research_status"]
+          transcript?: string
+          view_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "research_items_added_by_fkey"
+            columns: ["added_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -728,6 +961,27 @@ export type Database = {
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "script_internal_hook_fkey"
+            columns: ["hook_id"]
+            isOneToOne: false
+            referencedRelation: "hook_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "script_internal_hook_fkey"
+            columns: ["hook_id"]
+            isOneToOne: false
+            referencedRelation: "hooks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "script_internal_research_fkey"
+            columns: ["source_research_item_id"]
+            isOneToOne: false
+            referencedRelation: "research_items"
             referencedColumns: ["id"]
           },
           {
@@ -1044,7 +1298,35 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      hook_rankings: {
+        Row: {
+          archived: boolean | null
+          created_at: string | null
+          creator_handle: string | null
+          format_label: Database["public"]["Enums"]["video_format"] | null
+          format_type: Database["public"]["Enums"]["hook_format"] | null
+          id: string | null
+          niche_tags: string[] | null
+          performance_ratio: number | null
+          platform: string | null
+          posted_at: string | null
+          research_item_id: string | null
+          score: number | null
+          source_url: string | null
+          text: string | null
+          times_used: number | null
+        }
+        ComputedFields: never
+        Relationships: [
+          {
+            foreignKeyName: "hooks_research_item_id_fkey"
+            columns: ["research_item_id"]
+            isOneToOne: false
+            referencedRelation: "research_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       approve_cut: {
@@ -1077,6 +1359,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      hook_score: {
+        Args: { p_now?: string; p_posted_at: string; p_ratio: number }
+        Returns: number
+      }
       log_event: {
         Args: {
           p_action: string
@@ -1108,7 +1394,14 @@ export type Database = {
       app_role: "admin" | "team" | "editor" | "client"
       client_status: "onboarding" | "active" | "paused" | "offboarded"
       footage_check: "pending" | "passed" | "failed"
+      hook_format:
+        | "question"
+        | "bold_claim"
+        | "contrarian"
+        | "story_open"
+        | "number_list"
       job_status: "queued" | "in_progress" | "submitted" | "revision" | "done"
+      research_status: "new" | "worth_copying" | "dismissed"
       script_stage:
         | "research"
         | "scripted"
@@ -1257,7 +1550,15 @@ export const Constants = {
       app_role: ["admin", "team", "editor", "client"],
       client_status: ["onboarding", "active", "paused", "offboarded"],
       footage_check: ["pending", "passed", "failed"],
+      hook_format: [
+        "question",
+        "bold_claim",
+        "contrarian",
+        "story_open",
+        "number_list",
+      ],
       job_status: ["queued", "in_progress", "submitted", "revision", "done"],
+      research_status: ["new", "worth_copying", "dismissed"],
       script_stage: [
         "research",
         "scripted",
