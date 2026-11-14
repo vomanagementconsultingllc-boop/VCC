@@ -1,11 +1,11 @@
 // Runs automatically after every verified Netlify Forms submission (a function
 // named "submission-created" is triggered by that event) and copies the signup to:
 //
-// 1. Kit (email):
-//    - "prompts" signups are added to the prompts form, whose incentive email
-//      delivers the prompts, and tagged "AI Prompts".
-//    - "waitlist" answers are saved as custom fields and tagged "Studio Waitlist".
-//    Needs KIT_API_KEY (a Kit V4 API key) on the Netlify site.
+// 1. Resend (email):
+//    - "prompts" signups get the prompts email (netlify/lib/prompts-email.js).
+//    - "prompts" and "waitlist" signups are saved as Resend contacts.
+//    Needs RESEND_API_KEY on the Netlify site; vocreativeco.com must be a
+//    verified domain in Resend.
 //
 // 2. The "Vo Creative Studio · Signups" Google Sheet, via a small Apps Script web
 //    app inside the Sheet. Needs SHEETS_WEBHOOK_URL and SHEETS_TOKEN.
@@ -83,52 +83,78 @@ function rowFor(form, d, submitted) {
   return row;
 }
 
-// ---- Kit -----------------------------------------------------------------
-const KIT_API = process.env.KIT_API_BASE || 'https://api.kit.com/v4';
-const KIT = {
-  promptsFormId: Number(process.env.KIT_PROMPTS_FORM_ID || 10176738),
-  tags: { prompts: 25731927, waitlist: 25731928 },
-  // Kit custom field keys for the four studio waitlist answers
-  fields: { why: 'why_post_content', content: 'content_they_want_to_post', struggle: 'struggling_with', help: 'wants_from_the_studio' },
-};
+// ---- Resend (email) ---------------------------------------------------------
+// "prompts" signups get the prompts email (netlify/lib/prompts-email.js) and are
+// saved as a Resend contact. "waitlist" signups are saved as a contact too; their
+// answers stay in Netlify Forms and the Google Sheet.
+const { buildPromptsEmail } = require('../lib/prompts-email.js');
 
-async function kit(path, body) {
-  const res = await fetch(KIT_API + path, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      'X-Kit-Api-Key': process.env.KIT_API_KEY,
-    },
-    body: JSON.stringify(body || {}),
-  });
+const RESEND_API = process.env.RESEND_API_BASE || 'https://api.resend.com';
+const FROM = process.env.RESEND_FROM || 'Nathan Vo <nathan@vocreativeco.com>';
+const REPLY_TO = process.env.RESEND_REPLY_TO || 'nathan@vocreativeco.com';
+
+async function resend(method, path, body, idempotencyKey) {
+  const headers = {
+    Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+    'Content-Type': 'application/json',
+  };
+  if (idempotencyKey) headers['Idempotency-Key'] = idempotencyKey;
+  const res = await fetch(RESEND_API + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
   const text = await res.text();
-  if (!res.ok) throw new Error(`Kit ${path} -> ${res.status} ${text.slice(0, 200)}`);
+  if (!res.ok) {
+    const err = new Error(`Resend ${method} ${path} -> ${res.status} ${text.slice(0, 200)}`);
+    err.status = res.status;
+    throw err;
+  }
   return text ? JSON.parse(text) : {};
 }
 
-async function sendToKit(form, d) {
-  if (!process.env.KIT_API_KEY) return 'Kit not configured; skipped.';
+// Add the person to Resend contacts (or update their first name if they're
+// already there), so they can get a broadcast when the studio opens.
+async function saveContact(email, firstName) {
+  const contact = { email, unsubscribed: false, ...(firstName && { first_name: firstName }) };
+  try {
+    await resend('POST', '/contacts', contact);
+    return 'contact added';
+  } catch (err) {
+    if (err.status !== 409 && err.status !== 422) throw err;
+    if (firstName) await resend('PATCH', `/contacts/${encodeURIComponent(email)}`, { first_name: firstName });
+    return 'contact already saved';
+  }
+}
+
+async function sendWithResend(form, d, submissionId) {
+  if (!process.env.RESEND_API_KEY) return 'Resend not configured; skipped.';
+  if (form !== 'prompts' && form !== 'waitlist') return `Resend: nothing to do for form "${form}".`;
   const email = String(d.email || '').trim();
-  if (!email) return 'No email; skipped Kit.';
-  const firstName = String(d.name || '').trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'No valid email; skipped Resend.';
+  const firstName = String(d.name || '').trim().split(/\s+/)[0] || '';
+  const done = [];
 
   if (form === 'prompts') {
-    // Create (or update) the subscriber, tag them, then add them to the prompts
-    // form; the form's incentive email delivers the prompts.
-    const { subscriber } = await kit('/subscribers', { email_address: email, ...(firstName && { first_name: firstName }) });
-    await kit(`/tags/${KIT.tags.prompts}/subscribers/${subscriber.id}`);
-    await kit(`/forms/${KIT.promptsFormId}/subscribers/${subscriber.id}`);
-    return `Kit: ${email} added to the prompts form and tagged AI Prompts.`;
+    const msg = buildPromptsEmail({ name: firstName });
+    if (!msg) {
+      done.push('prompts email has no prompt text yet, not sent');
+    } else {
+      const sent = await resend('POST', '/emails', {
+        from: FROM,
+        to: [email],
+        reply_to: REPLY_TO,
+        subject: msg.subject,
+        html: msg.html,
+        text: msg.text,
+        tags: [{ name: 'form', value: 'prompts' }],
+      }, submissionId ? `prompts-${submissionId}` : undefined);
+      done.push(`prompts email sent (${sent.id})`);
+    }
   }
-  if (form === 'waitlist') {
-    const fields = {};
-    Object.keys(KIT.fields).forEach((k) => { if (d[k]) fields[KIT.fields[k]] = String(d[k]); });
-    const { subscriber } = await kit('/subscribers', { email_address: email, ...(firstName && { first_name: firstName }), fields });
-    await kit(`/tags/${KIT.tags.waitlist}/subscribers/${subscriber.id}`);
-    return `Kit: ${email} tagged Studio Waitlist with their answers.`;
+
+  try {
+    done.push(await saveContact(email, firstName));
+  } catch (err) {
+    done.push(`contact not saved: ${err.message}`);
   }
-  return `Kit: nothing to do for form "${form}".`;
+  return `Resend (${form}) ${email}: ${done.join('; ')}.`;
 }
 
 // ---- Google Sheets ----------------------------------------------------------
@@ -160,11 +186,11 @@ exports.handler = async (event) => {
   const form = payload.form_name || data['form-name'] || 'Other';
 
   const results = await Promise.allSettled([
-    sendToKit(form, data),
+    sendWithResend(form, data, payload.id),
     sendToSheet(form, data, payload.created_at),
   ]);
   results.forEach((r) => (r.status === 'fulfilled' ? console.log(r.value) : console.error(r.reason && r.reason.message)));
 
-  // Always 200: a Kit or Sheets hiccup must never affect the signup itself.
+  // Always 200: an email or Sheets hiccup must never affect the signup itself.
   return { statusCode: 200, body: 'ok' };
 };
