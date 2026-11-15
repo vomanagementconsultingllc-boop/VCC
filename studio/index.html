@@ -170,7 +170,7 @@
   .err:empty { display: none; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-  /* after the email: confirmation + studio waitlist question */
+  /* after the email: confirmation + Discord invite */
   .panel { width: 100%; max-width: 560px; outline: none; }
   .tick {
     display: grid;
@@ -229,56 +229,17 @@
   .btn-light { background: #fff; color: var(--ink); }
   .btn[disabled] { opacity: .6; cursor: progress; }
 
-  /* the studio waitlist questions */
-  body.quiz-mode .intro { display: none; }
-  .quiz { width: 100%; max-width: 560px; text-align: left; }
-  .progress { display: flex; gap: 6px; margin: 0 0 24px; }
-  .progress span { flex: 1; height: 5px; border-radius: 3px; background: var(--soft); transition: background-color .25s; }
-  .progress span.on { background: var(--ink); }
-  .step-label { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  .quiz h2 { margin: 0 0 22px; font-size: clamp(28px, 4.4vw, 42px); font-weight: 800; line-height: 1.06; letter-spacing: -.025em; outline: none; }
-  .options { display: grid; gap: 10px; }
-  .opt {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    min-height: 60px;
-    padding: 12px 16px;
-    border: 2px solid var(--line);
-    border-radius: 14px;
-    background: #fff;
-    color: var(--ink);
-    font: inherit;
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 1.25;
-    text-align: left;
-    cursor: pointer;
-    transition: border-color .15s, background-color .15s, color .15s;
-  }
-  @media (hover: hover) { .opt:hover { border-color: var(--ink); } }
-  .opt .key {
-    display: grid;
-    place-items: center;
-    flex: none;
-    width: 30px;
-    height: 30px;
-    border: 1.5px solid var(--line);
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--muted);
-  }
-  .opt[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: #fff; }
-  .opt[aria-pressed="true"] .key { border-color: rgba(255, 255, 255, .45); color: #fff; }
-  .quiz-nav { display: flex; justify-content: space-between; align-items: center; min-height: 40px; margin-top: 14px; }
+  body.done-mode .intro { display: none; }
   .link { padding: 8px 0; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .link:hover { color: var(--ink); }
-  .end { text-align: center; }
+  .btn-discord { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; text-decoration: none; }
+  .btn-discord svg { width: 24px; height: 24px; flex: none; }
+  .ask .link { display: block; margin: 8px auto 0; }
+  .joined { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .joined a { color: var(--ink); }
 
   /* real results */
-  body.quiz-mode .proof { display: none; }
+  body.done-mode .proof { display: none; }
   .proof { width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 16px 24px; text-align: center; border-top: 1px solid var(--line); }
   .kicker { margin: 0 0 10px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
   .proof h2 { margin: 0; font-size: clamp(32px, 5vw, 56px); font-weight: 800; line-height: 1.02; letter-spacing: -.03em; text-wrap: balance; }
@@ -353,54 +314,36 @@
     <p class="micro">Free. Sent straight to your inbox. <a href="privacy/">Privacy</a></p>
   </form>
 
-  <!-- Step 2: sent + "join the studio waitlist too?" -->
+  <!-- Step 2: sent + "join the Discord" -->
   <section class="panel" id="sent" hidden>
     <p class="tick" aria-hidden="true">&#10003;</p>
-    <h2 tabindex="-1" id="sent-title">Done! I sent the prompts to your email.</h2>
-    <p>Check <b id="s-email">your inbox</b>. If you don&rsquo;t see them in a few minutes, look in spam.</p>
+    <h2 tabindex="-1" id="sent-title">Done! The prompts are in your inbox.</h2>
+    <p>Check <b id="s-email">your inbox</b>. Not there in a few minutes? Look in spam.</p>
     <div class="ask" id="ask">
-      <h3>Want me to walk you through it?</h3>
-      <p>I&rsquo;m building a community where I walk you through all of it, step by step, so you&rsquo;re not figuring it out alone. Join the waitlist for my creative studio and get:</p>
+      <h3>Don&rsquo;t build it alone.</h3>
+      <p>Join my free Discord. Ask me questions, get unstuck, and see what everyone else is building with these prompts.</p>
       <ul class="incl">
-        <li>All 3 AI systems, set up with you</li>
-        <li>My content strategies</li>
-        <li>My behind-the-scenes thought process</li>
-        <li>Founders building right alongside you</li>
+        <li>Ask me anything in #ask-nathan</li>
+        <li>A help thread for each of the 3 systems</li>
+        <li>My full tech stack and new AI tool drops</li>
+        <li>Show off what you built</li>
       </ul>
-      <div class="yn">
-        <button type="button" class="btn btn-dark" id="yes">Yes, add me</button>
-        <button type="button" class="btn btn-light" id="no">No thanks</button>
-      </div>
+      <a class="btn btn-dark btn-discord" id="discord" href="https://discord.gg/jSfpvGcPmA" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.6 5.3A17.6 17.6 0 0 0 15.3 4l-.5 1.1a16.3 16.3 0 0 0-5 0L9.3 4a17.5 17.5 0 0 0-4.4 1.3C2.2 9.4 1.4 13.3 1.8 17.2a17.7 17.7 0 0 0 5.4 2.7l1.1-1.8a11.5 11.5 0 0 1-1.8-.9l.4-.3a12.6 12.6 0 0 0 10.8 0l.4.3c-.6.4-1.2.7-1.8.9l1.1 1.8a17.6 17.6 0 0 0 5.4-2.7c.5-4.5-.7-8.4-3.2-11.9zM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2z"/></svg>
+        <span>Join the free Discord</span>
+      </a>
+      <button type="button" class="link" id="no">No thanks, just the prompts</button>
+    </div>
+    <div class="joined" id="joined" hidden>
+      <p><b>See you inside!</b> If Discord didn&rsquo;t open, <a href="https://discord.gg/jSfpvGcPmA" target="_blank" rel="noopener">tap here to join</a>.</p>
     </div>
     <p id="no-msg" hidden>No problem. Enjoy the prompts!</p>
   </section>
 
-  <!-- Step 3: name (optional) + 4 questions -->
-  <section class="quiz" id="quiz" hidden aria-live="polite">
-    <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-    <p class="step-label" id="q-label"></p>
-    <h2 id="q-title" tabindex="-1"></h2>
-    <div id="q-body"></div>
-    <div class="quiz-nav">
-      <button type="button" class="link" id="q-back">Back</button>
-      <span></span>
-    </div>
-  </section>
-
-  <!-- Step 4: done -->
-  <section class="panel end" id="end" hidden>
-    <p class="tick" aria-hidden="true">&#10003;</p>
-    <h2 tabindex="-1" id="end-title">You&rsquo;re now on the waitlist for my creative studio.</h2>
-    <p id="end-msg">I&rsquo;ll email you first when the doors open.</p>
-    <p class="err" id="end-err" role="alert"></p>
-    <button type="button" class="btn btn-dark" id="end-retry" hidden>Try again</button>
-  </section>
-
-  <!-- So Netlify registers the waitlist form and its fields at deploy time. -->
-  <form name="waitlist" data-netlify="true" netlify-honeypot="bot-field" hidden>
-    <input type="hidden" name="form-name" value="waitlist">
-    <input name="email"><input name="name"><input name="why"><input name="content">
-    <input name="struggle"><input name="help"><input name="source"><input name="bot-field">
+  <!-- So Netlify registers the Discord-click form and its fields at deploy time. -->
+  <form name="discord-click" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="discord-click">
+    <input name="email"><input name="name"><input name="source"><input name="bot-field">
   </form>
 </main>
 
@@ -440,24 +383,11 @@
 (function () {
   'use strict';
 
-  // The studio waitlist questions. Edit the wording or options here.
-  var QUESTIONS = [
-    { key: 'why', title: 'Why are you looking to post content?',
-      options: ['To build a personal brand', 'To promote my business', 'To generate sales', 'To get opportunities'] },
-    { key: 'content', title: 'What sort of content do you want to post?',
-      options: ['Talking to camera: tips and opinions', 'Behind the scenes of my business', 'Stories from my journey', 'Showing off my product or service'] },
-    { key: 'struggle', title: 'What are you struggling with most right now?',
-      options: ['Knowing what to post', 'Getting views and followers', 'Editing takes too long', 'Turning views into customers'] },
-    { key: 'help', title: 'What would help you most from the studio?',
-      options: ['Being walked through the AI tools', 'Someone to make content with', 'A community of founders', 'A space to film'] }
-  ];
-
   var $ = function (id) { return document.getElementById(id); };
   var form = $('get'), email = $('f-email'), btn = $('f-btn'), err = $('f-err');
   var label = btn.textContent;
   var source = (location.search.slice(1) || document.referrer || 'direct').slice(0, 300);
-  var answers = { email: '', name: '' };
-  var step = 1; // 1..4 = questions
+  var who = { email: '', name: '' };
 
   $('year').textContent = String(new Date().getFullYear());
   $('f-source').value = source;
@@ -471,7 +401,7 @@
     }).then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); });
   }
   function show(el) {
-    ['get', 'sent', 'quiz', 'end'].forEach(function (id) { $(id).hidden = $(id) !== el; });
+    ['get', 'sent'].forEach(function (id) { $(id).hidden = $(id) !== el; });
   }
   function top(focusEl) {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -497,11 +427,11 @@
     fields.set('email', value);
     fields.set('name', $('f-name').value.trim());
     post(fields).then(function () {
-      answers.email = value;
-      answers.name = $('f-name').value.trim();
+      who.email = value;
+      who.name = $('f-name').value.trim();
       $('s-email').textContent = value;
-      if (answers.name) $('sent-title').textContent = 'Done, ' + answers.name + '! I sent the prompts to your email.';
-      document.body.classList.add('quiz-mode');
+      if (who.name) $('sent-title').textContent = 'Done, ' + who.name + '! The prompts are in your inbox.';
+      document.body.classList.add('done-mode');
       show($('sent'));
       top($('sent-title'));
     }).catch(function () {
@@ -511,88 +441,23 @@
     });
   });
 
-  // 2. Join the studio waitlist too?
+  // 2. Join the Discord (the link opens in a new tab; the click is recorded
+  //    as a "discord-click" submission so you can see who tapped it)
+  $('discord').addEventListener('click', function () {
+    try {
+      fetch('/', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'form-name': 'discord-click', 'bot-field': '', email: who.email, name: who.name, source: source }).toString()
+      }).catch(function () {});
+    } catch (e) { /* never block the link */ }
+    window.setTimeout(function () { $('ask').hidden = true; $('joined').hidden = false; }, 300);
+  });
   $('no').addEventListener('click', function () {
     $('ask').hidden = true;
     $('no-msg').hidden = false;
   });
-  $('yes').addEventListener('click', function () {
-    step = 1;
-    show($('quiz'));
-    render();
-  });
-
-  // 3. Name (optional) + four questions
-  function setProgress(n) {
-    Array.prototype.forEach.call(document.querySelectorAll('.progress span'), function (bar, i) {
-      bar.classList.toggle('on', i < n);
-    });
-  }
-  function render() {
-    var body = $('q-body');
-    body.innerHTML = '';
-    $('q-back').style.visibility = step === 1 ? 'hidden' : 'visible';
-
-    var q = QUESTIONS[step - 1];
-    setProgress(step);
-    $('q-label').textContent = 'Question ' + step + ' of ' + QUESTIONS.length;
-    $('q-title').textContent = q.title;
-    var list = document.createElement('div');
-    list.className = 'options';
-    q.options.forEach(function (text, i) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'opt';
-      b.setAttribute('aria-pressed', answers[q.key] === text ? 'true' : 'false');
-      b.innerHTML = '<span class="key">' + 'ABCD'.charAt(i) + '</span><span></span>';
-      b.lastChild.textContent = text;
-      b.addEventListener('click', function () { choose(q, text, b); });
-      list.appendChild(b);
-    });
-    body.appendChild(list);
-    top($('q-title'));
-  }
-  function choose(q, text, el) {
-    answers[q.key] = text;
-    Array.prototype.forEach.call(el.parentNode.children, function (o) { o.setAttribute('aria-pressed', o === el ? 'true' : 'false'); });
-    window.setTimeout(next, 220);
-  }
-  function next() {
-    if (step < QUESTIONS.length) { step += 1; render(); }
-    else finish();
-  }
-  $('q-back').addEventListener('click', function () { if (step > 1) { step -= 1; render(); } });
-  document.addEventListener('keydown', function (e) {
-    if ($('quiz').hidden) return;
-    var i = 'abcd1234'.indexOf(e.key.toLowerCase()) % 4;
-    if (i < 0 || e.metaKey || e.ctrlKey || e.altKey) return;
-    var opts = document.querySelectorAll('#q-body .opt');
-    if (opts[i]) opts[i].click();
-  });
-
-  // 4. Save to the "waitlist" form
-  function finish() {
-    show($('end'));
-    $('end-err').textContent = '';
-    $('end-retry').hidden = true;
-    $('end-title').textContent = 'Saving…';
-    top();
-    post({
-      'form-name': 'waitlist', 'bot-field': '', email: answers.email, name: answers.name,
-      why: answers.why || '', content: answers.content || '', struggle: answers.struggle || '', help: answers.help || '',
-      source: source
-    }).then(function () {
-      $('end-title').textContent = 'You’re now on the waitlist for my creative studio.';
-      $('end-msg').textContent = 'I’ll email you first when the doors open' + (answers.name ? ', ' + answers.name : '') + '.';
-      $('end-title').focus({ preventScroll: true });
-    }).catch(function () {
-      $('end-title').textContent = 'Almost there.';
-      $('end-msg').textContent = '';
-      $('end-err').textContent = 'That didn’t save. Check your connection and try again.';
-      $('end-retry').hidden = false;
-    });
-  }
-  $('end-retry').addEventListener('click', finish);
 
   $('again-btn').addEventListener('click', function (e) {
     e.preventDefault();
