@@ -37,7 +37,7 @@ export function ResearchCard({
       </CardTitle>
 
       {aiDrafted && !reviewed && (
-        <div className="mb-4 rounded-lg bg-warning-soft px-3 py-2 text-sm text-ink">
+        <div className="mb-4 rounded-2xl bg-warning-soft px-3 py-2 text-sm text-ink">
           <p>This draft was written by AI. It cannot be sent to the client until someone on the team has read it.</p>
           <form action={markReviewed} className="mt-2">
             <input type="hidden" name="script_id" value={scriptId} />
@@ -93,7 +93,7 @@ export function ResearchCard({
         <div className="mt-5 border-t border-line pt-4">
           <h3 className="mb-2 text-sm font-semibold text-ink">Adapted, not copied?</h3>
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-lg bg-surface-2 p-3">
+            <div className="rounded-2xl bg-surface-2 p-3">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-3">
                 Source{source.handle && ` · @${source.handle}`}
               </p>
@@ -102,7 +102,7 @@ export function ResearchCard({
                 Watch the source
               </a>
             </div>
-            <div className="rounded-lg bg-surface-2 p-3">
+            <div className="rounded-2xl bg-surface-2 p-3">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-ink-3">This client&rsquo;s version (last saved)</p>
               <p className="whitespace-pre-wrap text-sm text-ink">{clientVersion || "Nothing written yet."}</p>
             </div>

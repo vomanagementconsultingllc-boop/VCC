@@ -70,7 +70,7 @@ export function SubmitCut({ jobId }: { jobId: string }) {
         {busy ? progress : "Submit for review"}
       </Button>
       {error && (
-        <p role="alert" className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
+        <p role="alert" className="rounded-2xl bg-danger-soft px-3 py-2 text-sm text-danger">
           {error}
         </p>
       )}

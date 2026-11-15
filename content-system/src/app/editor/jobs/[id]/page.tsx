@@ -130,7 +130,7 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
               {shots?.map((shot) => {
                 const clip = clips?.find((c) => c.shot_number === shot.shot_number);
                 return (
-                  <li key={shot.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-line p-3">
+                  <li key={shot.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-ink/[0.07] p-3">
                     <span className="min-w-0 flex-1 text-sm">
                       <span className="block font-semibold text-ink">
                         Shot {shot.shot_number}
@@ -168,7 +168,7 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
             <p className="mb-4 text-sm text-ink-2">Extra clips this client filmed. Use what fits.</p>
             <ul className="space-y-3">
               {broll?.map((b) => (
-                <li key={b.id} className="flex flex-wrap items-center gap-3 rounded-lg border border-line p-3 text-sm">
+                <li key={b.id} className="flex flex-wrap items-center gap-3 rounded-2xl border border-ink/[0.07] p-3 text-sm">
                   <span className="min-w-0 flex-1">
                     <span className="block font-semibold text-ink">{one(b.request)?.title ?? "B-roll"}</span>
                     <span className="text-ink-3">

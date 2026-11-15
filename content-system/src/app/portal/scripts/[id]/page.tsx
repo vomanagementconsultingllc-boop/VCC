@@ -168,7 +168,7 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
         )}
         <ol className="space-y-4">
           {shots?.map((shot) => (
-            <li key={shot.id} className="rounded-lg border border-line p-4" data-testid="portal-shot">
+            <li key={shot.id} className="rounded-2xl border border-ink/[0.07] p-4" data-testid="portal-shot">
               <p className="font-semibold text-ink">
                 Shot {shot.shot_number}
                 {shot.instruction ? `: ${shot.instruction}` : ""}
@@ -225,7 +225,7 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
         {comments?.length ? (
           <ul className="mb-4 space-y-3">
             {comments.map((c) => (
-              <li key={c.id} className="rounded-lg bg-surface-2 px-3 py-2 text-sm">
+              <li key={c.id} className="rounded-2xl bg-surface-2 px-3 py-2 text-sm">
                 <p className="whitespace-pre-wrap text-ink">{c.body}</p>
                 <p className="mt-1 text-xs text-ink-3">{formatDateTime(c.created_at)}</p>
               </li>

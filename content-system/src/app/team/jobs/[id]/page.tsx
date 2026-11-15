@@ -74,7 +74,7 @@ export default async function TeamJobPage({ params }: PageProps<"/team/jobs/[id]
                 )}
               </div>
               {job.editor_notes && (
-                <p className="mb-4 whitespace-pre-wrap rounded-lg bg-surface-2 px-3 py-2 text-sm text-ink">
+                <p className="mb-4 whitespace-pre-wrap rounded-2xl bg-surface-2 px-3 py-2 text-sm text-ink">
                   <span className="font-semibold">Editor: </span>
                   {job.editor_notes}
                 </p>

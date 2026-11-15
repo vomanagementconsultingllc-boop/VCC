@@ -24,7 +24,7 @@ export function FootageCard({ shots, uploads, canUpload }: { shots: Shot[]; uplo
           const earlier = uploads.filter((u) => u.shot_id === shot.id && u.superseded).length;
           const requirement = { orientation: shot.orientation, minDurationSeconds: shot.min_duration_seconds };
           return (
-            <li key={shot.id} className="rounded-lg border border-line p-4">
+            <li key={shot.id} className="rounded-2xl border border-ink/[0.07] p-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="font-semibold text-ink">
                   Shot {shot.shot_number}
@@ -64,7 +64,7 @@ export function FootageCard({ shots, uploads, canUpload }: { shots: Shot[]; uplo
                       href={`/api/media/footage/${upload.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center rounded-lg border border-line-strong px-4 text-sm font-semibold text-ink hover:bg-surface-2"
+                      className="inline-flex min-h-11 items-center rounded-2xl border border-ink/[0.07]-strong px-4 text-sm font-semibold text-ink hover:bg-surface-2"
                     >
                       Watch clip
                     </a>

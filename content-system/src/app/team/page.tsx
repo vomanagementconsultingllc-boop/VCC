@@ -39,7 +39,7 @@ export default async function ClientsPage() {
             <li key={c.id}>
               <Link
                 href={`/team/clients/${c.id}`}
-                className="block h-full rounded-xl border border-line bg-surface p-5 hover:border-gold"
+                className="block h-full panel border border-ink/[0.06] p-5 hover:border-gold"
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>

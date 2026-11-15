@@ -30,7 +30,7 @@ export default async function EditorHome() {
             <li key={job.id}>
               <Link
                 href={`/editor/jobs/${job.id}`}
-                className="flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface p-4 hover:border-gold"
+                className="flex flex-wrap items-center gap-3 panel border border-ink/[0.06] p-4 hover:border-gold"
               >
                 <span className="min-w-0 flex-1">
                   <span className="block font-semibold text-ink">{one(job.script)?.title ?? "Edit job"}</span>
@@ -54,7 +54,7 @@ export default async function EditorHome() {
       {done.length > 0 && (
         <section className="mt-8">
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-2">Finished</h2>
-          <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+          <ul className="divide-y divide-line panel border border-ink/[0.06]">
             {done.map((job) => (
               <li key={job.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
                 <span className="text-ink">{job.client_label}</span>

@@ -52,7 +52,7 @@ export default async function PerformancePage() {
     <>
       <PageHeader title="Performance" subtitle="Which hooks and formats each client is using, and what has gone out." />
       {!hasNumbers && (
-        <p className="mb-5 rounded-lg bg-info-soft px-4 py-3 text-sm text-ink">
+        <p className="mb-5 rounded-2xl bg-info-soft px-4 py-3 text-sm text-ink">
           View counts are not collected yet. They will appear here once platform API access is set up; until then this
           page shows what was made and posted.
         </p>
@@ -77,15 +77,15 @@ export default async function PerformancePage() {
               <Card key={client.id}>
                 <CardTitle>{client.business || client.name}</CardTitle>
                 <dl className="grid grid-cols-3 gap-3 text-center">
-                  <div className="rounded-lg bg-surface-2 p-3">
+                  <div className="rounded-2xl bg-surface-2 p-3">
                     <dt className="text-xs text-ink-2">In progress</dt>
                     <dd className="font-display text-2xl text-ink">{own.length - made.length}</dd>
                   </div>
-                  <div className="rounded-lg bg-surface-2 p-3">
+                  <div className="rounded-2xl bg-surface-2 p-3">
                     <dt className="text-xs text-ink-2">Delivered</dt>
                     <dd className="font-display text-2xl text-ink">{made.length}</dd>
                   </div>
-                  <div className="rounded-lg bg-surface-2 p-3">
+                  <div className="rounded-2xl bg-surface-2 p-3">
                     <dt className="text-xs text-ink-2">Posted</dt>
                     <dd className="font-display text-2xl text-ink">{posted}</dd>
                   </div>

@@ -79,7 +79,7 @@ export default async function PortalBrollPage() {
               <h2 id="done-heading" className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-2">
                 Done
               </h2>
-              <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+              <ul className="divide-y divide-line panel border border-ink/[0.06]">
                 {done.map((r) => (
                   <li key={r.id} className="flex items-center justify-between gap-3 px-4 py-3 text-sm">
                     <span className="text-ink">{r.title}</span>

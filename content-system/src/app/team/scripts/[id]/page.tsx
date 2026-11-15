@@ -222,7 +222,7 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
             {comments?.length ? (
               <ul className="mb-4 space-y-3">
                 {comments.map((c) => (
-                  <li key={c.id} className="rounded-lg bg-surface-2 px-3 py-2 text-sm">
+                  <li key={c.id} className="rounded-2xl bg-surface-2 px-3 py-2 text-sm">
                     <p className="whitespace-pre-wrap text-ink">{c.body}</p>
                     <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-ink-3">
                       {c.author?.full_name || (c.author?.role === "client" ? "Client" : "Team")} ·{" "}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { publicEnv } from "@/lib/env";
+import { Eyebrow } from "@/components/ui";
 import { LoginForm } from "./login-form";
 import { Logo } from "@/components/logo";
 
@@ -49,8 +50,8 @@ export default function LoginPage() {
 
       <section className="flex flex-1 items-start justify-center bg-surface px-6 py-10 lg:items-center lg:px-14">
         <div className="w-full max-w-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold">Client portal</p>
-          <h2 className="mt-2 font-display text-3xl text-ink">Sign in</h2>
+          <Eyebrow>Client portal</Eyebrow>
+          <h2 className="mt-2 font-display text-4xl text-ink">Sign in</h2>
           <p className="mb-6 mt-2 text-ink-2">Enter your email and we will send you a link to sign in.</p>
           <LoginForm supportEmail={publicEnv.supportEmail} />
 

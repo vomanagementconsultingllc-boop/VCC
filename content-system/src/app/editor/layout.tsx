@@ -1,8 +1,8 @@
 import { Suspense, type ReactNode } from "react";
 import { requireEditor } from "@/lib/auth";
+import { TopNav } from "@/components/app-nav";
 import { SignOutButton } from "@/components/sign-out";
 import { PageLoading } from "@/components/ui";
-import { Logo } from "@/components/logo";
 
 export default function EditorLayout({ children }: { children: ReactNode }) {
   return (
@@ -13,19 +13,11 @@ export default function EditorLayout({ children }: { children: ReactNode }) {
 }
 
 async function EditorShell({ children }: { children: ReactNode }) {
-  const user = await requireEditor();
+  await requireEditor();
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b border-line bg-surface">
-        <div className="mx-auto flex w-full max-w-4xl items-center justify-between gap-4 px-4 py-3">
-          <span className="flex items-baseline gap-2"><Logo /><span className="text-sm text-ink-2">Editing</span></span>
-          <div className="flex items-center gap-3 text-sm text-ink-2">
-            <span>{user.fullName || user.email}</span>
-            <SignOutButton />
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-6">{children}</main>
+    <div className="min-h-screen">
+      <TopNav items={[{ href: "/editor", label: "My jobs" }]} label="Editing" right={<SignOutButton />} />
+      <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-24 sm:pt-28">{children}</main>
     </div>
   );
 }

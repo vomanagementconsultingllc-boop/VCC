@@ -150,7 +150,7 @@ export function UploadSlot({
   const pickLabel = shown?.status === "failed" ? "Record this shot again" : shown ? "Replace this clip" : "Record or choose video";
 
   return (
-    <div className="mt-3 rounded-lg bg-surface-2 p-3" data-testid={`slot-${shot.number}`}>
+    <div className="mt-3 rounded-2xl bg-surface-2 p-3" data-testid={`slot-${shot.number}`}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-sm font-semibold text-ink">Your clip for shot {shot.number}</span>
         {!busy && shown?.status === "passed" && <Badge tone="success">Looks good</Badge>}
@@ -168,7 +168,7 @@ export function UploadSlot({
       )}
 
       {phase.name === "warning" && (
-        <div className="mt-2 rounded-lg bg-warning-soft p-3 text-sm" role="alert">
+        <div className="mt-2 rounded-2xl bg-warning-soft p-3 text-sm" role="alert">
           <ul className="space-y-1 text-ink">
             {phase.problems.map((p) => (
               <li key={p}>{p}</li>

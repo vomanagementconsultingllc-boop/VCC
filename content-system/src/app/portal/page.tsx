@@ -42,7 +42,7 @@ export default async function PortalHome() {
         {(brollToSend > 0 || brollToRedo > 0) && (
           <Link
             href="/portal/broll"
-            className="mb-3 flex min-h-20 items-center justify-between gap-3 rounded-xl border border-gold bg-surface p-4"
+            className="mb-3 flex min-h-20 items-center justify-between gap-3 panel border border-gold p-4"
           >
             <span>
               <span className="block font-semibold text-ink">
@@ -72,7 +72,7 @@ export default async function PortalHome() {
               <li key={s.id}>
                 <Link
                   href={s.stage === "delivered" ? "/portal/delivered" : `/portal/scripts/${s.id}`}
-                  className="flex min-h-20 items-center justify-between gap-3 rounded-xl border border-gold bg-surface p-4"
+                  className="flex min-h-20 items-center justify-between gap-3 panel border border-gold p-4"
                 >
                   <span>
                     <span className="block font-semibold text-ink">{CLIENT_TASK[s.stage]}</span>
@@ -98,7 +98,7 @@ export default async function PortalHome() {
               <li key={s.id}>
                 <Link
                   href={`/portal/scripts/${s.id}`}
-                  className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface p-4"
+                  className="flex items-center justify-between gap-3 panel border border-ink/[0.06] p-4"
                 >
                   <span className="font-semibold text-ink">{s.title}</span>
                   <Badge tone={STAGES[s.stage].tone}>

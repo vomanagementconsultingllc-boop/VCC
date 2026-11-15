@@ -45,7 +45,7 @@ export default async function ClientScriptsPage({ params }: PageProps<"/team/cli
       {!scripts?.length ? (
         <EmptyState title="No scripts yet">Start one from here, or from the research board.</EmptyState>
       ) : (
-        <ul className="divide-y divide-line rounded-xl border border-line bg-surface">
+        <ul className="divide-y divide-line panel border border-ink/[0.06]">
           {scripts.map((s) => (
             <li key={s.id}>
               <Link href={`/team/scripts/${s.id}`} className="flex flex-wrap items-center gap-3 px-5 py-4 hover:bg-surface-2">

@@ -47,7 +47,7 @@ export default async function VoicePage({ params }: PageProps<"/team/clients/[id
         <div className="space-y-5 lg:col-span-2">
           <Card>
             <CardTitle>Voice profile</CardTitle>
-            <div className="mb-5 grid gap-4 rounded-lg bg-surface-2 p-4 sm:grid-cols-2">
+            <div className="mb-5 grid gap-4 rounded-2xl bg-surface-2 p-4 sm:grid-cols-2">
               <ActionForm action={importFireflies}>
                 <input type="hidden" name="client_id" value={client.id} />
                 <Field label="Import the onboarding call" hint="Fireflies meeting link or id.">
@@ -117,7 +117,7 @@ export default async function VoicePage({ params }: PageProps<"/team/clients/[id
                 <Textarea name="summary" rows={6} defaultValue={voice?.summary} />
               </Field>
 
-              <fieldset className="rounded-lg border border-line p-4">
+              <fieldset className="rounded-2xl border border-ink/[0.07] p-4">
                 <legend className="px-1 text-sm font-semibold text-ink">Logistics from the call</legend>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {INTAKE_FIELDS.map((f) => (

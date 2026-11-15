@@ -76,7 +76,7 @@ export default async function PipelinePage({ searchParams }: PageProps<"/team/pi
           {BOARD_STAGES.map((stage) => {
             const cards = byStage.get(stage) ?? [];
             return (
-              <section key={stage} className="w-60 shrink-0 rounded-xl bg-band p-2" aria-label={STAGES[stage].label}>
+              <section key={stage} className="w-60 shrink-0 rounded-[24px] bg-ink/[0.04] p-2" aria-label={STAGES[stage].label}>
                 <h2 className="flex items-center justify-between px-2 py-1.5 text-sm font-semibold text-ink">
                   {STAGES[stage].label}
                   <span className="text-ink-3">{cards.length}</span>
@@ -89,7 +89,7 @@ export default async function PipelinePage({ searchParams }: PageProps<"/team/pi
                       <li key={card.id}>
                         <Link
                           href={`/team/scripts/${card.id}`}
-                          className="block rounded-lg border border-line bg-surface p-3 text-sm hover:border-gold"
+                          className="block rounded-2xl border border-ink/[0.06] bg-surface shadow-soft p-3 text-sm hover:border-gold"
                         >
                           <span className="block font-semibold text-ink">{card.title}</span>
                           <span className="block text-ink-2">{card.client?.business || card.client?.name}</span>

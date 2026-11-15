@@ -46,7 +46,7 @@ export default async function JobsPage() {
             {ready.map((script) => {
               const client = one(script.client);
               return (
-                <li key={script.id} className="rounded-lg border border-line p-4">
+                <li key={script.id} className="rounded-2xl border border-ink/[0.07] p-4">
                   <p className="font-semibold text-ink">
                     <Link href={`/team/scripts/${script.id}`} className="hover:text-gold">
                       {script.title}
@@ -84,7 +84,7 @@ export default async function JobsPage() {
       {!sorted.length ? (
         <EmptyState title="No edit jobs yet" />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-line bg-surface">
+        <div className="overflow-x-auto panel border border-ink/[0.06]">
           <table className="w-full min-w-[42rem] text-left text-sm">
             <thead className="border-b border-line text-xs uppercase tracking-wide text-ink-2">
               <tr>

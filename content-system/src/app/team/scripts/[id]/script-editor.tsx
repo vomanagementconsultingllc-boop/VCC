@@ -136,7 +136,7 @@ export function ScriptEditor({ initial, neverSay }: { initial: EditorScript; nev
             <Textarea name="body" rows={12} value={body} onChange={(e) => touch(setBody)(e.target.value)} />
           </Field>
           {violations.length > 0 && (
-            <p role="alert" className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
+            <p role="alert" className="rounded-2xl bg-danger-soft px-3 py-2 text-sm text-danger">
               Uses words this client never says: <strong>{violations.join(", ")}</strong>. Reword before sending.
             </p>
           )}
@@ -157,13 +157,13 @@ export function ScriptEditor({ initial, neverSay }: { initial: EditorScript; nev
           Each shot becomes one upload slot for the client, labelled with its number and instruction.
         </p>
         {shots.length === 0 && (
-          <p className="rounded-lg border border-dashed border-line-strong px-4 py-6 text-center text-sm text-ink-2">
+          <p className="rounded-2xl border border-dashed border-ink/15 px-4 py-6 text-center text-sm text-ink-2">
             No shots yet. A script needs at least one before it can be sent.
           </p>
         )}
         <ol className="space-y-4">
           {shots.map((shot, index) => (
-            <li key={shot.key} className="rounded-lg border border-line p-4" data-testid="shot">
+            <li key={shot.key} className="rounded-2xl border border-ink/[0.07] p-4" data-testid="shot">
               <div className="mb-3 flex items-center justify-between gap-2">
                 <span className="font-semibold text-ink">Shot {index + 1}</span>
                 <span className="flex gap-1">

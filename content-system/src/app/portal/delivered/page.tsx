@@ -62,7 +62,7 @@ export default async function DeliveredPage() {
               {video.caption_draft && (
                 <div className="mt-4">
                   <h3 className="mb-1 text-sm font-semibold text-ink">Caption</h3>
-                  <p className="mb-3 whitespace-pre-wrap rounded-lg bg-surface-2 px-3 py-2 text-sm text-ink">
+                  <p className="mb-3 whitespace-pre-wrap rounded-2xl bg-surface-2 px-3 py-2 text-sm text-ink">
                     {video.caption_draft}
                   </p>
                   <CopyButton text={video.caption_draft} />

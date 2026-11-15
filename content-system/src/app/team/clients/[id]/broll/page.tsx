@@ -80,7 +80,7 @@ export default async function ClientBrollPage({ params }: PageProps<"/team/clien
       <ClientTabs clientId={client.id} />
 
       {!ai && (
-        <p className="mb-5 rounded-lg bg-warning-soft px-4 py-3 text-sm text-ink">
+        <p className="mb-5 rounded-2xl bg-warning-soft px-4 py-3 text-sm text-ink">
           AI review is off (no ANTHROPIC_API_KEY). Clips are still checked for length and orientation, then wait here for
           you to accept or send back.
         </p>
@@ -106,7 +106,7 @@ export default async function ClientBrollPage({ params }: PageProps<"/team/clien
                 </p>
 
                 {current ? (
-                  <div className="rounded-lg bg-surface-2 p-3 text-sm">
+                  <div className="rounded-2xl bg-surface-2 p-3 text-sm">
                     <p className="text-ink-2">
                       {current.original_name || "clip"} · {formatBytes(current.size_bytes)}
                       {current.duration_seconds != null && ` · ${Math.round(current.duration_seconds)}s`}

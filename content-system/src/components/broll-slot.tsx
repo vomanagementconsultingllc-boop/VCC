@@ -71,7 +71,7 @@ export function BrollSlot({ requestId, current, canSubmit }: { requestId: string
   }
 
   return (
-    <div className="mt-4 rounded-lg bg-surface-2 p-3" data-testid="broll-slot">
+    <div className="mt-4 rounded-2xl bg-surface-2 p-3" data-testid="broll-slot">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-sm font-semibold text-ink">Your clip</span>
         {!busy && shown?.status === "passed" && <Badge tone="success">Accepted</Badge>}
@@ -81,7 +81,7 @@ export function BrollSlot({ requestId, current, canSubmit }: { requestId: string
       </div>
 
       {!busy && shown?.status === "failed" && shown.advice && (
-        <div className="mt-2 rounded-lg bg-warning-soft px-3 py-2 text-sm text-ink" role="alert">
+        <div className="mt-2 rounded-2xl bg-warning-soft px-3 py-2 text-sm text-ink" role="alert">
           <p className="font-semibold">What to change</p>
           <p className="mt-1 whitespace-pre-wrap">{shown.advice}</p>
         </div>

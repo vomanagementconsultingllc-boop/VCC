@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Hanken_Grotesk, Marcellus } from "next/font/google";
+import { Hanken_Grotesk, Marcellus, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 
 const hanken = Hanken_Grotesk({ variable: "--font-hanken", subsets: ["latin"] });
 const marcellus = Marcellus({ variable: "--font-marcellus", subsets: ["latin"], weight: "400" });
+const splineMono = Spline_Sans_Mono({ variable: "--font-spline-mono", subsets: ["latin"], weight: ["400", "500"] });
 
 export const metadata: Metadata = {
   title: { default: "Vo Creative Co. Studio", template: "%s · Vo Creative Co." },
@@ -19,7 +20,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${hanken.variable} ${marcellus.variable} h-full antialiased`}>
+    <html lang="en" className={`${hanken.variable} ${marcellus.variable} ${splineMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

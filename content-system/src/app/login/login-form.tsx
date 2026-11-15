@@ -66,7 +66,7 @@ export function LoginForm({ supportEmail }: { supportEmail: string }) {
         {pending ? "Sending…" : "Email me a sign-in link"}
       </button>
       {state?.error && (
-        <p role="alert" className="rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
+        <p role="alert" className="rounded-2xl bg-danger-soft px-3 py-2 text-sm text-danger">
           {state.error}
         </p>
       )}

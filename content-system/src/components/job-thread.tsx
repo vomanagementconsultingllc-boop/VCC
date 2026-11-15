@@ -26,7 +26,7 @@ export function JobThread({ jobId, messages, canPost }: { jobId: string; message
       ) : (
         <ol className="mb-4 space-y-3">
           {messages.map((m) => (
-            <li key={m.id} className="rounded-lg bg-surface-2 px-3 py-2 text-sm">
+            <li key={m.id} className="rounded-2xl bg-surface-2 px-3 py-2 text-sm">
               <p className="mb-1 flex flex-wrap items-center gap-2 text-xs text-ink-3">
                 {KIND[m.kind] && <Badge tone={KIND[m.kind].tone}>{KIND[m.kind].label}</Badge>}
                 {m.author?.full_name || (m.author?.role === "editor" ? "Editor" : "Team")} · {formatDateTime(m.created_at)}

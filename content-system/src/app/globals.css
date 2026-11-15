@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 /* Vo Creative Co. "Roman Gold": white-led surfaces, antique gold accents,
-   espresso ink. Same tokens as the marketing site. */
+   espresso ink. Same tokens as the marketing site.
+
+   The shapes follow the reference the client chose: floating glass
+   navigation, pill buttons, large soft-cornered cards with hairline borders
+   and very light layered shadows, small monospace labels. */
 @theme {
   --color-ink: #251d16;
   --color-ink-2: #70604d;
   --color-ink-3: #9c8c76;
   --color-surface: #ffffff;
-  --color-surface-2: #f4f3ef;
+  --color-surface-2: #f6f4ef;
   --color-band: #eceae4;
   --color-line: #eae7e0;
   --color-line-strong: #dbd7ce;
@@ -26,6 +30,43 @@
 
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-marcellus), Georgia, serif;
+  --font-mono: var(--font-spline-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Barely-there depth for cards; a deeper float for the glass bars. */
+  --shadow-soft: 0 0 0.5px rgb(37 29 22 / 0.35), 0 1px 0.5px rgb(37 29 22 / 0.04), 0 2px 2px rgb(37 29 22 / 0.04);
+  --shadow-float:
+    0 10px 40px -10px rgb(37 29 22 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.8),
+    inset 0 -1px 0 rgb(255 255 255 / 0.2);
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 rgb(0 0 0 / 0.16);
+}
+
+/* A card surface: big soft corners, white, light layered shadow. Pair with a
+   border class for the hairline. */
+@utility panel {
+  border-radius: 24px;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Frosted glass for the floating navigation bars. */
+@utility glass {
+  border: 1px solid rgb(255 255 255 / 0.7);
+  background-color: rgb(255 255 255 / 0.6);
+  -webkit-backdrop-filter: blur(40px) saturate(2);
+  backdrop-filter: blur(40px) saturate(2);
+  box-shadow: var(--shadow-float);
+}
+
+/* More solid glass, for a bar that sits over scrolling content and has to stay readable. */
+@utility glass-solid {
+  background-color: rgb(255 255 255 / 0.88);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 html {
@@ -33,7 +74,12 @@ html {
 }
 
 body {
-  background: var(--color-surface-2);
+  /* Warm paper with a faint wash of gold behind the top bar, so the glass
+     has something to pick up. */
+  background:
+    radial-gradient(1100px 420px at 50% -120px, rgb(239 226 198 / 0.75), transparent 70%),
+    var(--color-surface-2);
+  background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
