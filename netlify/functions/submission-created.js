@@ -149,7 +149,7 @@ async function sendWithResend(form, d, submissionId) {
   const done = [];
 
   if (form === 'prompts') {
-    const msg = buildPromptsEmail({ name: firstName });
+    const msg = buildPromptsEmail({ name: firstName, email });
     if (!msg) {
       done.push('prompts email has no prompt links yet, not sent');
     } else {

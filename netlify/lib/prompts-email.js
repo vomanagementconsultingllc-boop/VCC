@@ -27,7 +27,16 @@ const PROMPTS = [
 const SUBJECT = 'Your 3 AI prompts';
 const PREHEADER = 'My AI Video Editor, Viral Video Researcher and Outreach System.';
 const PAGE_URL = `${SITE}/studio/`;
-const DISCORD_URL = 'https://discord.gg/jSfpvGcPmA';
+
+// The Discord button opens the questions on the page, already knowing who the
+// person is (?join=...). After question 4 the page shows the invite link.
+// The token is just base64url JSON of their email and first name (not a secret,
+// it only saves them retyping); studio/index.html reads it.
+function joinUrl(email, first) {
+  if (!email) return `${PAGE_URL}?src=email`;
+  const token = Buffer.from(JSON.stringify({ e: email, n: first || '' }), 'utf8').toString('base64url');
+  return `${PAGE_URL}?join=${token}&src=email`;
+}
 
 function promptsReady() {
   return PROMPTS.every((p) => /^https:\/\//.test(p.url || ''));
@@ -56,9 +65,10 @@ function promptBlock(p, i) {
 }
 
 // Returns { subject, html, text } for one person, or null if a prompt has no link.
-function buildPromptsEmail({ name } = {}) {
+function buildPromptsEmail({ name, email } = {}) {
   if (!promptsReady()) return null;
   const first = String(name || '').trim().split(/\s+/)[0] || '';
+  const discordLink = joinUrl(String(email || '').trim(), first);
   const hey = first ? `Hey ${first},` : 'Hey,';
 
   const html = `<!doctype html>
@@ -76,7 +86,8 @@ function buildPromptsEmail({ name } = {}) {
   <tr><td style="padding:32px 0 0">
     <h2 style="margin:0 0 8px;font:800 22px/1.2 ${FONT};color:#0a0a0a">Don&rsquo;t build it alone.</h2>
     <p style="margin:0 0 16px;font:16px/1.6 ${FONT};color:#1a1a1a">Join my free Discord. Ask me anything in #ask-nathan, get help in the thread for each system, see my full tech stack and new AI tool drops, and show off what you built.</p>
-    <a href="${DISCORD_URL}" style="display:inline-block;padding:15px 22px;background:#5865F2;border-radius:10px;font:700 16px/1 ${FONT};color:#ffffff;text-decoration:none">Join the free Discord &rarr;</a>
+    <a href="${esc(discordLink)}" style="display:inline-block;padding:15px 22px;background:#5865F2;border-radius:10px;font:700 16px/1 ${FONT};color:#ffffff;text-decoration:none">Join the free Discord &rarr;</a>
+    <p style="margin:10px 0 0;font:14px/1.5 ${FONT};color:#6b6b6b">Answer 4 quick questions, then you get the invite link.</p>
     <p style="margin:24px 0 4px;font:16px/1.6 ${FONT};color:#1a1a1a">Hit reply and tell me which one you&rsquo;re trying first. I read every reply.</p>
     <p style="margin:18px 0 0;font:16px/1.6 ${FONT};color:#1a1a1a">Nathan</p>
   </td></tr>
@@ -95,7 +106,8 @@ function buildPromptsEmail({ name } = {}) {
     ...PROMPTS.flatMap((p, i) => [`PROMPT 0${i + 1}: ${p.title.toUpperCase()}`, p.blurb, p.url, '']),
     "DON'T BUILD IT ALONE",
     'Join my free Discord. Ask me anything in #ask-nathan, get help in the thread for each system, see my full tech stack and new AI tool drops, and show off what you built.',
-    `Join here: ${DISCORD_URL}`,
+    'Answer 4 quick questions, then you get the invite link:',
+    discordLink,
     '',
     "Hit reply and tell me which one you're trying first. I read every reply.",
     '',

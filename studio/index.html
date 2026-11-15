@@ -388,7 +388,7 @@
 
   <!-- Step 3: four questions (answers are saved for email campaigns) -->
   <section class="quiz" id="quiz" hidden aria-live="polite">
-    <p class="got"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V7a5 5 0 0 1 10 0v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg><span>Your invite link unlocks after question 4.</span></p>
+    <p class="got"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V7a5 5 0 0 1 10 0v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg><span id="lock-text">Your invite link unlocks after question 4.</span></p>
     <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
     <p class="step-label" id="q-label"></p>
     <h2 id="q-title" tabindex="-1"></h2>
@@ -475,13 +475,29 @@
   var $ = function (id) { return document.getElementById(id); };
   var form = $('get'), email = $('f-email'), btn = $('f-btn'), err = $('f-err');
   var label = btn.textContent;
-  var source = (location.search.slice(1) || document.referrer || 'direct').slice(0, 300);
+  // ?join=... comes from the Discord button in the prompts email: base64url JSON
+  // {e: email, n: first name}. It's kept out of the recorded source.
+  var params = new URLSearchParams(location.search);
+  var joinToken = params.get('join');
+  params.delete('join');
+  var source = (params.toString() || document.referrer || 'direct').slice(0, 300);
   var who = { email: '', name: '' };
   var step = 1; // 1..4
 
   $('year').textContent = String(new Date().getFullYear());
   $('f-source').value = source;
   if (location.hash === '#join' && window.matchMedia('(pointer: fine)').matches) email.focus();
+
+  function readJoinToken(t) {
+    try {
+      var b64 = t.replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var bytes = Uint8Array.from(atob(b64), function (c) { return c.charCodeAt(0); });
+      var j = JSON.parse(new TextDecoder().decode(bytes));
+      if (j && typeof j.e === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(j.e)) return { email: j.e, name: String(j.n || '').slice(0, 60) };
+    } catch (e) { /* bad or cut-off link: fall back to the normal page */ }
+    return null;
+  }
 
   function post(fields) {
     return fetch('/', {
@@ -621,6 +637,22 @@
       } catch (e) { /* ignore */ }
     });
   });
+
+  // From the email's Discord button: go straight to the questions.
+  var fromEmail = joinToken && readJoinToken(joinToken);
+  if (joinToken) history.replaceState(null, '', location.pathname + (params.toString() ? '?' + params.toString() : '') + location.hash);
+  if (fromEmail) {
+    who.email = fromEmail.email;
+    who.name = fromEmail.name;
+    if (who.name) {
+      $('lock-text').textContent = 'Hey ' + who.name + '! Your invite link unlocks after question 4.';
+      $('invite-title').textContent = 'Here’s your invite, ' + who.name + '!';
+    }
+    document.body.classList.add('done-mode');
+    step = 1;
+    show($('quiz'));
+    render();
+  }
 
   $('again-btn').addEventListener('click', function (e) {
     e.preventDefault();
