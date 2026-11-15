@@ -26,7 +26,7 @@ export default function DemoShoot() {
       <Guide mood="oops">
         One clip needs another go. I have said exactly what to change on it. It will only take a minute.
       </Guide>
-      <Card className="p-0 sm:p-0">
+      <Card flush>
         <div className="px-5 pt-5">
           <CardTitle>Brushing too hard</CardTitle>
           <p className="-mt-2 mb-3 text-sm text-ink-2">Tap the text to start and pause. Use full screen while you record.</p>

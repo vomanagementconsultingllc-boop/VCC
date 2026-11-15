@@ -43,8 +43,19 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
   );
 }
 
-export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return <section className={cn("panel border border-ink/[0.06] p-5 sm:p-6", className)}>{children}</section>;
+export function Card({
+  className,
+  children,
+  flush = false,
+}: {
+  className?: string;
+  children: ReactNode;
+  /** No inner padding, for content that runs to the card's edges. */
+  flush?: boolean;
+}) {
+  return (
+    <section className={cn("panel border border-ink/[0.06]", !flush && "p-5 sm:p-6", className)}>{children}</section>
+  );
 }
 
 export function CardTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {

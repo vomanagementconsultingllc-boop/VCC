@@ -131,8 +131,9 @@ export function Teleprompter({ text, className }: { text: string; className?: st
     Math.min(range.max, Math.max(range.min, value));
 
   const paragraphs = text.split(/\n+/).filter((p) => p.trim());
-  const controlButton =
-    "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-white/25 px-3 text-sm font-semibold text-white hover:bg-white/10";
+  const controlBase = "inline-flex min-h-11 min-w-11 items-center justify-center rounded-lg border px-3 text-sm font-semibold";
+  const controlButton = cn(controlBase, "border-white/25 text-white hover:bg-white/10");
+  const primaryButton = cn(controlBase, "border-white bg-white text-black hover:bg-white/90");
 
   return (
     <div
@@ -177,7 +178,7 @@ export function Teleprompter({ text, className }: { text: string; className?: st
       <div className="flex flex-wrap items-center gap-2 border-t border-white/15 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <button
           type="button"
-          className={cn(controlButton, "border-white bg-white text-black hover:bg-white/90")}
+          className={primaryButton}
           onClick={() => setPlaying((p) => !p)}
         >
           {playing ? "Pause" : "Start"}

@@ -149,7 +149,7 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
         </Card>
       )}
 
-      <Card className="p-0">
+      <Card flush>
         <div className="px-5 pt-5">
           <CardTitle>Teleprompter</CardTitle>
           <p className="-mt-2 mb-3 text-sm text-ink-2">
