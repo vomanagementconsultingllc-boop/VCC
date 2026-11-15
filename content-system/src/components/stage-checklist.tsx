@@ -13,7 +13,7 @@ export function StageChecklist({ stage }: { stage: Stage }) {
               aria-hidden
               className={
                 done
-                  ? "flex size-6 items-center justify-center rounded-full bg-success text-xs font-bold text-white"
+                  ? "flex size-6 items-center justify-center rounded-full bg-ink text-xs font-bold text-on-gold"
                   : "size-6 rounded-full border-2 border-line-strong"
               }
             >

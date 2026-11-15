@@ -45,7 +45,9 @@ Adaptation:
 
 Length: 45 to 75 seconds spoken (roughly 110 to 180 words) unless the brief says otherwise.
 
-Shots: break the script into the few shots a client can film alone on a phone. Each shot's lines must be taken from the script, in order, covering all of it.`;
+Shots: break the script into the few shots a client can film alone on a phone. Each shot's lines must be taken from the script, in order, covering all of it.
+
+Directions: when you are told where and how the client can film, set each shot in one of their real places and say so by name. Use the place with the best light for talking shots, a quiet place when they speak, and never ask for anything they said must stay out of shot. Match the framing and movement to the format of the source video, so this week's videos do not all look the same. Write directions a nervous beginner can follow: where to stand, where the light should be, how to hold or prop the phone.`;
 
 export async function draftScript(input: {
   clientId: string;
@@ -59,6 +61,7 @@ export async function draftScript(input: {
   examplePosts: string[];
   sourceTranscript: string;
   brief: string;
+  shootingContext?: string;
 }): Promise<ScriptDraft> {
   const section = (title: string, body: string) => (body.trim() ? `## ${title}\n${body.trim()}\n` : "");
   // Exactly what the spec lists: hook, format, phrase bank, never-say list,
@@ -72,6 +75,7 @@ export async function draftScript(input: {
     section("Topics this client will not talk about", input.topicsAvoid.join("\n")),
     section("The client's offer, in their words", input.offer),
     section("Posts that sound like this client", input.examplePosts.slice(0, 3).join("\n\n---\n\n")),
+    section("Where and how this client can film (plan every shot around these)", input.shootingContext ?? ""),
     section("Brief from the team", input.brief),
   ].join("\n");
   return askStructured({

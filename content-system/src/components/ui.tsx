@@ -11,7 +11,7 @@ const variants: Record<Variant, string> = {
   primary: "bg-gold text-on-gold shadow-button hover:bg-gold-hover",
   secondary: "border border-ink/[0.08] bg-surface text-ink shadow-soft hover:bg-surface-2",
   ghost: "text-ink-2 hover:bg-ink/[0.06] hover:text-ink",
-  danger: "bg-danger text-white shadow-button hover:opacity-90",
+  danger: "bg-danger text-on-gold shadow-button hover:opacity-90",
 };
 
 // Pill-shaped, and 44px tall: comfortable to tap on a phone.

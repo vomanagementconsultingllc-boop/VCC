@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { SubmitButton } from "@/components/action-form";
+import { ActionForm, SubmitButton } from "@/components/action-form";
+import { planWeek } from "../../../research/actions";
 import { Badge, EmptyState, PageHeader } from "@/components/ui";
 import { FORMATS, STAGES, formatDate } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
@@ -42,6 +43,17 @@ export default async function ClientScriptsPage({ params }: PageProps<"/team/cli
         }
       />
       <ClientTabs clientId={client.id} />
+      <ActionForm action={planWeek} className="panel mb-5 border border-ink/10 p-5">
+        <input type="hidden" name="client_id" value={client.id} />
+        <p className="font-semibold text-ink">Plan this week</p>
+        <p className="mb-3 mt-1 text-sm text-ink-2">
+          Creates seven drafts from the best proven hooks this client has not used, each with its inspiration link.
+          Write or AI-draft each one, then send it. The client sees them in step 1.
+        </p>
+        <SubmitButton variant="secondary" pendingLabel="Planning…">
+          Plan 7 videos for this week
+        </SubmitButton>
+      </ActionForm>
       {!scripts?.length ? (
         <EmptyState title="No scripts yet">Start one from here, or from the research board.</EmptyState>
       ) : (

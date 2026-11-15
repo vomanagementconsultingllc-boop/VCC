@@ -137,9 +137,9 @@ export function Teleprompter({ text, className }: { text: string; className?: st
   return (
     <div
       className={cn(
-        "flex flex-col overflow-hidden bg-ink text-white",
+        "flex flex-col overflow-hidden border border-white/10 bg-black/70 text-white",
         // m-0! so a parent's spacing utility cannot shrink the full-screen layer.
-        full ? "fixed inset-0 z-50 m-0!" : "rounded-xl",
+        full ? "fixed inset-0 z-50 m-0! bg-black" : "rounded-[24px]",
         className,
       )}
       data-testid="teleprompter"
@@ -177,7 +177,7 @@ export function Teleprompter({ text, className }: { text: string; className?: st
       <div className="flex flex-wrap items-center gap-2 border-t border-white/15 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
         <button
           type="button"
-          className={cn(controlButton, "bg-gold border-gold")}
+          className={cn(controlButton, "border-white bg-white text-black hover:bg-white/90")}
           onClick={() => setPlaying((p) => !p)}
         >
           {playing ? "Pause" : "Start"}

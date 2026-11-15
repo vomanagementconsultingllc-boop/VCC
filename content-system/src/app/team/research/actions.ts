@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AiUnavailableError, aiConfigured } from "@/lib/ai/client";
 import { analyzeHook, draftScript, extractVoice } from "@/lib/ai/scripts";
 import { fetchFirefliesTranscript, parseFirefliesId } from "@/lib/fireflies";
+import { shootingContext, type IntakeAnswers } from "@/lib/intake";
 import { pullTikTokOutliers } from "@/lib/research/apify";
 import { intOrNull, isUuid, tags, text, type ActionState } from "@/lib/forms";
 import type { Database } from "@/lib/database.types";
@@ -108,6 +109,7 @@ export async function turnIntoScript(_prev: ActionState, formData: FormData): Pr
   let hook = "";
   let format: Enums["video_format"] = "talking_head";
   let researchId: string | null = isUuid(itemId) ? itemId : null;
+  let inspoUrl = "";
   if (isUuid(hookId)) {
     const { data } = await supabase.from("hook_rankings").select("text, research_item_id, format_label").eq("id", hookId).maybeSingle();
     if (data) {
@@ -117,16 +119,17 @@ export async function turnIntoScript(_prev: ActionState, formData: FormData): Pr
     }
   }
   if (researchId) {
-    const { data } = await supabase.from("research_items").select("hook_text, format_label").eq("id", researchId).maybeSingle();
+    const { data } = await supabase.from("research_items").select("hook_text, format_label, source_url").eq("id", researchId).maybeSingle();
     if (data) {
       hook = hook || data.hook_text;
       if (data.format_label) format = data.format_label;
+      inspoUrl = data.source_url;
     }
   }
 
   const { data: script, error } = await supabase
     .from("scripts")
-    .insert({ client_id: clientId, title: hook ? hook.slice(0, 80) : "Untitled script", hook, format, stage: "research" })
+    .insert({ client_id: clientId, title: hook ? hook.slice(0, 80) : "Untitled script", hook, format, stage: "research", inspo_url: inspoUrl })
     .select("id")
     .single();
   if (error || !script) return { error: "Could not create the script." };
@@ -135,6 +138,73 @@ export async function turnIntoScript(_prev: ActionState, formData: FormData): Pr
     .update({ hook_id: isUuid(hookId) ? hookId : null, source_research_item_id: researchId })
     .eq("script_id", script.id);
   redirect(`/team/scripts/${script.id}`);
+}
+
+const WEEKLY_VIDEOS = 7;
+
+/**
+ * Plan a client's week: seven new drafts, each built on the best proven hook
+ * for their niches that they have not used yet, with the video it came from
+ * as the inspiration link. They are drafts: nothing reaches the client until
+ * someone writes (or AI-drafts and reviews) each one and sends it.
+ */
+export async function planWeek(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireStaff();
+  const clientId = text(formData, "client_id");
+  if (!isUuid(clientId)) return { error: "Unknown client." };
+  const supabase = await createClient();
+  const { data: client } = await supabase.from("clients").select("niche_tags").eq("id", clientId).maybeSingle();
+  if (!client) return { error: "Unknown client." };
+  if (client.niche_tags.length === 0) {
+    return { error: "This client has no niche tags yet. Add some, or wait for their questionnaire, so research knows what to look for." };
+  }
+
+  const [{ data: hooks }, { data: taken }] = await Promise.all([
+    supabase
+      .from("hook_rankings")
+      .select("id, text, research_item_id, source_url, format_label")
+      .eq("archived", false)
+      .overlaps("niche_tags", client.niche_tags)
+      .order("score", { ascending: false })
+      .limit(60),
+    supabase.from("script_internal").select("hook_id").eq("client_id", clientId).not("hook_id", "is", null),
+  ]);
+  const used = new Set((taken ?? []).map((row) => row.hook_id));
+  const picks = (hooks ?? []).filter((h) => h.id && h.text && !used.has(h.id)).slice(0, WEEKLY_VIDEOS);
+  if (picks.length === 0) {
+    return { error: "No unused hooks for this client's niches. Pull research and save more hooks first." };
+  }
+
+  // Monday of the current week.
+  const now = new Date();
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - ((now.getUTCDay() + 6) % 7)));
+  const weekOf = monday.toISOString().slice(0, 10);
+
+  let created = 0;
+  for (const hook of picks) {
+    const { data: script } = await supabase
+      .from("scripts")
+      .insert({
+        client_id: clientId,
+        title: (hook.text ?? "").slice(0, 80),
+        hook: hook.text ?? "",
+        format: hook.format_label ?? "talking_head",
+        stage: "research",
+        inspo_url: hook.source_url ?? "",
+        week_of: weekOf,
+      })
+      .select("id")
+      .single();
+    if (!script) continue;
+    await supabase
+      .from("script_internal")
+      .update({ hook_id: hook.id, source_research_item_id: hook.research_item_id })
+      .eq("script_id", script.id);
+    created += 1;
+  }
+  refresh();
+  const short = created < WEEKLY_VIDEOS ? ` Only ${created} unused hook${created === 1 ? " was" : "s were"} available.` : "";
+  return { ok: `Created ${created} draft${created === 1 ? "" : "s"} for the week of ${weekOf}.${short} Write or AI-draft each one, then send it.` };
 }
 
 /** Pull outliers for one niche right now. Sends the scraper niche keywords only. */
@@ -205,10 +275,11 @@ export async function draftWithAi(_prev: ActionState, formData: FormData): Promi
   if (script.stage !== "research" && script.stage !== "scripted") return { error: "Only a draft can be rewritten by AI." };
   if (!script.hook.trim()) return { error: "Pick or write a hook first. The draft is built from it." };
 
-  const [{ data: voice }, { data: internal }, { data: existingShots }] = await Promise.all([
+  const [{ data: voice }, { data: internal }, { data: existingShots }, { data: intake }] = await Promise.all([
     supabase.from("voice_profiles").select("phrases_use, phrases_never, topics_avoid, offer, example_posts").eq("client_id", script.client_id).maybeSingle(),
     supabase.from("script_internal").select("source_research_item_id").eq("script_id", scriptId).maybeSingle(),
     supabase.from("shots").select("id").eq("script_id", scriptId),
+    supabase.from("client_intake").select("answers").eq("client_id", script.client_id).maybeSingle(),
   ]);
   const { data: source } = internal?.source_research_item_id
     ? await supabase.from("research_items").select("transcript").eq("id", internal.source_research_item_id).maybeSingle()
@@ -228,6 +299,8 @@ export async function draftWithAi(_prev: ActionState, formData: FormData): Promi
       examplePosts: Array.isArray(voice?.example_posts) ? (voice.example_posts as string[]) : [],
       sourceTranscript: source?.transcript ?? "",
       brief: text(formData, "brief"),
+      // Where and how this client can film, from their questionnaire, so the shots fit their real places.
+      shootingContext: shootingContext(intake?.answers as IntakeAnswers | undefined),
     });
   } catch (error) {
     return { error: aiMessage(error, "The draft failed. Try again, or write it by hand.") };

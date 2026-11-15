@@ -13,6 +13,28 @@ review. Built to deploy on Vercel.
 This folder is a separate app from the marketing site in the repo root. The
 root `netlify.toml` removes it from the published marketing site.
 
+## What a client sees: three steps
+
+The client side is three steps and nothing else, guided by one cartoon
+character ("Reel", drawn once in `src/components/guide.tsx`) who talks in
+speech bubbles.
+
+1. **Plan.** On first sign-in Reel asks a questionnaire: the business, what
+   to research, and in detail where they can film and what they film with.
+   After that, each week's videos appear here, each with its hook and a
+   direct link to the video it is modelled on. The client reads their
+   version and says yes or asks for changes.
+2. **Shoot.** Directions shot by shot (built around the places from the
+   questionnaire), the teleprompter, one upload box per shot, and the extra
+   b-roll clips. Each clip is checked as it lands and Reel says what to redo.
+3. **Finish.** The edit comes back. The client watches it, sends it back
+   with what to fix or approves it, then downloads one or all.
+
+The team plans a client's week with one button on their Scripts tab: seven
+drafts from the best proven hooks that client has not used, each carrying
+its inspiration link through to the client, the editor and the Claude
+editing API.
+
 ## Who can see what
 
 Enforced in the database (row level security), not just in the app:

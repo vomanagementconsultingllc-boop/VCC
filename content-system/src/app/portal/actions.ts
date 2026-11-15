@@ -1,6 +1,8 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { redirect } from "next/navigation";
+import { missingRequired, readIntake } from "@/lib/intake";
 import { requireClient } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { isUuid, text, type ActionState } from "@/lib/forms";
@@ -65,4 +67,42 @@ export async function markPosted(_prev: ActionState, formData: FormData): Promis
   if (error) return { error: error.code === "23514" ? error.message : "Could not save that. Try again." };
   refresh();
   return { ok: "Marked as posted. Nice work." };
+}
+
+/** Step 3: the client approves an edit. It is then theirs to download. */
+export async function approveVideo(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireClient();
+  const id = text(formData, "deliverable_id");
+  if (!isUuid(id)) return { error: "Unknown video." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("client_approve_video", { p_deliverable_id: id });
+  if (error) return { error: "Could not approve that. Try again." };
+  refresh();
+  return { ok: "Approved. It is ready to download below." };
+}
+
+/** Step 3: the client sends an edit back with what to fix. */
+export async function requestFix(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireClient();
+  const id = text(formData, "deliverable_id");
+  const note = text(formData, "note");
+  if (!isUuid(id)) return { error: "Unknown video." };
+  if (!note) return { error: "Tell me what to fix." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("client_request_fix", { p_deliverable_id: id, p_note: note });
+  if (error) return { error: error.code === "23514" ? error.message : "Could not send that. Try again." };
+  refresh();
+  return { ok: "Sent back. I will let you know when the fix is ready." };
+}
+
+/** The first-sign-in questionnaire. Saved through a database function that only ever writes the caller's own answers. */
+export async function submitIntake(_prev: ActionState, formData: FormData): Promise<ActionState> {
+  await requireClient();
+  const answers = readIntake(formData);
+  const missing = missingRequired(answers);
+  if (missing.length) return { error: `I still need: ${missing.map((f) => f.label.replace(/\?$/, "")).join("; ")}.` };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("submit_intake", { p_answers: answers });
+  if (error) return { error: "Could not save your answers. Try again." };
+  redirect("/portal");
 }

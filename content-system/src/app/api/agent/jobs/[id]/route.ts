@@ -30,7 +30,8 @@ export async function GET(request: Request, { params }: RouteContext<"/api/agent
   if (!job) return Response.json({ error: "Job not found." }, { status: 404 });
 
   const [{ data: script }, { data: shots }, { data: clips }, { data: messages }] = await Promise.all([
-    supabase.from("scripts").select("title, hook, body, format").eq("id", job.script_id).maybeSingle(),
+    // inspo_url is the video this one is modelled on: the edit should follow its pacing and style.
+    supabase.from("scripts").select("title, hook, body, format, inspo_url").eq("id", job.script_id).maybeSingle(),
     supabase.from("shots").select("shot_number, instruction, lines, orientation").eq("script_id", job.script_id).order("shot_number"),
     supabase
       .from("footage_uploads")

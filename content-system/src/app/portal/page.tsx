@@ -1,114 +1,71 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { requireClient } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
-import { Badge, EmptyState } from "@/components/ui";
-import { STAGES, type Stage } from "@/lib/labels";
+import { Guide } from "@/components/guide";
+import { Eyebrow, buttonClass } from "@/components/ui";
+import { firstName, requireOnboardedClient, weekLabel } from "@/lib/portal";
 
-export const metadata: Metadata = { title: "To do" };
+export const metadata: Metadata = { title: "Step 1: Plan" };
 
-/** What each stage asks of the client, if anything. */
-const CLIENT_TASK: Partial<Record<Stage, string>> = {
-  sent_to_client: "Read and approve your script",
-  awaiting_footage: "Record and upload your footage",
-  delivered: "Download your video and post it",
-};
-
-export default async function PortalHome() {
-  const user = await requireClient();
-  const supabase = await createClient();
+/** Step 1. This week's videos: each with its hook and the video it is modelled on. */
+export default async function PlanPage() {
+  const { user, supabase } = await requireOnboardedClient();
   const { data: scripts } = await supabase
     .from("scripts")
-    .select("id, title, stage, updated_at")
-    .order("updated_at", { ascending: false });
+    .select("id, title, hook, stage, inspo_url, week_of, sent_at")
+    .order("week_of", { ascending: false, nullsFirst: false })
+    .order("sent_at", { ascending: false });
 
-  const { data: broll } = await supabase.from("broll_requests").select("id, status").neq("status", "accepted");
-  const brollToSend = (broll ?? []).filter((b) => b.status === "open").length;
-  const brollToRedo = (broll ?? []).filter((b) => b.status === "needs_reshoot").length;
-
-  const waiting = (scripts ?? []).filter((s) => CLIENT_TASK[s.stage]);
-  const inProgress = (scripts ?? []).filter((s) => !CLIENT_TASK[s.stage] && s.stage !== "posted");
+  const toApprove = (scripts ?? []).filter((s) => s.stage === "sent_to_client");
+  const toShoot = (scripts ?? []).filter((s) => s.stage === "awaiting_footage").length;
+  const name = firstName(user.fullName);
 
   return (
-    <div className="space-y-6">
-      <h1 className="font-display text-3xl text-ink">
-        {user.fullName ? `Hi ${user.fullName.split(" ")[0]}` : "Welcome"}
-      </h1>
+    <div className="space-y-5">
+      <header>
+        <Eyebrow>Step 1 of 3</Eyebrow>
+        <h1 className="mt-1 font-display text-4xl text-ink">Plan your week</h1>
+      </header>
 
-      <section aria-labelledby="waiting-heading">
-        <h2 id="waiting-heading" className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-2">
-          Waiting on you
-        </h2>
-        {(brollToSend > 0 || brollToRedo > 0) && (
-          <Link
-            href="/portal/broll"
-            className="mb-3 flex min-h-20 items-center justify-between gap-3 panel border border-gold p-4"
-          >
-            <span>
-              <span className="block font-semibold text-ink">
-                {brollToRedo > 0 ? "Re-film some b-roll" : "Film your b-roll"}
-              </span>
-              <span className="text-sm text-ink-2">
-                {[
-                  brollToRedo > 0 ? `${brollToRedo} to film again` : "",
-                  brollToSend > 0 ? `${brollToSend} still to send` : "",
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-              </span>
-            </span>
-            <span aria-hidden className="text-2xl text-gold">
-              ›
-            </span>
-          </Link>
-        )}
-        {waiting.length === 0 && brollToSend === 0 && brollToRedo === 0 ? (
-          <EmptyState title="Nothing is waiting on you">
-            We will email you as soon as your next script is ready.
-          </EmptyState>
-        ) : (
-          <ul className="space-y-3">
-            {waiting.map((s) => (
-              <li key={s.id}>
-                <Link
-                  href={s.stage === "delivered" ? "/portal/delivered" : `/portal/scripts/${s.id}`}
-                  className="flex min-h-20 items-center justify-between gap-3 panel border border-gold p-4"
-                >
-                  <span>
-                    <span className="block font-semibold text-ink">{CLIENT_TASK[s.stage]}</span>
-                    <span className="text-sm text-ink-2">{s.title}</span>
-                  </span>
-                  <span aria-hidden className="text-2xl text-gold">
-                    ›
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      {toApprove.length > 0 ? (
+        <Guide mood="happy">
+          {name ? `${name}, ` : ""}I found {toApprove.length === 1 ? "a video" : `${toApprove.length} videos`} for you this
+          week. Each one opens with a hook that is already working for someone like you. Watch the inspiration, read
+          your version, and say yes to the ones you want to shoot.
+        </Guide>
+      ) : (
+        <Guide mood={toShoot > 0 ? "cheer" : "think"}>
+          {toShoot > 0
+            ? `All planned. You have ${toShoot} ready to film. Head to step 2.`
+            : "I am out finding your next videos. New ones land every week, and I will email you the moment they are here."}
+        </Guide>
+      )}
 
-      {inProgress.length > 0 && (
-        <section aria-labelledby="progress-heading">
-          <h2 id="progress-heading" className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-2">
-            With us
-          </h2>
-          <ul className="space-y-3">
-            {inProgress.map((s) => (
-              <li key={s.id}>
-                <Link
-                  href={`/portal/scripts/${s.id}`}
-                  className="flex items-center justify-between gap-3 panel border border-ink/[0.06] p-4"
-                >
-                  <span className="font-semibold text-ink">{s.title}</span>
-                  <Badge tone={STAGES[s.stage].tone}>
-                    {s.stage === "footage_received" ? "Footage received" : s.stage === "posted" ? "Posted" : "Being edited"}
-                  </Badge>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
+      <ol className="space-y-4">
+        {toApprove.map((script, index) => (
+          <li key={script.id} className="panel border border-ink/10 p-5">
+            <Eyebrow className="text-ink-2">
+              Video {index + 1} of {toApprove.length}
+              {script.week_of ? ` · ${weekLabel(script.week_of)}` : ""}
+            </Eyebrow>
+            <p className="mt-2 font-display text-2xl leading-snug text-ink">“{script.hook || script.title}”</p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <Link href={`/portal/scripts/${script.id}`} className={buttonClass("primary")}>
+                Read my version
+              </Link>
+              {script.inspo_url && (
+                <a href={script.inspo_url} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary")}>
+                  Watch the inspiration ↗
+                </a>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {toApprove.length === 0 && toShoot > 0 && (
+        <Link href="/portal/shoot" className={buttonClass("primary", "w-full")}>
+          Go to step 2: Shoot
+        </Link>
       )}
     </div>
   );

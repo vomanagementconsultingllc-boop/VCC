@@ -25,7 +25,7 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
   if (!job) notFound();
 
   const [{ data: script }, { data: shots }, { data: clips }, { data: messages }, { data: broll }] = await Promise.all([
-    supabase.from("scripts").select("title, hook, body, format").eq("id", job.script_id).maybeSingle(),
+    supabase.from("scripts").select("title, hook, body, format, inspo_url").eq("id", job.script_id).maybeSingle(),
     supabase.from("shots").select("id, shot_number, instruction, lines").eq("script_id", job.script_id).order("shot_number"),
     supabase
       .from("footage_uploads")
@@ -100,6 +100,18 @@ export default async function EditorJobPage({ params }: PageProps<"/editor/jobs/
         {job.status === "done" && (
           <Card>
             <p className="text-sm text-ink-2">This job is finished. The footage is no longer available to you.</p>
+          </Card>
+        )}
+
+        {script?.inspo_url && job.status !== "done" && (
+          <Card>
+            <CardTitle>Edit it like this</CardTitle>
+            <p className="mb-3 text-sm text-ink-2">
+              This video is modelled on the one below. Match its pacing, cuts and caption style.
+            </p>
+            <a href={script.inspo_url} target="_blank" rel="noopener noreferrer" className={buttonClass("secondary")}>
+              Watch the inspiration ↗
+            </a>
           </Card>
         )}
 

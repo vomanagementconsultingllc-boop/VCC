@@ -13,6 +13,7 @@ const CLIENT_TABLES = [
   "voice_corrections",
   "client_notes",
   "client_financials",
+  "client_intake",
   "scripts",
   "script_internal",
   "shots",

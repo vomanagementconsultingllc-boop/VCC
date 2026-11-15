@@ -303,6 +303,36 @@ export type Database = {
           },
         ]
       }
+      client_intake: {
+        Row: {
+          answers: NonNullable<Json>
+          client_id: string
+          completed_at: string | null
+          updated_at: string
+        }
+        ComputedFields: never
+        Insert: {
+          answers?: NonNullable<Json>
+          client_id: string
+          completed_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          answers?: NonNullable<Json>
+          client_id?: string
+          completed_at?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_intake_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: true
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       client_notes: {
         Row: {
           body: string
@@ -401,6 +431,7 @@ export type Database = {
         Row: {
           alt_file_path: string | null
           caption_draft: string
+          client_approved_at: string | null
           client_downloaded_at: string | null
           client_id: string
           created_by: string | null
@@ -414,6 +445,7 @@ export type Database = {
         Insert: {
           alt_file_path?: string | null
           caption_draft?: string
+          client_approved_at?: string | null
           client_downloaded_at?: string | null
           client_id: string
           created_by?: string | null
@@ -426,6 +458,7 @@ export type Database = {
         Update: {
           alt_file_path?: string | null
           caption_draft?: string
+          client_approved_at?: string | null
           client_downloaded_at?: string | null
           client_id?: string
           created_by?: string | null
@@ -1283,12 +1316,14 @@ export type Database = {
           format: Database["public"]["Enums"]["video_format"]
           hook: string
           id: string
+          inspo_url: string
           posted_at: string | null
           sent_at: string | null
           stage: Database["public"]["Enums"]["script_stage"]
           title: string
           updated_at: string
           version: number
+          week_of: string | null
         }
         ComputedFields: never
         Insert: {
@@ -1304,12 +1339,14 @@ export type Database = {
           format?: Database["public"]["Enums"]["video_format"]
           hook?: string
           id?: string
+          inspo_url?: string
           posted_at?: string | null
           sent_at?: string | null
           stage?: Database["public"]["Enums"]["script_stage"]
           title: string
           updated_at?: string
           version?: number
+          week_of?: string | null
         }
         Update: {
           body?: string
@@ -1324,12 +1361,14 @@ export type Database = {
           format?: Database["public"]["Enums"]["video_format"]
           hook?: string
           id?: string
+          inspo_url?: string
           posted_at?: string | null
           sent_at?: string | null
           stage?: Database["public"]["Enums"]["script_stage"]
           title?: string
           updated_at?: string
           version?: number
+          week_of?: string | null
         }
         Relationships: [
           {
@@ -1606,6 +1645,10 @@ export type Database = {
         Args: { p_script_id: string }
         Returns: undefined
       }
+      client_approve_video: {
+        Args: { p_deliverable_id: string }
+        Returns: undefined
+      }
       client_mark_downloaded: {
         Args: { p_deliverable_id: string }
         Returns: undefined
@@ -1620,6 +1663,10 @@ export type Database = {
       }
       client_request_changes: {
         Args: { p_comment: string; p_script_id: string }
+        Returns: undefined
+      }
+      client_request_fix: {
+        Args: { p_deliverable_id: string; p_note: string }
         Returns: undefined
       }
       create_edit_job: {
@@ -1666,6 +1713,7 @@ export type Database = {
         Args: { p_job_id: string; p_note: string }
         Returns: undefined
       }
+      submit_intake: { Args: { p_answers: Json }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "team" | "editor" | "client"

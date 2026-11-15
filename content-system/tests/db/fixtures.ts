@@ -279,6 +279,14 @@ export async function seed(db: Db) {
     );
   }
 
+  // --- Three steps: each client has answered the intake questionnaire.
+  for (const [clientId, label] of [[ids.clientA, "A"], [ids.clientB, "B"]] as const) {
+    await db.query("insert into public.client_intake (client_id, answers, completed_at) values ($1, $2, now())", [
+      clientId,
+      JSON.stringify({ locations: `PRIVATE shop floor ${label}` }),
+    ]);
+  }
+
   // --- Steps 6 and 7: a posted video per client. (Notifications are created by triggers during the seed above.)
   for (const [clientId, deliverableId] of [[ids.clientA, edit.deliverableA], [ids.clientB, edit.deliverableB]] as const) {
     await db.query(

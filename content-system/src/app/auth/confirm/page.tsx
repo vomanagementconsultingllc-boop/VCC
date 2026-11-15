@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ActionForm, SubmitButton } from "@/components/action-form";
-import { confirmSignIn } from "./actions";
+import { Guide } from "@/components/guide";
 import { Logo } from "@/components/logo";
+import { confirmSignIn } from "./actions";
 
 export const metadata: Metadata = { title: "Confirm sign-in" };
 
@@ -14,15 +15,14 @@ export const metadata: Metadata = { title: "Confirm sign-in" };
  */
 export default function ConfirmPage({ searchParams }: PageProps<"/auth/confirm">) {
   return (
-    <main className="flex flex-1 flex-col">
-      <header className="bg-ink px-6 py-5">
-        <Logo tone="gold" size="lg" />
-      </header>
-      <div className="flex flex-1 items-start justify-center bg-surface px-6 py-10 sm:items-center">
-        <div className="w-full max-w-sm">
-          <p className="text-xs font-semibold uppercase tracking-widest text-gold">Client portal</p>
-          <h1 className="mt-2 font-display text-3xl text-ink">One more tap</h1>
-          <Suspense fallback={<p className="mt-4 text-sm text-ink-2">Loading…</p>}>
+    <main className="flex flex-1 flex-col items-center px-4 pb-12 pt-8">
+      <Logo size="lg" />
+      <div className="mt-10 w-full max-w-sm">
+        <Guide mood="cheer" size={92}>
+          There you are. One more tap and you&rsquo;re in.
+        </Guide>
+        <div className="panel mt-4 border border-ink/10 p-6">
+          <Suspense fallback={<p className="text-sm text-ink-2">Loading…</p>}>
             <ConfirmForm searchParams={searchParams} />
           </Suspense>
         </div>
@@ -38,9 +38,9 @@ async function ConfirmForm({ searchParams }: Pick<PageProps<"/auth/confirm">, "s
 
   if (!tokenHash || !type) {
     return (
-      <p className="mt-4 text-sm text-ink-2">
+      <p className="text-sm text-ink-2">
         This link is incomplete.{" "}
-        <Link href="/login" className="font-semibold text-gold">
+        <Link href="/login" className="font-semibold text-ink underline">
           Ask for a new one
         </Link>
         .
@@ -49,8 +49,7 @@ async function ConfirmForm({ searchParams }: Pick<PageProps<"/auth/confirm">, "s
   }
 
   return (
-    <ActionForm action={confirmSignIn} className="mt-4">
-      <p className="mb-5 text-ink-2">Tap the button to finish signing in on this device.</p>
+    <ActionForm action={confirmSignIn}>
       <input type="hidden" name="token_hash" value={tokenHash} />
       <input type="hidden" name="type" value={type} />
       <SubmitButton pendingLabel="Signing in…" className="w-full">

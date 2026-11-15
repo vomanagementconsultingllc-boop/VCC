@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { requireClient } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
+import { Guide } from "@/components/guide";
 import { StageChecklist } from "@/components/stage-checklist";
 import { Teleprompter } from "@/components/teleprompter";
 import { UploadSlot, type SlotUpload } from "@/components/upload-slot";
@@ -24,7 +25,7 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
   const supabase = await createClient();
   const { data: script } = await supabase
     .from("scripts")
-    .select("id, title, hook, body, stage, version")
+    .select("id, title, hook, body, stage, version, inspo_url")
     .eq("id", id)
     .maybeSingle();
   if (!script) notFound();
@@ -73,14 +74,26 @@ export default async function PortalScriptPage({ params }: PageProps<"/portal/sc
     <div className="space-y-5">
       <header>
         <Link href="/portal" className="text-sm text-ink-2">
-          ← To do
+          ← Back
         </Link>
         <h1 className="mt-1 font-display text-3xl text-ink">{script.title}</h1>
       </header>
 
       {waitingForApproval && (
         <Card className="border-gold">
-          <CardTitle>Does this sound like you?</CardTitle>
+          <Guide mood="happy" size={64} className="mb-3">
+            Does this sound like you? Watch the inspiration first, then read your version below.
+          </Guide>
+          {script.inspo_url && (
+            <a
+              href={script.inspo_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mb-4 inline-flex min-h-11 items-center rounded-full border border-ink/15 px-5 text-sm font-semibold text-ink"
+            >
+              Watch the inspiration ↗
+            </a>
+          )}
           <p className="mb-4 text-sm text-ink-2">
             Read it through below. If it sounds like you, approve it and your upload slots open. If not, tell us what
             to change.

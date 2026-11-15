@@ -16,6 +16,7 @@ import {
   updateClientRecord,
 } from "../actions";
 import { ClientTabs } from "./client-tabs";
+import { IntakeCard } from "./intake-card";
 
 export const metadata: Metadata = { title: "Client" };
 
@@ -125,6 +126,8 @@ export default async function ClientPage({ params }: PageProps<"/team/clients/[i
             </Card>
           )}
         </div>
+
+        <IntakeCard clientId={client.id} />
 
         <Card className="lg:col-span-3">
           <CardTitle>Internal notes</CardTitle>

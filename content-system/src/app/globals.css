@@ -1,65 +1,66 @@
 @import "tailwindcss";
 
-/* Vo Creative Co. "Roman Gold": white-led surfaces, antique gold accents,
-   espresso ink. Same tokens as the marketing site.
+/* Vo Creative Co. app theme: dark, nearly monochrome, glass.
 
-   The shapes follow the reference the client chose: floating glass
-   navigation, pill buttons, large soft-cornered cards with hairline borders
-   and very light layered shadows, small monospace labels. */
+   One ink (warm paper white) on a deep espresso night, see-through panels,
+   and a single cartoon guide. Colour is kept for the two things that need
+   it: a warning (amber) and a problem (soft red). The token names are kept
+   from the earlier light theme ("gold" is the primary action colour, now
+   paper white) so components did not have to change. */
 @theme {
-  --color-ink: #251d16;
-  --color-ink-2: #70604d;
-  --color-ink-3: #9c8c76;
-  --color-surface: #ffffff;
-  --color-surface-2: #f6f4ef;
-  --color-band: #eceae4;
-  --color-line: #eae7e0;
-  --color-line-strong: #dbd7ce;
-  --color-gold: #a77b3e;
-  --color-gold-hover: #8a6430;
-  --color-gold-soft: #efe2c6;
-  --color-on-gold: #faf5ec;
-  --color-success: #5c7355;
-  --color-success-soft: #e1e9dd;
-  --color-warning: #b58227;
-  --color-warning-soft: #f3e7c9;
-  --color-danger: #a6432f;
-  --color-danger-soft: #f1ddd7;
-  --color-info: #5b6e7a;
-  --color-info-soft: #e1e7ea;
+  --color-night: #120e0b;
+  --color-ink: #f4f1ea;
+  --color-ink-2: #b9b1a4;
+  --color-ink-3: #877f73;
+  --color-surface: rgb(255 255 255 / 0.06);
+  --color-surface-2: rgb(255 255 255 / 0.05);
+  --color-band: rgb(255 255 255 / 0.08);
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-line-strong: rgb(255 255 255 / 0.18);
+  --color-gold: #f4f1ea;
+  --color-gold-hover: #ffffff;
+  --color-gold-soft: rgb(255 255 255 / 0.12);
+  --color-on-gold: #120e0b;
+  --color-success: #e9e5dc;
+  --color-success-soft: rgb(255 255 255 / 0.1);
+  --color-warning: #e7c787;
+  --color-warning-soft: rgb(231 199 135 / 0.13);
+  --color-danger: #f2a595;
+  --color-danger-soft: rgb(242 165 149 / 0.13);
+  --color-info: #d6d0c5;
+  --color-info-soft: rgb(255 255 255 / 0.08);
 
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-marcellus), Georgia, serif;
   --font-mono: var(--font-spline-mono), ui-monospace, SFMono-Regular, monospace;
 
-  /* Barely-there depth for cards; a deeper float for the glass bars. */
-  --shadow-soft: 0 0 0.5px rgb(37 29 22 / 0.35), 0 1px 0.5px rgb(37 29 22 / 0.04), 0 2px 2px rgb(37 29 22 / 0.04);
+  --shadow-soft: inset 0 1px 0 rgb(255 255 255 / 0.07), 0 12px 30px -18px rgb(0 0 0 / 0.8);
   --shadow-float:
-    0 10px 40px -10px rgb(37 29 22 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.8),
-    inset 0 -1px 0 rgb(255 255 255 / 0.2);
-  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.28), inset 0 -1px 0 rgb(0 0 0 / 0.16);
+    0 10px 40px -10px rgb(0 0 0 / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.2), inset 0 -1px 0 rgb(255 255 255 / 0.05);
+  --shadow-button: inset 0 1px 0 rgb(255 255 255 / 0.5), 0 6px 18px -8px rgb(0 0 0 / 0.6);
 }
 
-/* A card surface: big soft corners, white, light layered shadow. Pair with a
-   border class for the hairline. */
+/* A see-through card: big soft corners, a breath of white, blurred behind. */
 @utility panel {
   border-radius: 24px;
   background-color: var(--color-surface);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
   box-shadow: var(--shadow-soft);
 }
 
 /* Frosted glass for the floating navigation bars. */
 @utility glass {
-  border: 1px solid rgb(255 255 255 / 0.7);
-  background-color: rgb(255 255 255 / 0.6);
+  border: 1px solid rgb(255 255 255 / 0.15);
+  background-color: rgb(255 255 255 / 0.09);
   -webkit-backdrop-filter: blur(40px) saturate(2);
   backdrop-filter: blur(40px) saturate(2);
   box-shadow: var(--shadow-float);
 }
 
-/* More solid glass, for a bar that sits over scrolling content and has to stay readable. */
+/* Darker glass, for a bar that sits over scrolling content and has to stay readable. */
 @utility glass-solid {
-  background-color: rgb(255 255 255 / 0.88);
+  background-color: rgb(30 24 19 / 0.72);
 }
 
 @utility no-scrollbar {
@@ -71,14 +72,24 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
+  background: var(--color-night);
 }
 
 body {
-  /* Warm paper with a faint wash of gold behind the top bar, so the glass
-     has something to pick up. */
+  /* A quiet night sky: scattered specks and a soft glow behind the top bar. */
   background:
-    radial-gradient(1100px 420px at 50% -120px, rgb(239 226 198 / 0.75), transparent 70%),
-    var(--color-surface-2);
+    radial-gradient(1px 1px at 12% 18%, rgb(255 255 255 / 0.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 31% 62%, rgb(255 255 255 / 0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 47% 9%, rgb(255 255 255 / 0.5) 50%, transparent 51%),
+    radial-gradient(2px 2px at 63% 41%, rgb(255 255 255 / 0.35) 50%, transparent 51%),
+    radial-gradient(1px 1px at 78% 77%, rgb(255 255 255 / 0.5) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 91% 23%, rgb(255 255 255 / 0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 22% 88%, rgb(255 255 255 / 0.45) 50%, transparent 51%),
+    radial-gradient(900px 380px at 50% -140px, rgb(255 255 255 / 0.1), transparent 70%),
+    var(--color-night);
+  background-size:
+    520px 520px, 610px 610px, 430px 430px, 700px 700px, 560px 560px, 480px 480px, 640px 640px, auto, auto;
   background-attachment: fixed;
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -91,7 +102,13 @@ textarea {
   font-size: 16px;
 }
 
+/* Native dropdown lists are drawn by the system: give them solid colours. */
+option {
+  background: #1d1814;
+  color: #f4f1ea;
+}
+
 :focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-ink);
   outline-offset: 2px;
 }
