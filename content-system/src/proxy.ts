@@ -9,7 +9,8 @@ import { publicEnv } from "@/lib/env";
  * security regardless of what gets through here.
  */
 // /api/agent authenticates with an editor access key, /api/inngest with a signing key.
-const PUBLIC_PREFIXES = ["/login", "/auth", "/api/inngest", "/api/agent"];
+// /demo is a sample-data walk-through that only exists when built with DEMO_MODE=1.
+const PUBLIC_PREFIXES = ["/login", "/auth", "/api/inngest", "/api/agent", "/demo"];
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
