@@ -1,21 +1,35 @@
 // The email someone gets after asking for the prompts on vocreativeco.com/studio.
 // Sent through Resend by netlify/functions/submission-created.js.
 //
+// Each prompt is a setup guide (a PDF in studio/p/) that the email links to.
 // To change what the email says, edit PROMPTS and the copy below.
-// Until all three prompts have text, the email is not sent (see promptsReady).
+
+const SITE = 'https://vocreativeco.com';
 
 const PROMPTS = [
-  { title: 'My AI Video Editor', body: '' },
-  { title: 'My Viral Video Researcher', body: '' },
-  { title: 'AI Outreach System', body: '' },
+  {
+    title: 'My AI Video Editor',
+    blurb: 'Turns a raw talking-head video into a finished vertical short: tight cuts, title, captions and real screenshots, checked by itself before you see it.',
+    url: `${SITE}/studio/p/ai-video-editor-setup-prompts.pdf`,
+  },
+  {
+    title: 'My Viral Video Researcher',
+    blurb: 'Finds the short-form videos that outperformed in your niche, logs every hook to a Google Sheet, and turns the patterns into ideas you can film.',
+    url: `${SITE}/studio/p/viral-research-system-setup-prompts.pdf`,
+  },
+  {
+    title: 'AI Outreach System',
+    blurb: 'Pulls a list of local businesses, scores each one against your ideal client, writes first messages in your voice, and tracks every follow-up.',
+    url: `${SITE}/studio/p/outreach-system-setup-prompts.pdf`,
+  },
 ];
 
 const SUBJECT = 'Your 3 AI prompts';
 const PREHEADER = 'My AI Video Editor, Viral Video Researcher and Outreach System.';
-const PAGE_URL = 'https://vocreativeco.com/studio/';
+const PAGE_URL = `${SITE}/studio/`;
 
 function promptsReady() {
-  return PROMPTS.every((p) => p.body.trim().length > 0);
+  return PROMPTS.every((p) => /^https:\/\//.test(p.url || ''));
 }
 
 function esc(s) {
@@ -27,19 +41,20 @@ function esc(s) {
 }
 
 const FONT = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
-const MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
 
 function promptBlock(p, i) {
   return `
-  <tr><td style="padding:28px 0 0">
-    <p style="margin:0 0 4px;font:700 11px/1.4 ${FONT};letter-spacing:.14em;text-transform:uppercase;color:#6b6b6b">Prompt 0${i + 1}</p>
-    <h2 style="margin:0 0 12px;font:800 22px/1.2 ${FONT};color:#0a0a0a">${esc(p.title)}</h2>
-    <div style="padding:16px 18px;background:#f6f6f6;border:1px solid #e6e6e6;border-radius:12px;font:14px/1.6 ${MONO};color:#1a1a1a;white-space:pre-wrap;word-break:break-word">${esc(p.body.trim())}</div>
+  <tr><td style="padding:16px 0 0">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e6e6e6;border-radius:14px;background:#fafafa"><tr><td style="padding:20px 20px 22px">
+      <p style="margin:0 0 4px;font:700 11px/1.4 ${FONT};letter-spacing:.14em;text-transform:uppercase;color:#6b6b6b">Prompt 0${i + 1}</p>
+      <h2 style="margin:0 0 8px;font:800 22px/1.2 ${FONT};color:#0a0a0a">${esc(p.title)}</h2>
+      <p style="margin:0 0 16px;font:15px/1.55 ${FONT};color:#3a3a3a">${esc(p.blurb)}</p>
+      <a href="${esc(p.url)}" style="display:inline-block;padding:13px 20px;background:#0a0a0a;border-radius:10px;font:700 15px/1 ${FONT};color:#ffffff;text-decoration:none">Open the setup prompts &rarr;</a>
+    </td></tr></table>
   </td></tr>`;
 }
 
-// Returns { subject, html, text } for one person, or null if the prompts
-// have no text yet.
+// Returns { subject, html, text } for one person, or null if a prompt has no link.
 function buildPromptsEmail({ name } = {}) {
   if (!promptsReady()) return null;
   const first = String(name || '').trim().split(/\s+/)[0] || '';
@@ -54,7 +69,7 @@ function buildPromptsEmail({ name } = {}) {
   <tr><td>
     <p style="margin:0 0 16px;font:16px/1.6 ${FONT};color:#1a1a1a">${esc(hey)}</p>
     <h1 style="margin:0 0 14px;font:800 30px/1.1 ${FONT};letter-spacing:-.02em;color:#0a0a0a">Here are the 3 AI prompts behind my 1.5&nbsp;million views.</h1>
-    <p style="margin:0;font:16px/1.6 ${FONT};color:#1a1a1a">Copy any of them into ChatGPT or Claude, fill in the parts in [brackets], and run it.</p>
+    <p style="margin:0 0 8px;font:16px/1.6 ${FONT};color:#1a1a1a">Each one is a short set of copy-and-paste prompts that builds the system inside Claude. Run them in order in one chat and fill in the parts in [brackets].</p>
   </td></tr>
   ${PROMPTS.map(promptBlock).join('')}
   <tr><td style="padding:32px 0 0">
@@ -72,9 +87,9 @@ function buildPromptsEmail({ name } = {}) {
     hey,
     '',
     'Here are the 3 AI prompts behind my 1.5 million views.',
-    'Copy any of them into ChatGPT or Claude, fill in the parts in [brackets], and run it.',
+    'Each one is a short set of copy-and-paste prompts that builds the system inside Claude. Run them in order in one chat and fill in the parts in [brackets].',
     '',
-    ...PROMPTS.flatMap((p, i) => [`PROMPT 0${i + 1}: ${p.title.toUpperCase()}`, '', p.body.trim(), '', '']),
+    ...PROMPTS.flatMap((p, i) => [`PROMPT 0${i + 1}: ${p.title.toUpperCase()}`, p.blurb, p.url, '']),
     'Want me to walk you through it? I\'m building a community where I set these up with you, step by step. Reply "studio" and I\'ll save you a spot on the waitlist for my creative studio.',
     '',
     "Hit reply and tell me which one you're trying first. I read every reply.",

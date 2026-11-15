@@ -74,6 +74,14 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+# The free setup-prompt PDFs are linked from the prompts email; keep them out
+# of search results so the signup stays the way to get them.
+[[headers]]
+  for = "/studio/p/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 # Media caches for a day (filenames are stable), then revalidates.
 [[headers]]
   for = "/*.mp4"
