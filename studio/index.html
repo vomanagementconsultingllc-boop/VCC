@@ -274,16 +274,17 @@
   .opt[aria-pressed="true"] .key { border-color: rgba(255, 255, 255, .45); color: #fff; }
   .quiz-nav { display: flex; justify-content: space-between; align-items: center; min-height: 40px; margin-top: 14px; }
   .got { display: flex; align-items: center; gap: 8px; margin: 0 0 22px; padding: 10px 14px; border-radius: 12px; background: var(--soft); font-size: 15px; color: var(--muted); }
-  .got::before { content: "\2713"; display: grid; place-items: center; flex: none; width: 22px; height: 22px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 12px; font-weight: 800; }
-  .got b { color: var(--ink); }
+  .got svg { width: 18px; height: 18px; flex: none; color: var(--ink); }
+  .got span { color: var(--ink); font-weight: 600; }
+  .panel .note { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+  .panel .note a { color: var(--ink); }
+  .invite-btn { margin-top: 22px; }
 
   .link { padding: 8px 0; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .link:hover { color: var(--ink); }
   .btn-discord { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; text-decoration: none; }
   .btn-discord svg { width: 24px; height: 24px; flex: none; }
-  .ask .link { display: block; margin: 8px auto 0; }
-  .joined { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
-  .joined a { color: var(--ink); }
+  .ask .link { display: block; margin: 6px auto 0; }
 
   /* real results */
   body.done-mode .proof { display: none; }
@@ -361,20 +362,7 @@
     <p class="micro">Free. Sent straight to your inbox. <a href="privacy/">Privacy</a></p>
   </form>
 
-  <!-- Step 2: four questions (answers become email groups) -->
-  <section class="quiz" id="quiz" hidden aria-live="polite">
-    <p class="got"><span>Prompts sent to <b id="q-email">your inbox</b>.</span></p>
-    <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-    <p class="step-label" id="q-label"></p>
-    <h2 id="q-title" tabindex="-1"></h2>
-    <div id="q-body"></div>
-    <div class="quiz-nav">
-      <button type="button" class="link" id="q-back">Back</button>
-      <span></span>
-    </div>
-  </section>
-
-  <!-- Step 3: done + "join the Discord" -->
+  <!-- Step 2: prompts sent + "join the free Discord" -->
   <section class="panel" id="sent" hidden>
     <p class="tick" aria-hidden="true">&#10003;</p>
     <h2 tabindex="-1" id="sent-title">You&rsquo;re all set!</h2>
@@ -388,16 +376,39 @@
         <li>My full tech stack and new AI tool drops</li>
         <li>Show off what you built</li>
       </ul>
-      <a class="btn btn-dark btn-discord" id="discord" href="https://discord.gg/jSfpvGcPmA" target="_blank" rel="noopener">
+      <button type="button" class="btn btn-dark btn-discord" id="discord">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.6 5.3A17.6 17.6 0 0 0 15.3 4l-.5 1.1a16.3 16.3 0 0 0-5 0L9.3 4a17.5 17.5 0 0 0-4.4 1.3C2.2 9.4 1.4 13.3 1.8 17.2a17.7 17.7 0 0 0 5.4 2.7l1.1-1.8a11.5 11.5 0 0 1-1.8-.9l.4-.3a12.6 12.6 0 0 0 10.8 0l.4.3c-.6.4-1.2.7-1.8.9l1.1 1.8a17.6 17.6 0 0 0 5.4-2.7c.5-4.5-.7-8.4-3.2-11.9zM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2z"/></svg>
         <span>Join the free Discord</span>
-      </a>
+      </button>
+      <p class="note">Answer 4 quick questions, then you get the invite link.</p>
       <button type="button" class="link" id="no">No thanks, just the prompts</button>
     </div>
-    <div class="joined" id="joined" hidden>
-      <p><b>See you inside!</b> If Discord didn&rsquo;t open, <a href="https://discord.gg/jSfpvGcPmA" target="_blank" rel="noopener">tap here to join</a>.</p>
-    </div>
     <p id="no-msg" hidden>No problem. Enjoy the prompts!</p>
+  </section>
+
+  <!-- Step 3: four questions (answers are saved for email campaigns) -->
+  <section class="quiz" id="quiz" hidden aria-live="polite">
+    <p class="got"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 10V7a5 5 0 0 1 10 0v3h1a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h1zm2 0h6V7a3 3 0 0 0-6 0v3z"/></svg><span>Your invite link unlocks after question 4.</span></p>
+    <div class="progress" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p class="step-label" id="q-label"></p>
+    <h2 id="q-title" tabindex="-1"></h2>
+    <div id="q-body"></div>
+    <div class="quiz-nav">
+      <button type="button" class="link" id="q-back">Back</button>
+      <span></span>
+    </div>
+  </section>
+
+  <!-- Step 4: the invite link -->
+  <section class="panel" id="invite" hidden>
+    <p class="tick" aria-hidden="true">&#10003;</p>
+    <h2 tabindex="-1" id="invite-title">Here&rsquo;s your invite!</h2>
+    <p>Tap below to join my Discord. See you inside.</p>
+    <a class="btn btn-dark btn-discord invite-btn" id="invite-link" href="https://discord.gg/jSfpvGcPmA" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.6 5.3A17.6 17.6 0 0 0 15.3 4l-.5 1.1a16.3 16.3 0 0 0-5 0L9.3 4a17.5 17.5 0 0 0-4.4 1.3C2.2 9.4 1.4 13.3 1.8 17.2a17.7 17.7 0 0 0 5.4 2.7l1.1-1.8a11.5 11.5 0 0 1-1.8-.9l.4-.3a12.6 12.6 0 0 0 10.8 0l.4.3c-.6.4-1.2.7-1.8.9l1.1 1.8a17.6 17.6 0 0 0 5.4-2.7c.5-4.5-.7-8.4-3.2-11.9zM8.7 14.8c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2zm6.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2z"/></svg>
+      <span>Open my Discord invite</span>
+    </a>
+    <p class="note">Or use this link: <a href="https://discord.gg/jSfpvGcPmA" target="_blank" rel="noopener">discord.gg/jSfpvGcPmA</a></p>
   </section>
 
   <!-- So Netlify registers these forms and their fields at deploy time. -->
@@ -480,7 +491,7 @@
     }).then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); });
   }
   function show(el) {
-    ['get', 'quiz', 'sent'].forEach(function (id) { $(id).hidden = $(id) !== el; });
+    ['get', 'sent', 'quiz', 'invite'].forEach(function (id) { $(id).hidden = $(id) !== el; });
   }
   function top(focusEl) {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -509,12 +520,13 @@
       who.email = value;
       who.name = $('f-name').value.trim();
       $('s-email').textContent = value;
-      $('q-email').textContent = value;
-      if (who.name) $('sent-title').textContent = 'You’re all set, ' + who.name + '!';
+      if (who.name) {
+        $('sent-title').textContent = 'You’re all set, ' + who.name + '!';
+        $('invite-title').textContent = 'Here’s your invite, ' + who.name + '!';
+      }
       document.body.classList.add('done-mode');
-      step = 1;
-      show($('quiz'));
-      render();
+      show($('sent'));
+      top($('sent-title'));
     }).catch(function () {
       btn.disabled = false;
       btn.textContent = label;
@@ -522,7 +534,18 @@
     });
   });
 
-  // 2. Four questions, one tap each
+  // 2. "Join the free Discord" starts the questions; "No thanks" ends here
+  $('discord').addEventListener('click', function () {
+    step = 1;
+    show($('quiz'));
+    render();
+  });
+  $('no').addEventListener('click', function () {
+    $('ask').hidden = true;
+    $('no-msg').hidden = false;
+  });
+
+  // 3. Four questions, one tap each
   function setProgress(n) {
     Array.prototype.forEach.call(document.querySelectorAll('.progress span'), function (bar, i) {
       bar.classList.toggle('on', i < n);
@@ -580,26 +603,23 @@
   }
   function finish() {
     saveAnswers(1);
-    show($('sent'));
-    top($('sent-title'));
+    show($('invite'));
+    top($('invite-title'));
   }
 
-  // 3. Join the Discord (the link opens in a new tab; the click is recorded
-  //    as a "discord-click" submission so you can see who tapped it)
-  $('discord').addEventListener('click', function () {
-    try {
-      fetch('/', {
-        method: 'POST',
-        keepalive: true,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ 'form-name': 'discord-click', 'bot-field': '', email: who.email, name: who.name, source: source }).toString()
-      }).catch(function () {});
-    } catch (e) { /* never block the link */ }
-    window.setTimeout(function () { $('ask').hidden = true; $('joined').hidden = false; }, 300);
-  });
-  $('no').addEventListener('click', function () {
-    $('ask').hidden = true;
-    $('no-msg').hidden = false;
+  // 4. The invite link. Taps are recorded as a "discord-click" submission
+  //    so you can see who opened it; the link itself is never blocked.
+  Array.prototype.forEach.call(document.querySelectorAll('#invite a'), function (a) {
+    a.addEventListener('click', function () {
+      try {
+        fetch('/', {
+          method: 'POST',
+          keepalive: true,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ 'form-name': 'discord-click', 'bot-field': '', email: who.email, name: who.name, source: source }).toString()
+        }).catch(function () {});
+      } catch (e) { /* ignore */ }
+    });
   });
 
   $('again-btn').addEventListener('click', function (e) {
