@@ -27,6 +27,7 @@ const PROMPTS = [
 const SUBJECT = 'Your 3 AI prompts';
 const PREHEADER = 'My AI Video Editor, Viral Video Researcher and Outreach System.';
 const PAGE_URL = `${SITE}/studio/`;
+const DISCORD_URL = 'https://discord.gg/jSfpvGcPmA';
 
 function promptsReady() {
   return PROMPTS.every((p) => /^https:\/\//.test(p.url || ''));
@@ -73,8 +74,10 @@ function buildPromptsEmail({ name } = {}) {
   </td></tr>
   ${PROMPTS.map(promptBlock).join('')}
   <tr><td style="padding:32px 0 0">
-    <p style="margin:0 0 14px;font:16px/1.6 ${FONT};color:#1a1a1a"><b>Want me to walk you through it?</b> I&rsquo;m building a community where I set these up with you, step by step. Reply <b>&ldquo;studio&rdquo;</b> and I&rsquo;ll save you a spot on the waitlist for my creative studio.</p>
-    <p style="margin:0 0 4px;font:16px/1.6 ${FONT};color:#1a1a1a">Hit reply and tell me which one you&rsquo;re trying first. I read every reply.</p>
+    <h2 style="margin:0 0 8px;font:800 22px/1.2 ${FONT};color:#0a0a0a">Don&rsquo;t build it alone.</h2>
+    <p style="margin:0 0 16px;font:16px/1.6 ${FONT};color:#1a1a1a">Join my free Discord. Ask me anything in #ask-nathan, get help in the thread for each system, see my full tech stack and new AI tool drops, and show off what you built.</p>
+    <a href="${DISCORD_URL}" style="display:inline-block;padding:15px 22px;background:#5865F2;border-radius:10px;font:700 16px/1 ${FONT};color:#ffffff;text-decoration:none">Join the free Discord &rarr;</a>
+    <p style="margin:24px 0 4px;font:16px/1.6 ${FONT};color:#1a1a1a">Hit reply and tell me which one you&rsquo;re trying first. I read every reply.</p>
     <p style="margin:18px 0 0;font:16px/1.6 ${FONT};color:#1a1a1a">Nathan</p>
   </td></tr>
   <tr><td style="padding:36px 0 0;border-bottom:1px solid #eeeeee"></td></tr>
@@ -90,7 +93,9 @@ function buildPromptsEmail({ name } = {}) {
     'Each one is a short set of copy-and-paste prompts that builds the system inside Claude. Run them in order in one chat and fill in the parts in [brackets].',
     '',
     ...PROMPTS.flatMap((p, i) => [`PROMPT 0${i + 1}: ${p.title.toUpperCase()}`, p.blurb, p.url, '']),
-    'Want me to walk you through it? I\'m building a community where I set these up with you, step by step. Reply "studio" and I\'ll save you a spot on the waitlist for my creative studio.',
+    "DON'T BUILD IT ALONE",
+    'Join my free Discord. Ask me anything in #ask-nathan, get help in the thread for each system, see my full tech stack and new AI tool drops, and show off what you built.',
+    `Join here: ${DISCORD_URL}`,
     '',
     "Hit reply and tell me which one you're trying first. I read every reply.",
     '',
