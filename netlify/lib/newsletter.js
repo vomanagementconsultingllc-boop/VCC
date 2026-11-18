@@ -58,29 +58,32 @@ function button(text, href, bg = '#000000') {
 //   next: 'milestone',
 //   videoUrl: 'link to the post',
 // }
-function renderNewsletter(issue = {}, { unsubscribeUrl, mailingAddress } = {}) {
+// Required every week: date, summary.progress, metrics.current, progress.title,
+// at least one story card, at least one "How I did it" step, and the mailing
+// address. Optional (left out when the video doesn't cover them, never made
+// up): summary.concern, metrics.prior, screenshots, challenge, ask, next.
+function renderNewsletter(issue = {}, { mailingAddress } = {}) {
   const s = issue.summary || {};
   const m = issue.metrics || {};
   const p = issue.progress || {};
   const c = issue.challenge || {};
   const a = issue.ask || {};
+  const has = (v) => v != null && String(v).trim() !== '';
   const how = issue.howIDidIt && issue.howIDidIt.length ? issue.howIDidIt : [FILL('how you used your AI systems this week, step by step')];
-  const cards = p.cards && p.cards.length ? p.cards : [FILL('story card 1'), FILL('story card 2'), FILL('story card 3')];
+  const cards = p.cards && p.cards.length ? p.cards.slice(0, 4) : [FILL('story card 1'), FILL('story card 2'), FILL('story card 3')];
   const shots = p.screenshots || [];
 
   const subject = `VCC update, ${val(issue.date, 'date')}`;
-  const preview = `${val(s.progress, 'main progress')} and ${val(s.concern, 'biggest concern')}.`;
+  const summary = `${val(s.progress, 'main progress')}${has(s.concern) ? ` and ${s.concern}` : ''}.`.replace(/\.\.$/, '.');
 
   const metricsBox = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#000000;border-radius:16px"><tr><td style="padding:22px 22px 20px">
       <p style="margin:0 0 6px;font:700 12px/1.3 ${TITLE};letter-spacing:.16em;text-transform:uppercase;color:#ffffff">People in the Discord</p>
-      <p style="margin:0;font:700 44px/1.05 ${TITLE};color:#ffffff">${esc(val(m.prior, 'last week'))} <span style="color:${RED}">&rarr;</span> <span style="color:${RED}">${esc(val(m.current, 'this week'))}</span></p>
+      <p style="margin:0;font:700 44px/1.05 ${TITLE};color:#ffffff">${has(m.prior) ? `${esc(m.prior)} <span style="color:${RED}">&rarr;</span> ` : ''}<span style="color:${RED}">${esc(val(m.current, 'this week'))}</span></p>
       ${m.note ? `<p style="margin:10px 0 0;font:400 15px/1.5 ${BODY};color:#d9d9d9">${esc(m.note)}</p>` : ''}
     </td></tr></table>`;
 
-  const shotHtml = shots.length
-    ? shots.map((img) => `<p style="margin:0 0 14px"><img src="${esc(img.src.startsWith('http') ? img.src : `${SITE}/${img.src}`)}" alt="${esc(img.alt || '')}" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:1px solid #e6e6e6;border-radius:14px"></p>`).join('')
-    : para(FILL('screenshots from this week'), `color:${RED}`);
+  const shotHtml = shots.map((img) => `<p style="margin:0 0 14px"><img src="${esc(img.src.startsWith('http') ? img.src : `${SITE}/${img.src}`)}" alt="${esc(img.alt || '')}" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:1px solid #e6e6e6;border-radius:14px"></p>`).join('');
 
   const cardHtml = cards.map((t, i) => `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 10px;border:1px solid #e6e6e6;border-left:4px solid ${RED};border-radius:12px;background:#fafafa"><tr><td style="padding:14px 16px">
@@ -90,38 +93,44 @@ function renderNewsletter(issue = {}, { unsubscribeUrl, mailingAddress } = {}) {
 
   const howHtml = `<ol style="margin:0 0 6px;padding-left:22px;font:400 17px/1.6 ${BODY};color:#111111">${how.map((h) => `<li style="margin:0 0 8px">${esc(h)}</li>`).join('')}</ol>`;
 
-  const footer = `You&rsquo;re getting this because you signed up at <a href="${SITE}/studio/" style="color:#8a8a8a">vocreativeco.com/studio</a>.  <a href="${esc(unsubscribeUrl || '{{{RESEND_UNSUBSCRIBE_URL}}}')}" style="color:#8a8a8a">Unsubscribe</a><br>${esc(mailingAddress || FILL('mailing address'))}`;
+  const challengeHtml = has(c.issue) ? section(`${label('Challenge')}${para(c.issue)}${has(c.response) ? `<p style="margin:0 0 14px;font:400 17px/1.6 ${BODY};color:#111111"><b style="font-family:${TITLE};text-transform:uppercase;letter-spacing:.04em;font-size:14px">Our response:</b> ${esc(c.response)}${has(c.date) ? ` (${esc(c.date)})` : ''}.</p>` : ''}`) : '';
+  const askHtml = has(a.role) && has(a.problem) ? section(`<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${RED};border-radius:16px"><tr><td style="padding:20px 22px">
+      <p style="margin:0 0 8px;font:700 12px/1.3 ${TITLE};letter-spacing:.16em;text-transform:uppercase;color:#ffffff">Ask</p>
+      <p style="margin:0 0 12px;font:500 18px/1.5 ${BODY};color:#ffffff">Can you introduce me to ${esc(a.role)}${has(a.org) ? ` at ${esc(a.org)}` : ''}? I&rsquo;m working on ${esc(a.problem)}.</p>
+      <p style="margin:0;font:400 15px/1.5 ${BODY};color:#ffffff">Just hit reply.</p>
+    </td></tr></table>`) : '';
+  const nextHtml = has(issue.next) ? section(`${label('Next')}${para(issue.next)}`) : '';
+  const videoBtn = has(issue.videoUrl) ? `<p style="margin:0 0 10px">${button('Watch this week’s video', issue.videoUrl, RED)}</p>` : '';
+
+  const footer = `Vo Creative Co. &middot; Using AI to remove your content bottlenecks &middot; <a href="mailto:nathan@vocreativeco.com" style="color:#8a8a8a">nathan@vocreativeco.com</a><br>You&rsquo;re getting this because you signed up at <a href="${SITE}/studio/" style="color:#8a8a8a">vocreativeco.com/studio</a>. <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#8a8a8a">Unsubscribe</a><br>${esc(mailingAddress || FILL('mailing address'))}`;
 
   const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(subject)}</title>
 <link rel="stylesheet" href="${FONTS_CSS}"></head>
 <body style="margin:0;padding:0;background:#ffffff">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(preview)}</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(summary)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#ffffff"><tr><td align="center" style="padding:28px 16px 36px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">
   <tr><td style="padding:0 0 18px;border-bottom:3px solid ${RED}">
     <p style="margin:0 0 6px;font:700 12px/1.3 ${TITLE};letter-spacing:.16em;text-transform:uppercase;color:${RED}">VCC update</p>
     <p style="margin:0;font:700 34px/1.05 ${TITLE};letter-spacing:-.01em;text-transform:uppercase;color:#000000">${esc(val(issue.date, 'date'))}</p>
   </td></tr>
-  ${section(`${label('Summary')}${para(`${val(s.progress, 'main progress')} and ${val(s.concern, 'biggest concern')}.`)}`)}
+  ${section(`${label('Summary')}${para(summary)}`)}
   ${section(`${label('Metrics')}${metricsBox}`)}
   ${section(`${label('Progress')}<p style="margin:0 0 14px;font:700 22px/1.2 ${TITLE};text-transform:uppercase;color:#000000">${esc(val(p.title, 'what shipped or what a pilot proved'))}</p>${shotHtml}${cardHtml}`)}
-  ${section(`${label('Challenge')}${para(val(c.issue, 'the issue'))}<p style="margin:0 0 14px;font:400 17px/1.6 ${BODY};color:#111111"><b style="font-family:${TITLE};text-transform:uppercase;letter-spacing:.04em;font-size:14px">Our response:</b> ${esc(val(c.response, 'what you are doing about it'))} (${esc(val(c.date, 'date'))}).</p>`)}
-  ${section(`<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${RED};border-radius:16px"><tr><td style="padding:20px 22px">
-      <p style="margin:0 0 8px;font:700 12px/1.3 ${TITLE};letter-spacing:.16em;text-transform:uppercase;color:#ffffff">Ask</p>
-      <p style="margin:0 0 12px;font:500 18px/1.5 ${BODY};color:#ffffff">Can you introduce me to ${esc(val(a.role, 'buyer role'))} at ${esc(val(a.org, 'district or organization'))}? I&rsquo;m working on ${esc(val(a.problem, 'the specific problem'))}.</p>
-      <p style="margin:0;font:400 15px/1.5 ${BODY};color:#ffffff">Just hit reply.</p>
-    </td></tr></table>`)}
+  ${challengeHtml}
+  ${askHtml}
   ${section(`${label('How I did it')}${howHtml}`)}
-  ${section(`${label('Next')}${para(val(issue.next, 'next milestone'))}`)}
-  ${section(`<p style="margin:0 0 10px">${issue.videoUrl ? button('Watch this week’s video', issue.videoUrl, RED) : para(FILL('link to this week’s video'), `color:${RED}`)}</p><p style="margin:0">${button('Join the free Discord', DISCORD_URL)}</p>`)}
+  ${nextHtml}
+  ${section(`${videoBtn}<p style="margin:0">${button('Join the free Discord', DISCORD_URL)}</p>`)}
   ${section(`<p style="margin:0;font:400 17px/1.6 ${BODY};color:#111111">Nathan</p>`)}
   <tr><td style="padding:30px 0 0"><p style="margin:0;padding-top:14px;border-top:1px solid #eeeeee;font:400 12px/1.6 Helvetica, Arial, sans-serif;color:#8a8a8a">${footer}</p></td></tr>
 </table>
 </td></tr></table>
 </body></html>`;
 
-  return { subject, preview, html, ready: !hasFillIn(html) && !hasFillIn(subject) && !hasFillIn(preview) };
+  const missing = (html.match(/\[FILL IN: [^\]]+\]/g) || []).map((x) => x.slice(10, -1));
+  return { subject, preview: summary, html, ready: missing.length === 0, missing };
 }
 
 module.exports = { renderNewsletter, hasFillIn };
