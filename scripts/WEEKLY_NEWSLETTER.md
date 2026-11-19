@@ -32,6 +32,19 @@ Resend key (injected by the proxy for api.resend.com) and access to discord.com.
    stop and let the next hourly run try again.
 4. Run `discord` for the current member count. `status` gives last week's
    count (`lastDiscordCount`).
+4b. Stills (Nathan's OK, Nov 19, 2026; the Weekly Video folder is shared
+   "anyone with the link"). Download the video into a scratch folder:
+       curl -sSL -o video.mp4 "https://drive.usercontent.google.com/download?id=<file id>&export=download&confirm=t"
+   Pull a frame every 4 seconds into contact sheets with ffmpeg, look at them,
+   and pick 3 to 5 real moments that match the story cards (and one for "How
+   I did it" if the video shows the AI tools). Grab each in full quality with
+   ffmpeg -ss <seconds> and crop to 4:5 (crop=1080:1350:0:285,scale=800:1000),
+   JPEG quality about 80. Upload each to Drive, folder "Newsletter images"
+   inside Weekly Video (id 1QBzL0zJ4iC5PVkbEJQaQu26CBbf6YFaO), named
+   "<YYYY-MM-DD> <what it shows>.jpg", with the create-file tool using a
+   file reference (sha256:<hash>:<absolute path>) as the content. Use
+   https://lh3.googleusercontent.com/d/<uploaded file id>=w800 as each src,
+   and check one with curl (it must return image/jpeg). Never use AI images.
 5. Write the issue JSON to a scratch file (format below), then run `preview`
    on it and read the result. Fix anything that breaks the rules above.
 6. Run `send` on it. It schedules the broadcast to everyone in the "All prompt
@@ -57,7 +70,9 @@ Commands (run from the repo root):
       "date": "Nov 22",
       "summary": { "progress": "main progress, one clause", "concern": "biggest concern (optional)" },
       "metrics": { "prior": <lastDiscordCount>, "current": <discord members now>, "note": "optional" },
-      "progress": { "title": "what shipped or what a pilot proved", "cards": ["1-2 sentences", "..."], "screenshots": [] },
+      "progress": { "title": "what shipped or what a pilot proved", "cards": ["1-2 sentences", "..."],
+                    "screenshots": [{ "src": "https://lh3.googleusercontent.com/d/<id>=w800", "alt": "what it shows" }] },
+      "howIDidItScreenshots": [{ "src": "...", "alt": "..." }],
       "challenge": { "issue": "optional", "response": "what he's doing about it", "date": "optional" },
       "ask": { "role": "buyer role", "org": "organization", "problem": "specific problem" },
       "howIDidIt": ["how he used his AI systems this week, step by step"],

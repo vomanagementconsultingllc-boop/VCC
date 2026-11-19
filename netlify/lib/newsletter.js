@@ -58,6 +58,21 @@ function button(text, href, bg = '#000000') {
 //   next: 'milestone',
 //   videoUrl: 'link to the post',
 // }
+// Screenshots: two per row (one alone is full width). src is a full https URL
+// (weekly stills live in Drive, Weekly Video / Newsletter images, served from
+// https://lh3.googleusercontent.com/d/<file id>=w800) or a path on the site.
+function grid(shots) {
+  if (!shots || !shots.length) return '';
+  const img = (x, w) => `<img src="${esc(/^https?:/.test(x.src) ? x.src : `${SITE}/${x.src}`)}" alt="${esc(x.alt || '')}" width="${w}" style="display:block;width:100%;max-width:${w}px;height:auto;border:1px solid #e6e6e6;border-radius:12px">`;
+  if (shots.length === 1) return `<p style="margin:0 0 14px">${img(shots[0], 300)}</p>`;
+  const rows = [];
+  for (let i = 0; i < shots.length; i += 2) {
+    const a = shots[i]; const b = shots[i + 1];
+    rows.push(`<tr><td width="50%" valign="top" style="padding:0 5px 10px 0">${img(a, 260)}</td><td width="50%" valign="top" style="padding:0 0 10px 5px">${b ? img(b, 260) : ''}</td></tr>`);
+  }
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 6px">${rows.join('')}</table>`;
+}
+
 // Required every week: date, summary.progress, metrics.current, progress.title,
 // at least one story card, at least one "How I did it" step, and the mailing
 // address. Optional (left out when the video doesn't cover them, never made
@@ -83,7 +98,7 @@ function renderNewsletter(issue = {}, { mailingAddress } = {}) {
       ${m.note ? `<p style="margin:10px 0 0;font:400 15px/1.5 ${BODY};color:#d9d9d9">${esc(m.note)}</p>` : ''}
     </td></tr></table>`;
 
-  const shotHtml = shots.map((img) => `<p style="margin:0 0 14px"><img src="${esc(img.src.startsWith('http') ? img.src : `${SITE}/${img.src}`)}" alt="${esc(img.alt || '')}" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:1px solid #e6e6e6;border-radius:14px"></p>`).join('');
+  const shotHtml = grid(shots);
 
   const cardHtml = cards.map((t, i) => `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 10px;border:1px solid #e6e6e6;border-left:4px solid ${RED};border-radius:12px;background:#fafafa"><tr><td style="padding:14px 16px">
@@ -91,6 +106,7 @@ function renderNewsletter(issue = {}, { mailingAddress } = {}) {
         <p style="margin:0;font:400 16px/1.55 ${BODY};color:#111111">${esc(t)}</p>
       </td></tr></table>`).join('');
 
+  const howShots = grid(issue.howIDidItScreenshots || []);
   const howHtml = `<ol style="margin:0 0 6px;padding-left:22px;font:400 17px/1.6 ${BODY};color:#111111">${how.map((h) => `<li style="margin:0 0 8px">${esc(h)}</li>`).join('')}</ol>`;
 
   const challengeHtml = has(c.issue) ? section(`${label('Challenge')}${para(c.issue)}${has(c.response) ? `<p style="margin:0 0 14px;font:400 17px/1.6 ${BODY};color:#111111"><b style="font-family:${TITLE};text-transform:uppercase;letter-spacing:.04em;font-size:14px">Our response:</b> ${esc(c.response)}${has(c.date) ? ` (${esc(c.date)})` : ''}.</p>` : ''}`) : '';
@@ -120,7 +136,7 @@ function renderNewsletter(issue = {}, { mailingAddress } = {}) {
   ${section(`${label('Progress')}<p style="margin:0 0 14px;font:700 22px/1.2 ${TITLE};text-transform:uppercase;color:#000000">${esc(val(p.title, 'what shipped or what a pilot proved'))}</p>${shotHtml}${cardHtml}`)}
   ${challengeHtml}
   ${askHtml}
-  ${section(`${label('How I did it')}${howHtml}`)}
+  ${section(`${label('How I did it')}${howHtml}${howShots}`)}
   ${nextHtml}
   ${section(`${videoBtn}<p style="margin:0">${button('Join the free Discord', DISCORD_URL)}</p>`)}
   ${section(`<p style="margin:0;font:400 17px/1.6 ${BODY};color:#111111">Nathan</p>`)}
