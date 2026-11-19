@@ -13,7 +13,7 @@
 // (in Claude cloud sessions the proxy fills in the real Resend key).
 //
 // State lives in Resend itself: every issue is a broadcast named
-//   "VCC weekly | <date> | file=<drive file id> | discord=<count>"
+//   "VCC weekly | <date> | <drive file id> | d=<discord count>"   (Resend caps names at 70 chars)
 // so a video is never sent twice and next week knows last week's count.
 
 const fs = require('fs');
@@ -44,8 +44,9 @@ async function listIssues() {
   return (out.data || [])
     .filter((b) => /^VCC weekly \|/.test(b.name || ''))
     .map((b) => {
-      const file = (b.name.match(/file=([^\s|]+)/) || [])[1] || null;
-      const discord = Number((b.name.match(/discord=(\d+)/) || [])[1]);
+      const parts = b.name.split('|').map((x) => x.trim());
+      const file = (b.name.match(/file=([^\s|]+)/) || [])[1] || parts[2] || null;
+      const discord = Number((b.name.match(/(?:discord|d)=(\d+)/) || [])[1]);
       return { id: b.id, name: b.name, status: b.status, created_at: b.created_at, scheduled_at: b.scheduled_at, sent_at: b.sent_at, file, discord: Number.isFinite(discord) ? discord : null };
     })
     .sort((x, y) => String(y.created_at).localeCompare(String(x.created_at)));
@@ -120,14 +121,14 @@ async function cmdSend(file) {
     return;
   }
 
-  const name = `VCC weekly | ${issue.date} | file=${issue.driveFileId} | discord=${issue.metrics && issue.metrics.current}`;
+  const name = `VCC weekly | ${issue.date} | ${issue.driveFileId} | d=${issue.metrics && issue.metrics.current}`.slice(0, 70);
   const b = await resend('POST', '/broadcasts', {
     segment_id: CONFIG.segmentId, from: CONFIG.from, reply_to: CONFIG.replyTo,
     subject: n.subject, preview_text: n.preview, html: n.html, name,
   });
   await resend('POST', `/broadcasts/${b.id}/send`, { scheduled_at: when.toISOString() });
 
-  const note = `<b>Preview.</b> This goes to your whole list at <b>${fmtET(when)} ET</b>. To stop it, open <a href="https://resend.com/broadcasts">resend.com/broadcasts</a> and delete "${name.split(' | file=')[0]}", or tell your Link in bio Claude chat "stop the newsletter".`;
+  const note = `<b>Preview.</b> This goes to your whole list at <b>${fmtET(when)} ET</b>. To stop it, open <a href="https://resend.com/broadcasts">resend.com/broadcasts</a> and delete "${name.split(' | ').slice(0, 2).join(' | ')}", or tell your Link in bio Claude chat "stop the newsletter".`;
   const r = await resend('POST', '/emails', { from: CONFIG.from, to: [CONFIG.previewTo], subject: `[Preview, sends ${fmtET(when)}] ${n.subject}`, html: previewEmail(n, note) });
   console.log(JSON.stringify({ scheduled: true, broadcast: b.id, name, sendsAt: when.toISOString(), sendsAtET: fmtET(when), pinged: r.id }, null, 2));
 }
