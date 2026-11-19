@@ -1,11 +1,14 @@
 {
-  "mailingAddress": "",
+  "mailingAddress": "2929 Hannah Blvd, East Lansing, MI",
   "segmentId": "ca045d50-67b6-4e56-9670-f0623d3a47d9",
   "from": "Nathan Vo <nathan@vocreativeco.com>",
   "replyTo": "nathan@vocreativeco.com",
   "previewTo": "nathan@vocreativeco.com",
   "discordInvite": "jSfpvGcPmA",
-  "discordBaseline": { "members": 7, "date": "2026-11-18" },
+  "discordBaseline": {
+    "members": 7,
+    "date": "2026-11-18"
+  },
   "sendDelayMinutes": 120,
   "latestSendTimeET": "23:45",
   "timezone": "America/New_York"
