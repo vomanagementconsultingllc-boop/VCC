@@ -15,9 +15,10 @@ root `netlify.toml` removes it from the published marketing site.
 
 ## What a client sees: three steps
 
-The client side is three steps and nothing else, guided by one cartoon
-character ("Reel", drawn once in `src/components/guide.tsx`) who talks in
-speech bubbles.
+The client side is three tabs at the top of the screen and nothing else,
+the same on a phone and on a desktop, guided by one cartoon character
+("Reel", drawn once in `src/components/guide.tsx`) who talks in speech
+bubbles. Settings and sign out sit in a quiet link at the foot of the page.
 
 1. **Plan.** On first sign-in Reel asks a questionnaire: the business, what
    to research, and in detail where they can film and what they film with.
@@ -30,10 +31,25 @@ speech bubbles.
 3. **Finish.** The edit comes back. The client watches it, sends it back
    with what to fix or approves it, then downloads one or all.
 
-The team plans a client's week with one button on their Scripts tab: seven
-drafts from the best proven hooks that client has not used, each carrying
-its inspiration link through to the client, the editor and the Claude
-editing API.
+## What the team sees: three tabs
+
+The team side uses the same tab bar (`TopTabs` in `src/components/app-nav.tsx`).
+
+1. **Clients.** Opens on "Needs you": every video waiting on the team,
+   grouped by the one thing to do about it (watch the edit, pick an editor,
+   check and send the script, write the script, chase late footage). Each
+   line links to the page where that gets done. The clients are listed below.
+2. **Videos.** Every video in progress, in the same Plan / Shoot / Finish
+   steps the client sees, with a "You" tag on the ones waiting on the team.
+   The editing queue is one button away.
+3. **Research.** Videos that did unusually well, and the hook library.
+
+Settings (admin only) and sign out are small links beside the logo.
+
+The team plans a client's week with one button on that client's Videos tab:
+seven drafts from the best proven hooks the client has not used, each
+carrying its inspiration link through to the client, the editor and the
+Claude editing API.
 
 ## Who can see what
 
@@ -42,7 +58,7 @@ Enforced in the database (row level security), not just in the app:
 | Role | Sees |
 | --- | --- |
 | Admin | Everything, including pricing, costs, settings, the audit log, export and delete. |
-| Team member | Clients, voice profiles, research, scripts, pipeline, jobs. No pricing, costs, settings or audit log. |
+| Team member | Clients, voice profiles, research, scripts, the editing queue. No pricing, costs, settings or audit log. |
 | Editor | Only jobs assigned to them, and through an open job that script, its shots and clips, and the client's accepted b-roll. Access ends when the job is done. |
 | Client | Only their own scripts (once sent), briefs, upload slots, b-roll list, delivered videos and voice summary. Never research, internal notes or other clients. |
 

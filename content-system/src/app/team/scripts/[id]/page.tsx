@@ -5,7 +5,7 @@ import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { Badge, ButtonLink, Card, CardTitle, PageHeader, Textarea } from "@/components/ui";
-import { STAGES, formatDateTime } from "@/lib/labels";
+import { STAGES, STAGE_NOW, formatDateTime } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 import { addTeamComment, deleteScript, pullBackScript, sendToClient } from "../actions";
 import { aiConfigured } from "@/lib/ai/client";
@@ -88,8 +88,8 @@ export default async function ScriptPage({ params }: PageProps<"/team/scripts/[i
             · version {script.version}
           </>
         }
-        back={{ href: "/team/pipeline", label: "Pipeline" }}
-        actions={<Badge tone={stage.tone}>{stage.label}</Badge>}
+        back={{ href: "/team/videos", label: "Videos" }}
+        actions={<Badge tone={stage.waitingOn === "team" ? "gold" : "neutral"}>{STAGE_NOW[script.stage]}</Badge>}
       />
 
       <div className="grid gap-5 lg:grid-cols-3">

@@ -6,12 +6,12 @@ import { createClient } from "@/lib/supabase/server";
 import { ActionForm, SubmitButton } from "@/components/action-form";
 import { planWeek } from "../../../research/actions";
 import { Badge, EmptyState, PageHeader } from "@/components/ui";
-import { FORMATS, STAGES, formatDate } from "@/lib/labels";
+import { FORMATS, STAGES, STAGE_NOW, formatDate } from "@/lib/labels";
 import { isUuid } from "@/lib/forms";
 import { createScript } from "../../../scripts/actions";
 import { ClientTabs } from "../client-tabs";
 
-export const metadata: Metadata = { title: "Scripts" };
+export const metadata: Metadata = { title: "Videos" };
 
 export default async function ClientScriptsPage({ params }: PageProps<"/team/clients/[id]/scripts">) {
   await requireStaff();
@@ -33,12 +33,12 @@ export default async function ClientScriptsPage({ params }: PageProps<"/team/cli
     <>
       <PageHeader
         title={client.business || client.name}
-        subtitle="Scripts"
+        subtitle="Videos"
         back={{ href: "/team", label: "Clients" }}
         actions={
           <form action={createScript}>
             <input type="hidden" name="client_id" value={client.id} />
-            <SubmitButton pendingLabel="Creating…">New script</SubmitButton>
+            <SubmitButton pendingLabel="Creating…">New video</SubmitButton>
           </form>
         }
       />
@@ -47,15 +47,15 @@ export default async function ClientScriptsPage({ params }: PageProps<"/team/cli
         <input type="hidden" name="client_id" value={client.id} />
         <p className="font-semibold text-ink">Plan this week</p>
         <p className="mb-3 mt-1 text-sm text-ink-2">
-          Creates seven drafts from the best proven hooks this client has not used, each with its inspiration link.
-          Write or AI-draft each one, then send it. The client sees them in step 1.
+          Picks the seven best hooks this client has not used and starts a video for each, with its inspiration link.
+          Write each script (or let AI draft it), check it, and send it. The client sees them under Plan.
         </p>
         <SubmitButton variant="secondary" pendingLabel="Planning…">
           Plan 7 videos for this week
         </SubmitButton>
       </ActionForm>
       {!scripts?.length ? (
-        <EmptyState title="No scripts yet">Start one from here, or from the research board.</EmptyState>
+        <EmptyState title="No videos yet">Plan a week above, or start a single video with New video.</EmptyState>
       ) : (
         <ul className="divide-y divide-line panel border border-ink/[0.06]">
           {scripts.map((s) => (
@@ -67,7 +67,7 @@ export default async function ClientScriptsPage({ params }: PageProps<"/team/cli
                     {FORMATS[s.format]} · v{s.version} · updated {formatDate(s.updated_at)}
                   </span>
                 </span>
-                <Badge tone={STAGES[s.stage].tone}>{STAGES[s.stage].label}</Badge>
+                <Badge tone={STAGES[s.stage].waitingOn === "team" ? "gold" : "neutral"}>{STAGE_NOW[s.stage]}</Badge>
               </Link>
             </li>
           ))}

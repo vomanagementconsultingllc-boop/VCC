@@ -29,7 +29,7 @@ export default async function HooksPage() {
     <>
       <PageHeader
         title="Hook library"
-        subtitle="Ranked by how far each beat its creator's median, with full weight for 60 days and half as much every 30 days after."
+        subtitle="Your saved openings, strongest first. A hook counts for less once the video behind it is more than 60 days old."
         back={{ href: "/team/research", label: "Research" }}
       />
       {!hooks?.length ? (

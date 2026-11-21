@@ -64,8 +64,40 @@ export const STAGES: Record<Stage, { label: string; tone: Tone; waitingOn: "team
   posted: { label: "Posted and tracked", tone: "success", waitingOn: "nobody" },
 };
 
-/** Columns on the internal board. */
-export const BOARD_STAGES: Stage[] = STAGE_ORDER.filter((s) => s !== "approved");
+/** The three steps, the same words the client sees. The team's Videos page is grouped by them. */
+export type StepKey = "plan" | "shoot" | "finish";
+export const STEPS: Array<{ key: StepKey; number: number; label: string; about: string }> = [
+  { key: "plan", number: 1, label: "Plan", about: "Scripts being written, and scripts the client is reading." },
+  { key: "shoot", number: 2, label: "Shoot", about: "Approved scripts the client is filming." },
+  { key: "finish", number: 3, label: "Finish", about: "Footage is in: editing, checking, and handing over." },
+];
+
+export const STAGE_STEP: Record<Stage, StepKey> = {
+  research: "plan",
+  scripted: "plan",
+  sent_to_client: "plan",
+  approved: "shoot",
+  awaiting_footage: "shoot",
+  footage_received: "finish",
+  in_edit: "finish",
+  review: "finish",
+  delivered: "finish",
+  posted: "finish",
+};
+
+/** What is happening to a video right now, in plain words, for the team. */
+export const STAGE_NOW: Record<Stage, string> = {
+  research: "Write the script",
+  scripted: "Check the script and send it to the client",
+  sent_to_client: "The client is reading the script",
+  approved: "The client is filming",
+  awaiting_footage: "The client is filming",
+  footage_received: "Footage is in. Pick an editor",
+  in_edit: "The editor is working on it",
+  review: "The edit is back. Watch it and approve it",
+  delivered: "The client is checking the finished video",
+  posted: "Posted",
+};
 
 export function stageIndex(stage: Stage): number {
   return STAGE_ORDER.indexOf(stage);

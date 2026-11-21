@@ -54,7 +54,7 @@ export default async function TeamJobPage({ params }: PageProps<"/team/jobs/[id]
             </Link>
           </>
         }
-        back={{ href: "/team/jobs", label: "Edit jobs" }}
+        back={{ href: "/team/jobs", label: "Editing queue" }}
         actions={<Badge tone={status.tone}>{status.label}</Badge>}
       />
 

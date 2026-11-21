@@ -1,69 +1,56 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { requireStaff } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
-import { Badge, ButtonLink, EmptyState, PageHeader } from "@/components/ui";
-import { CLIENT_STATUS, one } from "@/lib/labels";
+import { ButtonLink, EmptyState, Eyebrow, PageHeader } from "@/components/ui";
+import { ClientGrid, NeedsYou } from "@/components/team/needs-you";
+import { CLIENT_STATUS } from "@/lib/labels";
 import { pipelineHealth } from "@/lib/pipeline-health";
+import { teamTodo } from "@/lib/team-todo";
 
 export const metadata: Metadata = { title: "Clients" };
 
 export default async function ClientsPage() {
   await requireStaff();
   const supabase = await createClient();
-  const { data: clients } = await supabase
-    .from("clients")
-    .select("id, name, business, niche_tags, status, assigned:profiles!clients_assigned_team_member_fkey(full_name, email)")
-    .order("status")
-    .order("name");
-
-  // Pipeline health per client: what is stuck, and on whom.
-  const { data: scripts } = await supabase
-    .from("scripts")
-    .select("client_id, stage, footage_requested_at, brief:shooting_briefs(due_date)")
-    .in("stage", ["sent_to_client", "awaiting_footage", "footage_received", "in_edit", "review"]);
-  const health = pipelineHealth(scripts ?? [], new Date());
+  const [{ data: clients }, { data: scripts }, { data: submitted }] = await Promise.all([
+    supabase.from("clients").select("id, name, business, status").order("status").order("name"),
+    // Every video still in progress: the to-do list and each client's summary come from these.
+    supabase
+      .from("scripts")
+      .select(
+        "id, title, client_id, stage, footage_requested_at, client:clients(name, business), brief:shooting_briefs(due_date)",
+      )
+      .not("stage", "in", "(delivered,posted)")
+      .order("updated_at"),
+    supabase.from("edit_jobs").select("id, script_id").eq("status", "submitted"),
+  ]);
+  const now = new Date();
+  const health = pipelineHealth(scripts ?? [], now);
 
   return (
     <>
       <PageHeader
         title="Clients"
-        subtitle="Everyone on the done-with-you offer, and what is stuck where."
+        subtitle="What needs you today, then everyone you make videos for."
         actions={<ButtonLink href="/team/clients/new">New client</ButtonLink>}
       />
+      <NeedsYou groups={teamTodo(scripts ?? [], submitted ?? [], now)} videosHref="/team/videos" />
+      <Eyebrow className="mb-3 text-ink-2">Your clients</Eyebrow>
       {!clients?.length ? (
-        <EmptyState title="No clients yet">Add your first client to start their voice profile.</EmptyState>
+        <EmptyState title="No clients yet">
+          Add your first client. They get an email to sign in and answer a few questions.
+        </EmptyState>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {clients.map((c) => (
-            <li key={c.id}>
-              <Link
-                href={`/team/clients/${c.id}`}
-                className="block h-full panel border border-ink/[0.06] p-5 hover:border-gold"
-              >
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <p className="font-semibold text-ink">{c.business || c.name}</p>
-                    {c.business && <p className="text-sm text-ink-2">{c.name}</p>}
-                  </div>
-                  <Badge tone={CLIENT_STATUS[c.status].tone}>{CLIENT_STATUS[c.status].label}</Badge>
-                </div>
-                <p className="mt-3 text-sm text-ink-2">{c.niche_tags.join(" · ") || "No niche tags yet"}</p>
-                <p className="mt-1 text-xs text-ink-3">
-                  {one(c.assigned) ? `Assigned to ${one(c.assigned)?.full_name || one(c.assigned)?.email}` : "Unassigned"}
-                </p>
-                <p className="mt-3 flex flex-wrap gap-1.5">
-                  {health.get(c.id)?.waiting ? (
-                    <Badge tone="warning">{health.get(c.id)?.waiting} waiting on client</Badge>
-                  ) : null}
-                  {health.get(c.id)?.overdue ? <Badge tone="danger">{health.get(c.id)?.overdue} footage overdue</Badge> : null}
-                  {health.get(c.id)?.editing ? <Badge tone="gold">{health.get(c.id)?.editing} in the edit queue</Badge> : null}
-                  {!health.get(c.id) && <Badge>Nothing in progress</Badge>}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <ClientGrid
+          clients={clients.map((c) => ({
+            id: c.id,
+            href: `/team/clients/${c.id}`,
+            title: c.business || c.name,
+            person: c.business ? c.name : undefined,
+            status: c.status === "active" ? undefined : CLIENT_STATUS[c.status],
+            health: health.get(c.id),
+          }))}
+        />
       )}
     </>
   );

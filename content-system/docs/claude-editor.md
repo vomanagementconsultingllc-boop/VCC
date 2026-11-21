@@ -22,7 +22,7 @@ client sees anything.
 
 ## Each time
 
-Assign jobs to the Claude seat from **Edit jobs**, then start a Claude session
+Assign jobs to the Claude seat from **Videos → Editing queue**, then start a Claude session
 (or a scheduled one) with a prompt like:
 
 > Check my edit queue at $VCC_APP_URL using the access key in $VCC_EDITOR_KEY.

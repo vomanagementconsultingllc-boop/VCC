@@ -39,11 +39,13 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
     <>
       <PageHeader
         title="Research"
-        subtitle={`Videos that beat their creator's own median. ${OUTLIER_RATIO}x or more counts as an outlier.`}
+        subtitle={`Videos that did far better than normal for their creator: ${OUTLIER_RATIO} times their usual views or more. Save the best openings as hooks.`}
         actions={<ButtonLink href="/team/hooks" variant="secondary">Hook library</ButtonLink>}
       />
 
-      <form className="mb-5 flex flex-wrap items-end gap-3">
+      <details className="mb-5" open={Boolean(niche) || show !== "open" || sort !== "ratio"}>
+        <summary className="flex min-h-11 cursor-pointer items-center text-sm font-semibold text-ink-2">Filter and sort</summary>
+      <form className="mt-2 flex flex-wrap items-end gap-3">
         <label className="block">
           <span className="mb-1 block text-sm font-semibold">Niche</span>
           <Select name="niche" defaultValue={niche} className="min-w-44">
@@ -58,28 +60,29 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
         <label className="block">
           <span className="mb-1 block text-sm font-semibold">Show</span>
           <Select name="show" defaultValue={show}>
-            <option value="open">Not dismissed</option>
-            <option value="worth_copying">Worth copying</option>
-            <option value="dismissed">Dismissed</option>
+            <option value="open">Everything not hidden</option>
+            <option value="worth_copying">Shortlisted</option>
+            <option value="dismissed">Hidden</option>
             <option value="all">Everything</option>
           </Select>
         </label>
         <label className="block">
           <span className="mb-1 block text-sm font-semibold">Sort</span>
           <Select name="sort" defaultValue={sort}>
-            <option value="ratio">Performance ratio</option>
-            <option value="recent">Most recent</option>
+            <option value="ratio">Biggest win first</option>
+            <option value="recent">Newest first</option>
           </Select>
         </label>
         <button type="submit" className={buttonClass("secondary")}>
           Apply
         </button>
       </form>
+      </details>
 
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
           {!items?.length ? (
-            <EmptyState title="Nothing on the board">Pull a niche or add a video by hand.</EmptyState>
+            <EmptyState title="No videos here yet">Use “Find new videos”, or add one yourself.</EmptyState>
           ) : (
             items.map((item) => {
               const ratio = item.performance_ratio == null ? null : Number(item.performance_ratio);
@@ -91,19 +94,19 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
                         @{item.creator_handle || "unknown"} <span className="font-normal text-ink-3">· {item.platform}</span>
                       </p>
                       <p className="text-sm text-ink-2">
-                        {compact(item.view_count)} views · median {compact(item.creator_median_views)}
+                        {compact(item.view_count)} views · they usually get {compact(item.creator_median_views)}
                         {item.posted_at && ` · ${formatDate(item.posted_at)}`}
                         {item.format_label && ` · ${FORMATS[item.format_label]}`}
                       </p>
                     </div>
                     <span className="flex flex-wrap gap-1.5">
                       {ratio != null ? (
-                        <Badge tone={ratio >= OUTLIER_RATIO ? "success" : "neutral"}>{ratio}x median</Badge>
+                        <Badge tone={ratio >= OUTLIER_RATIO ? "success" : "neutral"}>{ratio}x their usual</Badge>
                       ) : (
-                        <Badge tone="warning">No median yet</Badge>
+                        <Badge tone="warning">Not enough data yet</Badge>
                       )}
-                      {item.status === "worth_copying" && <Badge tone="gold">Worth copying</Badge>}
-                      {item.status === "dismissed" && <Badge>Dismissed</Badge>}
+                      {item.status === "worth_copying" && <Badge tone="gold">Shortlisted</Badge>}
+                      {item.status === "dismissed" && <Badge>Hidden</Badge>}
                     </span>
                   </div>
                   {item.hook_text && <p className="mt-3 font-display text-lg text-ink">“{item.hook_text}”</p>}
@@ -125,7 +128,7 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
                       <input type="hidden" name="item_id" value={item.id} />
                       <Select name="client_id" aria-label="Client" defaultValue="">
                         <option value="" disabled>
-                          Turn into a script for…
+                          Make a video for…
                         </option>
                         {clients?.map((c) => (
                           <option key={c.id} value={c.id}>
@@ -133,11 +136,11 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
                           </option>
                         ))}
                       </Select>
-                      <SubmitButton pendingLabel="Creating…">Turn into script</SubmitButton>
+                      <SubmitButton pendingLabel="Creating…">Start the video</SubmitButton>
                     </ActionForm>
                     <ActionForm action={saveHook} className="space-y-2">
                       <input type="hidden" name="item_id" value={item.id} />
-                      <Input name="text" aria-label="Hook text" defaultValue={item.hook_text} placeholder="The hook, word for word" />
+                      <Input name="text" aria-label="Hook text" defaultValue={item.hook_text} placeholder="The opening line, word for word" />
                       <div className="flex flex-wrap gap-2">
                         <Select name="format_type" aria-label="Hook type" className="w-auto flex-1" defaultValue="bold_claim">
                           <option value="question">Question</option>
@@ -154,16 +157,16 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
                     <input type="hidden" name="item_id" value={item.id} />
                     {item.status !== "worth_copying" && (
                       <button type="submit" name="status" value="worth_copying" className={buttonClass("ghost")}>
-                        Mark worth copying
+                        Shortlist
                       </button>
                     )}
                     {item.status !== "dismissed" ? (
                       <button type="submit" name="status" value="dismissed" className={buttonClass("ghost")}>
-                        Dismiss
+                        Hide
                       </button>
                     ) : (
                       <button type="submit" name="status" value="new" className={buttonClass("ghost")}>
-                        Restore
+                        Bring back
                       </button>
                     )}
                   </form>
@@ -175,9 +178,10 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
 
         <aside className="space-y-5">
           <Card>
-            <CardTitle>Pull outliers for a niche</CardTitle>
+            <CardTitle>Find new videos</CardTitle>
             <p className="mb-3 text-sm text-ink-2">
-              Runs weekly on its own. Only the niche keyword is sent to the scraper, never a client name or script.
+              Searches one niche for videos that did unusually well. This also runs by itself every week. Only the
+              niche keyword is sent out, never a client name or script.
             </p>
             <ActionForm action={pullNiche} className="space-y-3">
               <Select name="niche" aria-label="Niche" defaultValue={niche || niches[0] || ""}>
@@ -187,14 +191,17 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
                   </option>
                 ))}
               </Select>
-              <SubmitButton variant="secondary" pendingLabel="Pulling… this can take a minute">
-                Pull now
+              <SubmitButton variant="secondary" pendingLabel="Searching… this can take a minute">
+                Search now
               </SubmitButton>
             </ActionForm>
           </Card>
           <Card>
-            <CardTitle>Add a video by hand</CardTitle>
-            <ActionForm action={addResearchItem} resetOnSuccess className="space-y-3">
+            <details>
+              <summary className="flex min-h-11 cursor-pointer items-center font-display text-[22px] leading-tight text-ink">
+                Add a video yourself
+              </summary>
+            <ActionForm action={addResearchItem} resetOnSuccess className="mt-3 space-y-3">
               <Field label="Link">
                 <Input name="source_url" type="url" required placeholder="https://www.tiktok.com/@…" />
               </Field>
@@ -213,7 +220,7 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
                 <Field label="Views">
                   <Input name="view_count" inputMode="numeric" required />
                 </Field>
-                <Field label="Creator median" hint="Last 20 posts.">
+                <Field label="Their usual views" hint="Middle of their last 20 posts.">
                   <Input name="creator_median_views" inputMode="numeric" />
                 </Field>
                 <Field label="Followers">
@@ -226,14 +233,15 @@ export default async function ResearchPage({ searchParams }: PageProps<"/team/re
               <Field label="Niche tags" hint="Comma separated.">
                 <Input name="niche_tags" defaultValue={niche} />
               </Field>
-              <Field label="Hook" hint="First spoken sentence or first on-screen text. Left blank, it is read from the transcript.">
+              <Field label="Opening line" hint="First thing said or shown. Leave blank and it is read from the transcript.">
                 <Input name="hook_text" />
               </Field>
               <Field label="Transcript or caption">
                 <Textarea name="transcript" />
               </Field>
-              <SubmitButton pendingLabel="Adding…">Add to board</SubmitButton>
+              <SubmitButton pendingLabel="Adding…">Add it</SubmitButton>
             </ActionForm>
+            </details>
           </Card>
         </aside>
       </div>

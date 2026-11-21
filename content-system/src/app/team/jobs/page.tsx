@@ -7,7 +7,7 @@ import { Badge, Card, CardTitle, EmptyState, Input, PageHeader, Select } from "@
 import { createJob } from "@/app/actions/jobs";
 import { JOB_STATUS, formatDate, isOverdue, one, type JobStatus } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Edit jobs" };
+export const metadata: Metadata = { title: "Editing queue" };
 
 const ORDER: JobStatus[] = ["submitted", "revision", "in_progress", "queued", "done"];
 
@@ -35,10 +35,14 @@ export default async function JobsPage() {
 
   return (
     <>
-      <PageHeader title="Edit jobs" subtitle="Assign footage to editors and review what comes back." />
+      <PageHeader
+        title="Editing queue"
+        subtitle="Hand footage to an editor, then watch what comes back."
+        back={{ href: "/team/videos", label: "Videos" }}
+      />
 
       <Card className="mb-5">
-        <CardTitle>Ready to assign</CardTitle>
+        <CardTitle>Footage is in. Pick an editor</CardTitle>
         {!ready?.length ? (
           <p className="text-sm text-ink-2">Nothing waiting. Scripts appear here once every shot has passed its checks.</p>
         ) : (
@@ -60,7 +64,7 @@ export default async function JobsPage() {
                     <label className="block">
                       <span className="mb-1 block text-sm font-semibold">Editor</span>
                       <Select name="editor_id" className="min-w-48" defaultValue="">
-                        <option value="">Unassigned (queue)</option>
+                        <option value="">No one yet (any editor can take it)</option>
                         {editors?.map((e) => (
                           <option key={e.id} value={e.id}>
                             {e.full_name || e.email}
@@ -72,7 +76,7 @@ export default async function JobsPage() {
                       <span className="mb-1 block text-sm font-semibold">Due</span>
                       <Input type="date" name="due_date" />
                     </label>
-                    <SubmitButton pendingLabel="Creating…">Create edit job</SubmitButton>
+                    <SubmitButton pendingLabel="Creating…">Send to editing</SubmitButton>
                   </ActionForm>
                 </li>
               );

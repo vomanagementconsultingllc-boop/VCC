@@ -35,9 +35,9 @@ export function ButtonLink({
 }
 
 /** Small monospace label that sits above a heading. */
-export function Eyebrow({ children, className }: { children: ReactNode; className?: string }) {
+export function Eyebrow({ children, className, id }: { children: ReactNode; className?: string; id?: string }) {
   return (
-    <p className={cn("font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-gold-hover", className)}>
+    <p id={id} className={cn("font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-gold-hover", className)}>
       {children}
     </p>
   );

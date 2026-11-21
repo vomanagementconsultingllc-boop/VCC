@@ -1,6 +1,6 @@
 import { Suspense, type ReactNode } from "react";
 import { requireEditor } from "@/lib/auth";
-import { TopNav } from "@/components/app-nav";
+import { TopTabs, topLinkClass } from "@/components/app-nav";
 import { SignOutButton } from "@/components/sign-out";
 import { PageLoading } from "@/components/ui";
 
@@ -16,8 +16,9 @@ async function EditorShell({ children }: { children: ReactNode }) {
   await requireEditor();
   return (
     <div className="min-h-screen">
-      <TopNav items={[{ href: "/editor", label: "My jobs" }]} label="Editing" right={<SignOutButton />} />
-      <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-24 sm:pt-28">{children}</main>
+      {/* An editor has one page (their jobs), so there are no tabs to show. */}
+      <TopTabs items={[]} label="Editing" right={<SignOutButton className={topLinkClass} />} />
+      <main className="mx-auto w-full max-w-4xl px-4 pb-20 pt-6">{children}</main>
     </div>
   );
 }

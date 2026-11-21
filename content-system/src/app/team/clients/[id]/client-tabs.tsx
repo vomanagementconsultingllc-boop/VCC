@@ -7,16 +7,16 @@ export function ClientTabs({ clientId }: { clientId: string }) {
   return (
     <nav className="mb-5 flex flex-wrap gap-1" aria-label="Client sections">
       <NavLink href={base} exact className={tab} activeClassName={active}>
-        Overview
+        About
       </NavLink>
       <NavLink href={`${base}/voice`} className={tab} activeClassName={active}>
-        Voice profile
+        Voice
       </NavLink>
       <NavLink href={`${base}/scripts`} className={tab} activeClassName={active}>
-        Scripts
+        Videos
       </NavLink>
       <NavLink href={`${base}/broll`} className={tab} activeClassName={active}>
-        B-roll drop box
+        B-roll
       </NavLink>
     </nav>
   );

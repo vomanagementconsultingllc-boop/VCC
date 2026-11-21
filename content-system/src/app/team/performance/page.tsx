@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Badge, Card, CardTitle, EmptyState, PageHeader } from "@/components/ui";
 import { FORMATS, one, type VideoFormat } from "@/lib/labels";
 
-export const metadata: Metadata = { title: "Performance" };
+export const metadata: Metadata = { title: "What has gone out" };
 
 const HOOK_LABEL: Record<string, string> = {
   question: "Question",
@@ -50,7 +50,11 @@ export default async function PerformancePage() {
 
   return (
     <>
-      <PageHeader title="Performance" subtitle="Which hooks and formats each client is using, and what has gone out." />
+      <PageHeader
+        title="What has gone out"
+        subtitle="Which hooks and formats each client is using, and what has been posted."
+        back={{ href: "/team/videos", label: "Videos" }}
+      />
       {!hasNumbers && (
         <p className="mb-5 rounded-2xl bg-info-soft px-4 py-3 text-sm text-ink">
           View counts are not collected yet. They will appear here once platform API access is set up; until then this
