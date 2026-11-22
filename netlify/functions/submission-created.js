@@ -14,7 +14,7 @@
 // Each part is skipped when its settings are missing, and errors are only logged,
 // so a problem here can never block a signup.
 
-const TABS = { prompts: 'Prompts', waitlist: 'Answers', 'discord-click': 'Discord taps', 'studio-waitlist': 'Waitlist', booking: 'Booking' };
+const TABS = { prompts: 'Prompts', breakdown: '78K breakdown', waitlist: 'Answers', 'discord-click': 'Discord taps', 'studio-waitlist': 'Waitlist', booking: 'Booking' };
 
 function detroitTime(value) {
   return new Date(value).toLocaleString('en-US', {
@@ -87,10 +87,13 @@ function rowFor(form, d, submitted) {
 // ---- Resend (email) ---------------------------------------------------------
 // "prompts": send the prompts email (netlify/lib/prompts-email.js), save the
 //   person as a Resend contact and add them to the "All prompt signups" segment.
+// "breakdown": same, with the 78K video breakdown email (netlify/lib/breakdown-email.js)
+//   and got_78k_breakdown = "yes" on the contact.
 // "waitlist": the 4 questions; each answer is saved as a contact property, so a
 //   campaign can go to everyone who picked a given answer.
 // "discord-click": marks the contact with tapped_discord = "yes".
 const { buildPromptsEmail } = require('../lib/prompts-email.js');
+const { buildBreakdownEmail } = require('../lib/breakdown-email.js');
 
 const RESEND_API = process.env.RESEND_API_BASE || 'https://api.resend.com';
 const FROM = process.env.RESEND_FROM || 'Nathan Vo <nathan@vocreativeco.com>';
@@ -142,7 +145,7 @@ async function saveContact(email, fields) {
 
 async function sendWithResend(form, d, submissionId) {
   if (!process.env.RESEND_API_KEY) return 'Resend not configured; skipped.';
-  if (!['prompts', 'waitlist', 'discord-click'].includes(form)) return `Resend: nothing to do for form "${form}".`;
+  if (!['prompts', 'breakdown', 'waitlist', 'discord-click'].includes(form)) return `Resend: nothing to do for form "${form}".`;
   const email = String(d.email || '').trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'No valid email; skipped Resend.';
   const firstName = String(d.name || '').trim().split(/\s+/)[0] || '';
@@ -166,6 +169,20 @@ async function sendWithResend(form, d, submissionId) {
     }
   }
 
+  if (form === 'breakdown') {
+    const msg = buildBreakdownEmail({ name: firstName });
+    const sent = await resend('POST', '/emails', {
+      from: FROM,
+      to: [email],
+      reply_to: REPLY_TO,
+      subject: msg.subject,
+      html: msg.html,
+      text: msg.text,
+      tags: [{ name: 'form', value: 'breakdown' }],
+    }, submissionId ? `breakdown-${submissionId}` : undefined);
+    done.push(`breakdown email sent (${sent.id})`);
+  }
+
   // Contact details for this form
   const fields = firstName ? { first_name: firstName } : {};
   if (form === 'waitlist') {
@@ -174,10 +191,11 @@ async function sendWithResend(form, d, submissionId) {
     if (Object.keys(properties).length) fields.properties = properties;
   }
   if (form === 'discord-click') fields.properties = { tapped_discord: 'yes' };
+  if (form === 'breakdown') fields.properties = { got_78k_breakdown: 'yes' };
 
   try {
     done.push(await saveContact(email, fields));
-    if (form === 'prompts' && ALL_SIGNUPS_SEGMENT) {
+    if ((form === 'prompts' || form === 'breakdown') && ALL_SIGNUPS_SEGMENT) {
       await resend('POST', `/contacts/${encodeURIComponent(email)}/segments/${ALL_SIGNUPS_SEGMENT}`);
       done.push('added to All prompt signups');
     }
