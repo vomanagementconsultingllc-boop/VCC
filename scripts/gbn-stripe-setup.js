@@ -60,22 +60,23 @@ const itemPrice = (item) => (item.endsWith('@197') ? TIERS[base(item)].regular :
 const cartKey = (cart) => cart.join('+');
 const cartTotal = (cart) => cart.reduce((n, k) => n + itemPrice(k), 0);
 
-// What you'd pay instead (Nathan's numbers, Nov 23, 2026): a quality editor
-// charges $50 a video, and an agency can cost $2,000 a month. Same numbers as
-// the chart on /ai/checkout/. Shown at checkout above the Pay button.
+// What you'd pay instead in the first 30 days (Nathan's numbers, Nov 23, 2026):
+// a quality editor charges $50 a video ($1,500 for 30 daily videos), and a
+// social media manager costs $2,000. Same numbers as the chart on
+// /ai/checkout/. Shown at checkout above the Pay button.
 const EDITOR_PER_VIDEO = 50;
 const DAYS = 30;
-const AGENCY_PER_MONTH = 2000;
+const SMM_30_DAYS = 2000;
 const money = (n) => `$${n.toLocaleString('en-US')}`;
 
 function savingsText(cart) {
-  const total = cartTotal(cart) / 100;
-  if (cart.length === 1 && cart[0] === 'editor') {
-    const editor = EDITOR_PER_VIDEO * DAYS;
-    return `On average, a quality editor charges ${money(EDITOR_PER_VIDEO)} a video. Post every day for ${DAYS} days and that's ${money(editor)}. You're paying ${money(total)} once, so you save ${money(editor - total)} in your first month. All sales are final, no refunds. Needs your own paid Claude plan.`;
-  }
+  const editor = EDITOR_PER_VIDEO * DAYS;
+  const hasSmm = cart[0] === 'full' || cart.map(base).includes('social');
+  const saving = hasSmm
+    ? `you save ${money(editor)} on an editor and ${money(SMM_30_DAYS)} on a social media manager in the first ${DAYS} days`
+    : `you save ${money(editor)} on an editor in the first ${DAYS} days`;
   const extra = cart[0] === 'full' ? ' You also get the bonus video and the private GBN AI Discord. GBN AI goes to $997 on Dec 31.' : '';
-  return `On average, an agency can cost you ${money(AGENCY_PER_MONTH)} a month. You're paying ${money(total)} once, so you save ${money(AGENCY_PER_MONTH - total)} in your first month.${extra} All sales are final, no refunds. Needs your own paid Claude plan.`;
+  return `A quality editor charges ${money(EDITOR_PER_VIDEO)} a video, so posting every day for ${DAYS} days costs ${money(editor)}. With GBN AI, ${saving}.${extra} All sales are final, no refunds. Needs your own paid Claude plan.`;
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

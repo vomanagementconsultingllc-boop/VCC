@@ -72,6 +72,7 @@
   .fill.you { background: var(--red); min-width: 8px; }
   .saved { margin: 4px 0 0; font-size: 20px; font-weight: 800; line-height: 1.25; }
   .saved span { color: var(--red); }
+  .saved span.on { color: inherit; }
 
   .actions { margin-top: 14px; }
   .actions .btn { width: 100%; }
@@ -170,11 +171,15 @@
 
         <div class="chart" aria-live="polite">
           <h3>How much you’re saving on average</h3>
-          <div class="row-l"><span id="them-label">A quality editor<small>$50 a video, posting every day for a month</small></span><span id="them-price">$1,500</span></div>
-          <div class="track"><div class="fill them"></div></div>
-          <div class="row-l"><span id="you-label">You, with GBN AI</span><span id="you-price">$97</span></div>
+          <div class="row-l"><span>A quality editor<small>$50 a video, posting every day for 30 days</small></span><span id="editor-cost">$1,500</span></div>
+          <div class="track"><div class="fill them" id="bar-editor"></div></div>
+          <div id="smm-row" hidden>
+            <div class="row-l"><span>A social media manager</span><span id="smm-cost">$2,000</span></div>
+            <div class="track"><div class="fill them" id="bar-smm"></div></div>
+          </div>
+          <div class="row-l"><span id="you-label">You, with the AI Video Editor</span><span id="you-price">$97 once</span></div>
           <div class="track"><div class="fill you" id="bar-you"></div></div>
-          <p class="saved">You save <span id="saved">$1,403</span> in your first month.</p>
+          <p class="saved">You save <span id="saved">$1,500</span> <span class="on" id="saved-on">on an editor</span> in the first 30 days.</p>
         </div>
 
         <div class="actions">
@@ -228,8 +233,10 @@
   var GBN = 179, GBN_LATER = 997;
   var DEADLINE = Date.parse('2026-12-31T05:00:00Z'); // Dec 31, 12:00 AM Eastern
   var EDITOR_PRICE = 97;
-  // What you'd pay instead (Nathan's numbers): a quality editor charges $50 a video; an agency can cost $2,000 a month.
-  var EDITOR_PER_VIDEO = 50, DAYS = 30, AGENCY = 2000;
+  // What you'd pay instead in the first 30 days (Nathan's numbers): a quality
+  // editor charges $50 a video ($1,500 for 30 daily videos); a social media
+  // manager costs $2,000.
+  var EDITOR_PER_VIDEO = 50, DAYS = 30, SMM = 2000;
   var ADDONS = [
     { key: 'researcher', name: 'Viral Video Researcher', price: 37, text: 'Tells you what to post.' },
     { key: 'social', name: 'Social Media Manager', price: 37, text: 'Plans your posts and tells you what’s working.' },
@@ -299,13 +306,20 @@
     return ADDONS.filter(function (a) { return document.querySelector('#addons input[value="' + a.key + '"]').checked; });
   }
 
-  function drawChart(themLabel, themNote, them, youLabel, you) {
-    $('them-label').innerHTML = themLabel + (themNote ? '<small>' + themNote + '</small>' : '');
-    $('them-price').textContent = money(them) + '/mo';
+  // withSmm: compare against an editor AND a social media manager (GBN AI).
+  function drawChart(withSmm, youLabel, you) {
+    var editor = EDITOR_PER_VIDEO * DAYS;
+    var max = withSmm ? Math.max(editor, SMM) : editor;
+    $('editor-cost').textContent = money(editor);
+    $('bar-editor').style.width = (editor / max * 100).toFixed(1) + '%';
+    $('smm-row').hidden = !withSmm;
+    $('smm-cost').textContent = money(SMM);
+    $('bar-smm').style.width = (SMM / max * 100).toFixed(1) + '%';
     $('you-label').textContent = youLabel;
     $('you-price').textContent = money(you) + ' once';
-    $('bar-you').style.width = (you / them * 100).toFixed(1) + '%';
-    $('saved').textContent = money(them - you);
+    $('bar-you').style.width = (you / max * 100).toFixed(1) + '%';
+    $('saved').textContent = money(withSmm ? editor + SMM : editor);
+    $('saved-on').textContent = withSmm ? 'on an editor and a social media manager' : 'on an editor';
   }
 
   function render() {
@@ -325,7 +339,7 @@
       go.textContent = 'Continue to payment: ' + money(total);
       go.href = withSrc(LINKS.editor);
       alt.hidden = true;
-      drawChart('A quality editor', money(EDITOR_PER_VIDEO) + ' a video, posting every day for a month', EDITOR_PER_VIDEO * DAYS, 'You, with the AI Video Editor', total);
+      drawChart(false, 'You, with the AI Video Editor', total);
       return;
     }
 
@@ -346,7 +360,7 @@
     } else {
       alt.hidden = true; // GBN AI costs less than this cart, so there's no reason to pay more
     }
-    drawChart('An agency', '', AGENCY, 'You, with GBN AI', GBN);
+    drawChart(true, 'You, with GBN AI', GBN);
   }
 
   // Clocks
