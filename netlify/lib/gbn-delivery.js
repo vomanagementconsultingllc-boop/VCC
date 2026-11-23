@@ -12,7 +12,8 @@
 //       "researcher": { "url": "..." },
 //       "social":     { "url": "..." },
 //       "outreach":   { "url": "..." },
-//       "full":       { "url": "<folder with all 4>", "bonus": "<the bonus video>" }
+//       "full":       { "url": "<folder with all 4>", "bonus": "<the bonus video>",
+//                       "discord": "<invite link to the private GBN AI Discord>" }
 //     }
 //   }
 // A system with no url still gets a "coming within 24 hours" line, and
@@ -40,6 +41,14 @@ const PAYMENT_LINKS = {
   plink_1UekwhQQ9MdDPoingKXDiCaA: ['editor', 'outreach'],
   plink_1UekwiQQ9MdDPoin2UHnIPqq: ['editor', 'researcher', 'social'],
   plink_1UekwjQQ9MdDPoinwPmz34xE: ['full'],
+  // after the 1-hour window: add-ons at $197
+  plink_1UelDTQQ9MdDPointH76IG6R: ['editor', 'researcher'],
+  plink_1UelDUQQ9MdDPoinYVzbnJQ5: ['editor', 'social'],
+  plink_1UelDVQQ9MdDPoinsy1AAXwi: ['editor', 'outreach'],
+  plink_1UelDVQQ9MdDPoinUCeO0JDv: ['editor', 'researcher', 'social'],
+  plink_1UelDWQQ9MdDPoinyShLO7BQ: ['editor', 'researcher', 'outreach'],
+  plink_1UelDWQQ9MdDPoiniqk9V3FV: ['editor', 'social', 'outreach'],
+  plink_1UelDXQQ9MdDPoinaPjCkEhG: ['editor', 'researcher', 'social', 'outreach'],
 };
 
 // Which GBN systems a Stripe checkout session bought, or null if it isn't GBN AI.
@@ -80,7 +89,10 @@ function itemsFor(tiers, delivery) {
   tiers.forEach((k) => {
     const d = delivery.tiers[k] || {};
     items.push({ name: TIERS[k].name, url: d.url || '', kind: 'files' });
-    if (k === 'full') items.push({ name: 'Bonus: how I use it to make content that goes viral', url: d.bonus || '', kind: 'video' });
+    if (k === 'full') {
+      items.push({ name: 'Bonus: how I use it to make content that goes viral', url: d.bonus || '', kind: 'video' });
+      items.push({ name: 'The private GBN AI Discord', url: d.discord || '', kind: 'discord' });
+    }
   });
   return items;
 }
@@ -98,7 +110,9 @@ function buyerEmail({ tiers, name, delivery }) {
 
   const rows = items.map((i) => {
     const action = i.url
-      ? button(i.url, i.kind === 'video' ? 'Watch the video &rarr;' : 'Open your files &rarr;')
+      ? (i.kind === 'discord'
+        ? button(i.url, 'Join the private Discord &rarr;', '#5865F2')
+        : button(i.url, i.kind === 'video' ? 'Watch the video &rarr;' : 'Open your files &rarr;'))
       : `<p style="margin:0;font:15px/1.5 ${FONT};color:#3a3a3a">I&rsquo;m putting this together by hand. You&rsquo;ll get it at this email within 24 hours.</p>`;
     return `<tr><td style="padding:12px 0 0">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e6e6e6;border-radius:14px;background:#fafafa"><tr><td style="padding:18px 20px">

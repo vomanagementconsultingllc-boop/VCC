@@ -5,119 +5,173 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Checkout | GBN AI</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#E8352B">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Cpath d='M14 16h9l9 26 9-26h9L37 50h-10z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
 <link rel="stylesheet" href="../gbn.css">
 <style>
-  main { padding: 32px 0 48px; }
-  .steps-top { display: flex; gap: 8px; align-items: center; margin: 0 0 18px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  /* the Dec 31 countdown */
+  .bar { position: sticky; top: 0; z-index: 5; padding: 10px 16px; background: var(--red); color: #fff; text-align: center; font-size: 15px; font-weight: 700; line-height: 1.3; }
+  .bar .clock { display: inline-flex; gap: 6px; margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .bar .clock span { padding: 2px 7px; border-radius: 6px; background: rgba(0,0,0,.22); }
+
+  main { padding: 26px 0 48px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+  .side { position: sticky; top: 64px; }
+  .steps-top { display: flex; gap: 8px; align-items: center; margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .steps-top b { color: var(--ink); }
   h1 { font-size: clamp(30px, 5vw, 44px); }
-  .box { margin-top: 20px; border: 1px solid var(--line); border-radius: 18px; }
+
+  .box { margin-top: 18px; border: 1px solid var(--line); border-radius: 18px; }
   .item { display: flex; gap: 14px; align-items: flex-start; padding: 18px; }
   .item + .item { border-top: 1px solid var(--line); }
   .item .txt { flex: 1; min-width: 0; }
   .item h3 { margin: 0 0 4px; font-size: 18px; }
   .item p { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.45; }
   .item .hire { margin-top: 6px; font-size: 13px; }
-  .item .px { text-align: right; white-space: nowrap; }
-  .item .px b { display: block; font-size: 20px; font-weight: 800; }
-  .item .px s { font-size: 13px; color: #9A9A9A; }
-  .item .px span { display: block; font-size: 12px; color: var(--muted); }
+  .px { flex: none; min-width: 92px; text-align: right; }
+  .px s { display: block; font-size: 14px; color: #9A9A9A; }
+  .px b { display: block; font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .px .later { display: block; font-size: 12px; color: var(--muted); }
+  .off { display: inline-block; margin-top: 4px; padding: 3px 7px; border-radius: 6px; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .03em; }
+  .timer { display: block; margin-top: 6px; color: var(--red); font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .timer.ended { color: var(--muted); font-weight: 600; }
   .addon { cursor: pointer; transition: background-color .15s; }
   @media (hover: hover) { .addon:hover { background: #FAFAFA; } }
   .addon input { position: absolute; opacity: 0; width: 1px; height: 1px; }
   .check { flex: none; display: grid; place-items: center; width: 26px; height: 26px; margin-top: 1px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; }
   .check svg { width: 14px; height: 14px; opacity: 0; }
-  .addon input:checked ~ .check { background: var(--ink); }
-  .addon input:checked ~ .check svg { opacity: 1; }
+  .addon input:checked ~ .check, .base .check { background: var(--ink); }
+  .addon input:checked ~ .check svg, .base .check svg { opacity: 1; }
   .addon input:focus-visible ~ .check { outline: 3px solid var(--focus); outline-offset: 2px; }
   .addon.on { background: #FAFAFA; }
-  .base .check { background: var(--ink); }
-  .base .check svg { opacity: 1; }
-  .sub { margin: 30px 0 4px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .sub { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 28px 0 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .sub .timer { margin: 0; letter-spacing: 0; text-transform: none; font-size: 14px; }
 
-  .total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; padding: 0 4px; font-size: 18px; font-weight: 700; }
+  .card { padding: 20px; border: 1px solid var(--line); border-radius: 18px; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; font-weight: 700; }
   .total b { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
 
-  .upsell { margin-top: 18px; padding: 22px; border-radius: 18px; background: var(--ink); color: #fff; }
-  .upsell .kicker { color: #BDBDBD; }
-  .upsell h2 { color: #fff; font-size: clamp(24px, 4vw, 32px); }
-  .upsell p { margin: 0 0 14px; color: #D4D4D4; }
-  .upsell ul { margin: 0 0 18px; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 15px; }
+  .upsell { margin-top: 14px; padding: 18px; border-radius: 16px; background: var(--ink); color: #fff; }
+  .upsell h2 { margin: 0 0 8px; color: #fff; font-size: 24px; line-height: 1.12; }
+  .upsell p { margin: 0 0 12px; color: #D4D4D4; font-size: 15px; }
+  .upsell .val { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+  .upsell .val s { color: #9A9A9A; font-size: 16px; }
+  .upsell ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14.5px; }
   .upsell li { display: flex; gap: 9px; }
   .upsell li::before { content: ""; flex: none; width: 16px; height: 16px; margin-top: 2px; border-radius: 5px; background: var(--red) center / 9px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
-  .upsell .btn { width: 100%; }
-  .upsell .link { display: block; width: 100%; margin-top: 10px; padding: 10px; border: 0; background: none; color: #CFCFCF; font: inherit; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: center; }
 
-  .deadline { margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: #FFF3F2; border: 1px solid #F6C9C5; font-size: 16px; line-height: 1.5; }
+  .deadline { margin-top: 14px; padding: 14px 16px; border-radius: 14px; background: #FFF3F2; border: 1px solid #F6C9C5; font-size: 15px; line-height: 1.5; }
   .deadline b { color: var(--red); }
 
-  .go { width: 100%; margin-top: 16px; }
+  /* savings chart, right next to the button */
+  .chart { margin-top: 16px; padding: 16px; border-radius: 16px; background: var(--soft); }
+  .chart h3 { margin: 0 0 2px; font-size: 16px; }
+  .chart .basis { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+  .bars { display: grid; gap: 10px; }
+  .bars .lbl { display: flex; justify-content: space-between; gap: 8px; font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
+  .track { position: relative; height: 22px; border-radius: 6px; background: #fff; overflow: hidden; }
+  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; }
+  .fill.range { background: repeating-linear-gradient(135deg, #BDBDBD 0 6px, #D6D6D6 6px 12px); }
+  .fill.low { background: #6B6B6B; }
+  .fill.you { background: var(--red); min-width: 6px; }
+  .roles { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+  .roles li { display: flex; justify-content: space-between; gap: 10px; }
+  .roles li b { color: var(--ink); font-weight: 700; white-space: nowrap; }
+  .saved { margin: 12px 0 0; font-size: 18px; font-weight: 800; }
+  .saved span { color: var(--red); }
 
-  .savings { margin-top: 26px; padding: 18px; border-radius: 16px; background: var(--soft); }
-  .savings h3 { margin: 0 0 10px; font-size: 17px; }
-  .savings table { width: 100%; border-collapse: collapse; font-size: 15px; }
-  .savings td { padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-  .savings td.n { text-align: right; white-space: nowrap; padding-left: 10px; }
-  .savings tr.you td { border-bottom: 0; font-weight: 800; padding-top: 12px; }
-  .savings p { margin: 10px 0 0; font-size: 12.5px; color: var(--muted); }
-  .fine { margin-top: 14px; text-align: center; font-size: 13px; color: var(--muted); }
+  .actions { margin-top: 14px; }
+  .actions .btn { width: 100%; }
+  .actions .alt { display: block; width: 100%; margin-top: 8px; padding: 10px; color: var(--muted); font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
+  .actions .note { margin: 8px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+  .fine { margin-top: 14px; text-align: center; font-size: 12.5px; color: var(--muted); }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .side { position: static; }
+  }
+  @media (max-width: 600px) {
+    .bar { font-size: 14px; }
+    .bar .clock { display: flex; justify-content: center; margin: 6px 0 0; }
+    .item { padding: 16px 14px; gap: 12px; }
+    .px { min-width: 84px; }
+    .upsell h2 { font-size: 22px; }
+  }
 </style>
 </head>
 <body>
+<div class="bar" id="bar" role="note">
+  GBN AI goes to $997 on Dec 31
+  <span class="clock" aria-hidden="true"><span id="cd-d">0d</span><span id="cd-h">00h</span><span id="cd-m">00m</span><span id="cd-s">00s</span></span>
+</div>
+
 <main>
-  <div class="wrap narrow">
-    <p class="steps-top"><b>1. Your order</b> <span aria-hidden="true">›</span> <span>2. Payment</span></p>
-    <h1>Your order</h1>
+  <div class="wrap grid">
+    <div>
+      <p class="steps-top"><b>1. Your order</b> <span aria-hidden="true">›</span> <span>2. Payment</span></p>
+      <h1>Your order</h1>
 
-    <div class="box">
-      <div class="item base">
-        <span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>
-        <div class="txt">
-          <h3>AI Video Editor</h3>
-          <p>Send it a raw video, approve the storyboard, get a finished vertical video. Every style.</p>
+      <div class="box">
+        <div class="item base">
+          <span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>
+          <div class="txt">
+            <h3>AI Video Editor</h3>
+            <p>Send it a raw video, approve the storyboard, get a finished vertical video. Every style.</p>
+          </div>
+          <div class="px"><b>$97</b><span class="later" id="editor-later">$194 after Dec 30</span></div>
         </div>
-        <div class="px"><b>$97</b><span class="later">$194 after Dec 30</span></div>
       </div>
+
+      <p class="sub"><span>Add to your order</span><span class="timer" id="hour-head"></span></p>
+      <div class="box" id="addons"></div>
     </div>
 
-    <p class="sub">Add to your order</p>
-    <div class="box" id="addons"></div>
+    <aside class="side">
+      <div class="card">
+        <div class="total"><span>Total</span><b id="total">$97</b></div>
 
-    <div class="total"><span>Total</span><b id="total">$97</b></div>
+        <!-- They added something: point them to GBN AI -->
+        <div class="upsell" id="upsell" hidden>
+          <h2 id="up-title">Spend +$45 more and get all 4.</h2>
+          <p id="up-text">All 4 systems, my bonus video, and the private GBN AI Discord.</p>
+          <div class="val"><s>$688 value</s><span class="off" id="up-off">74% OFF</span></div>
+          <ul>
+            <li>AI Video Editor</li>
+            <li>Viral Video Researcher</li>
+            <li>Social Media Manager</li>
+            <li>AI Outreach System</li>
+            <li>Bonus: my video on making content that goes viral</li>
+            <li>The private GBN AI Discord</li>
+          </ul>
+        </div>
 
-    <!-- If they add anything: offer GBN AI instead -->
-    <div class="upsell" id="upsell" hidden>
-      <p class="kicker">Better deal</p>
-      <h2 id="up-title">Get all of it as GBN AI for $179.</h2>
-      <p id="up-text"></p>
-      <ul>
-        <li>AI Video Editor</li>
-        <li>Viral Video Researcher</li>
-        <li>Social Media Manager</li>
-        <li>AI Outreach System</li>
-        <li>Bonus: my video on using it to make content that goes viral</li>
-      </ul>
-      <a class="btn btn-red" id="go-full" href="#">Get GBN AI: $179</a>
-      <button class="link" id="keep" type="button">No thanks, continue with <span id="keep-total">$134</span></button>
-    </div>
+        <!-- They added nothing: the deadline -->
+        <p class="deadline" id="deadline">Launch prices end <b>Dec 30</b>. After that the AI Video Editor goes to $194.</p>
 
-    <!-- If they don't add anything: the deadline -->
-    <p class="deadline" id="deadline">These are launch prices, and they end <b>Dec 30</b>. After that, everything doubles: the AI Video Editor goes to $194.</p>
+        <div class="chart" aria-live="polite">
+          <h3 id="chart-title">30 days of posting every day</h3>
+          <p class="basis" id="chart-basis">What it costs to hire it out vs this</p>
+          <div class="bars">
+            <div><div class="lbl"><span>Hiring it out</span><span id="hire-range">$300 to $1,800</span></div>
+              <div class="track"><span class="fill range" id="bar-high"></span><span class="fill low" id="bar-low"></span></div></div>
+            <div><div class="lbl"><span id="you-label">Your order</span><span id="you-price">$97 once</span></div>
+              <div class="track"><span class="fill you" id="bar-you"></span></div></div>
+          </div>
+          <ul class="roles" id="roles"></ul>
+          <p class="saved">You save at least <span id="saved">$203</span></p>
+        </div>
 
-    <a class="btn go" id="go" href="#">Continue to payment: $97</a>
-
-    <div class="savings" aria-live="polite">
-      <h3>What you save vs hiring it out</h3>
-      <table id="save-table"></table>
-      <p>Hiring costs use Upwork’s published hourly rates at just 10 hours a month each. GBN AI needs your own paid Claude plan.</p>
-    </div>
-
-    <p class="fine">Secure payment by Stripe. Your files are emailed to you right after you pay.</p>
+        <div class="actions">
+          <a class="btn btn-red" id="go" href="#">Continue to payment: $97</a>
+          <a class="alt" id="alt" href="#" hidden>No thanks, continue with $134</a>
+          <p class="note" id="go-note" hidden></p>
+        </div>
+        <p class="fine">Hiring costs: Upwork’s published hourly rates. Editing at 1 hour per video, every other role at just 10 hours for the month. GBN AI needs your own paid Claude plan. Secure payment by Stripe, files emailed right after you pay.</p>
+      </div>
+    </aside>
   </div>
 </main>
 <footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
@@ -125,114 +179,168 @@
 <script>
 (function () {
   'use strict';
-  // Prices, add-ons and the Stripe payment link for each cart
-  // (scripts/gbn-stripe-setup.js makes the links).
-  var EDITOR = { key: 'editor', name: 'AI Video Editor', price: 97, role: 'video editor', rate: [10, 60] };
+  // ---- The offer (scripts/gbn-stripe-setup.js makes the matching Stripe links) ----
+  var REGULAR = 197;                 // add-on price after the 1-hour window
+  var HOUR = 60 * 60 * 1000;         // 1-hour add-on window, from the first time this person opens checkout
+  var GBN = 179, GBN_LATER = 997;
+  var DEADLINE = Date.parse('2026-12-31T05:00:00Z'); // Dec 31, 12:00 AM Eastern
+  var EDITOR = { key: 'editor', name: 'AI Video Editor', price: 97, role: 'Video editor', rate: [10, 60], hours: 30, basis: '30 edits' };
   var ADDONS = [
-    { key: 'researcher', name: 'Viral Video Researcher', price: 37, role: 'content strategist', rate: [35, 65],
+    { key: 'researcher', name: 'Viral Video Researcher', price: 37, role: 'Content strategist', rate: [35, 65], hours: 10, basis: '10 hrs',
       text: 'Finds what’s blowing up in your niche and writes ideas you can film, with hooks.' },
-    { key: 'social', name: 'Social Media Manager', price: 37, role: 'social media manager', rate: [14, 35],
+    { key: 'social', name: 'Social Media Manager', price: 37, role: 'Social media manager', rate: [14, 35], hours: 10, basis: '10 hrs',
       text: 'Briefs every post, keeps your calendar, and checks how every video did.' },
-    { key: 'outreach', name: 'AI Outreach System', price: 69, role: 'lead generation specialist', rate: [13, 45],
+    { key: 'outreach', name: 'AI Outreach System', price: 69, role: 'Lead generation specialist', rate: [13, 45], hours: 10, basis: '10 hrs',
       text: 'Builds your lead list and writes personal first messages in your voice.' }
   ];
-  var FULL_PRICE = 179;
   var LINKS = {
     'editor': 'https://buy.stripe.com/fZu28tesN2RyfpX6so9fW0D',
     'editor+researcher': 'https://buy.stripe.com/eVqeVf70l1Nu7Xv7ws9fW0E',
     'editor+social': 'https://buy.stripe.com/7sY14p1G1gIo1z71849fW0F',
     'editor+outreach': 'https://buy.stripe.com/fZufZjgAV0Jq6Tr1849fW0G',
     'editor+researcher+social': 'https://buy.stripe.com/28EaEZ5WhgIo6Trg2Y9fW0H',
-    'full': 'https://buy.stripe.com/fZucN73O91Nu1z75ok9fW0I'
+    'full': 'https://buy.stripe.com/fZucN73O91Nu1z75ok9fW0I',
+    'editor+researcher@197': 'https://buy.stripe.com/28EfZjdoJ4ZG2DbcQM9fW0J',
+    'editor+social@197': 'https://buy.stripe.com/5kQeVf3O92Ry6Tr8Aw9fW0K',
+    'editor+outreach@197': 'https://buy.stripe.com/5kQ5kF3O94ZG91z3gc9fW0L',
+    'editor+researcher@197+social@197': 'https://buy.stripe.com/aFaaEZ4Sdcs8b9Hg2Y9fW0M',
+    'editor+researcher@197+outreach@197': 'https://buy.stripe.com/00w5kFesNbo46Tr8Aw9fW0N',
+    'editor+social@197+outreach@197': 'https://buy.stripe.com/cNidRbgAV2Ry6TraIE9fW0O',
+    'editor+researcher@197+social@197+outreach@197': 'https://buy.stripe.com/7sYcN7esNcs8fpX1849fW0P'
   };
-  var DEADLINE = Date.parse('2026-12-31T05:00:00Z'); // end of Dec 30, Eastern
-  var launch = Date.now() < DEADLINE;
+  var VALUE = EDITOR.price + REGULAR * ADDONS.length; // $688
 
   var $ = function (id) { return document.getElementById(id); };
   var money = function (n) { return '$' + n.toLocaleString('en-US'); };
+  var pct = function (now, was) { return Math.round((1 - now / was) * 100) + '% OFF'; };
   var src = (new URLSearchParams(location.search).get('src') || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
   var withSrc = function (url) { return src ? url + '?client_reference_id=' + encodeURIComponent(src) : url; };
   $('year').textContent = String(new Date().getFullYear());
 
-  // Build the add-on rows
+  // The 1-hour window starts the first time this person opens checkout, and
+  // really ends: after it, the add-ons are $197 here and at Stripe.
+  var start = Date.now();
+  try {
+    var saved = Number(localStorage.getItem('gbn_addon_hour_start'));
+    if (saved && saved <= Date.now()) start = saved; else localStorage.setItem('gbn_addon_hour_start', String(start));
+  } catch (e) { /* storage blocked: the hour runs from this page view */ }
+  var expired = function () { return Date.now() - start >= HOUR; };
+  var launch = function () { return Date.now() < DEADLINE; };
+
+  // Add-on rows
   var check = '<span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>';
   $('addons').innerHTML = ADDONS.map(function (a) {
     return '<label class="item addon" data-key="' + a.key + '">' +
       '<input type="checkbox" value="' + a.key + '">' + check +
       '<span class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p>' +
-      '<p class="hire">Replaces a ' + a.role + ': $' + a.rate[0] + ' to $' + a.rate[1] + ' an hour on Upwork</p></span>' +
-      '<span class="px"><b>+' + money(a.price) + '</b>' + (launch ? '<span class="later">' + money(a.price * 2) + ' after Dec 30</span>' : '') + '</span>' +
-      '</label>';
+      '<p class="hire">Replaces a ' + a.role.toLowerCase() + ': $' + a.rate[0] + ' to $' + a.rate[1] + ' an hour on Upwork</p></span>' +
+      '<span class="px" id="px-' + a.key + '"></span></label>';
   }).join('');
-  if (!launch) document.querySelectorAll('.later').forEach(function (el) { el.hidden = true; });
 
-  var dismissed = false; // "No thanks" on the GBN AI offer
+  function priceOf(a) { return expired() ? REGULAR : a.price; }
+
+  function drawPrices() {
+    var ended = expired();
+    ADDONS.forEach(function (a) {
+      $('px-' + a.key).innerHTML = ended
+        ? '<b>+' + money(REGULAR) + '</b><span class="timer ended">1-hour price ended</span>'
+        : '<s>' + money(REGULAR) + '</s><b>+' + money(a.price) + '</b><span class="off">' + pct(a.price, REGULAR) + '</span>' +
+          '<span class="timer" data-timer>⏱ 60:00</span>';
+    });
+  }
 
   function selected() {
     return ADDONS.filter(function (a) { return document.querySelector('#addons input[value="' + a.key + '"]').checked; });
   }
 
-  function savingsRows(items, price, label) {
+  function drawChart(items, price, label) {
     var low = 0, high = 0;
-    var rows = items.map(function (i) {
-      low += i.rate[0] * 10; high += i.rate[1] * 10;
-      return '<tr><td>A freelance ' + i.role + '</td><td class="n">' + money(i.rate[0] * 10) + ' to ' + money(i.rate[1] * 10) + '/mo</td></tr>';
+    $('roles').innerHTML = items.map(function (i) {
+      var l = i.rate[0] * i.hours, h = i.rate[1] * i.hours;
+      low += l; high += h;
+      return '<li><span>' + i.role + ' (' + i.basis + ')</span><b>' + money(l) + ' to ' + money(h) + '</b></li>';
     }).join('');
-    if (items.length > 1) rows += '<tr><td><b>Hiring it all out</b></td><td class="n"><b>' + money(low) + ' to ' + money(high) + '/mo</b></td></tr>';
-    rows += '<tr class="you"><td>' + label + '</td><td class="n">' + money(price) + ' once</td></tr>';
-    return rows;
+    $('hire-range').textContent = money(low) + ' to ' + money(high);
+    $('you-label').textContent = label;
+    $('you-price').textContent = money(price) + ' once';
+    $('bar-high').style.width = '100%';
+    $('bar-low').style.width = (low / high * 100).toFixed(1) + '%';
+    $('bar-you').style.width = (price / high * 100).toFixed(1) + '%';
+    $('saved').textContent = money(low - price);
   }
 
   function render() {
     var picks = selected();
     document.querySelectorAll('.addon').forEach(function (el) { el.classList.toggle('on', el.querySelector('input').checked); });
-    var total = EDITOR.price + picks.reduce(function (n, a) { return n + a.price; }, 0);
-    var cartKey = ['editor'].concat(picks.map(function (a) { return a.key; })).join('+');
-    var tooBig = total >= FULL_PRICE || !LINKS[cartKey]; // GBN AI is cheaper or equal: only offer that
+    var ended = expired();
+    var total = EDITOR.price + picks.reduce(function (n, a) { return n + priceOf(a); }, 0);
+    var cartKey = ['editor'].concat(picks.map(function (a) { return ended ? a.key + '@197' : a.key; })).join('+');
+    var cartLink = LINKS[cartKey];
     $('total').textContent = money(total);
 
-    var showUpsell = picks.length > 0 && (tooBig || !dismissed);
-    $('upsell').hidden = !showUpsell;
-    $('deadline').hidden = !(picks.length === 0 && launch);
-    $('go-full').href = withSrc(LINKS.full);
+    var go = $('go'), alt = $('alt'), note = $('go-note');
+    $('upsell').hidden = picks.length === 0;
+    $('deadline').hidden = !(picks.length === 0 && launch());
 
-    if (picks.length > 0) {
-      if (tooBig) {
-        $('up-title').textContent = 'GBN AI is cheaper: ' + money(FULL_PRICE) + ' for everything.';
-        $('up-text').textContent = 'Your order comes to ' + money(total) + '. GBN AI is all 4 systems plus my bonus video for ' + money(FULL_PRICE) + ', so you save ' + money(total - FULL_PRICE) + '.';
-        $('keep').hidden = true;
-      } else {
-        $('up-title').textContent = 'Get all of it as GBN AI for ' + money(FULL_PRICE) + '.';
-        $('up-text').textContent = 'For ' + money(FULL_PRICE - total) + ' more than your order, get all 4 systems plus my bonus video. Bought one by one, they’re ' + money(EDITOR.price + ADDONS.reduce(function (n, a) { return n + a.price; }, 0)) + '.';
-        $('keep').hidden = false;
-        $('keep-total').textContent = money(total);
-      }
-    }
-
-    // Main button
-    var go = $('go');
-    if (tooBig) {
-      go.hidden = true;
-    } else {
-      go.hidden = showUpsell;
+    if (picks.length === 0) {
       go.textContent = 'Continue to payment: ' + money(total);
-      go.href = withSrc(LINKS[cartKey]);
+      go.href = withSrc(LINKS.editor);
+      alt.hidden = true; note.hidden = true;
+      drawChart([EDITOR], total, 'AI Video Editor');
+      return;
     }
 
-    // Savings table: for GBN AI when that's the offer on screen, else for the order
-    var all = [EDITOR].concat(ADDONS);
-    $('save-table').innerHTML = (tooBig || (showUpsell && !dismissed))
-      ? savingsRows(all, FULL_PRICE, 'GBN AI (all 4 + bonus video)')
-      : savingsRows([EDITOR].concat(picks), total, 'Your order');
+    // Something added: GBN AI is the main button.
+    $('up-off').textContent = pct(GBN, VALUE);
+    if (total < GBN) {
+      $('up-title').textContent = 'Spend +' + money(GBN - total) + ' more and get all 4.';
+      go.textContent = 'Get all 4: +' + money(GBN - total);
+    } else {
+      $('up-title').textContent = 'Save ' + money(total - GBN) + ' when you get GBN AI.';
+      go.textContent = 'Save ' + money(total - GBN) + ': get GBN AI';
+    }
+    $('up-text').textContent = 'All 4 systems, my bonus video, and the private GBN AI Discord.';
+    go.href = withSrc(LINKS.full);
+    note.hidden = false;
+    note.textContent = 'GBN AI is ' + money(GBN) + ' total' + (launch() ? ' until Dec 30, then ' + money(GBN_LATER) + '.' : '.');
+    if (cartLink) {
+      alt.hidden = false;
+      alt.textContent = 'No thanks, continue with ' + money(total);
+      alt.href = withSrc(cartLink);
+    } else {
+      alt.hidden = true; // GBN AI costs less than this cart, so there's no reason to pay more
+    }
+    drawChart([EDITOR].concat(ADDONS), GBN, 'GBN AI (all 4 + bonus + Discord)');
   }
 
-  $('addons').addEventListener('change', function () { dismissed = false; render(); });
-  $('keep').addEventListener('click', function () {
-    dismissed = true;
-    render();
-    $('go').focus();
-  });
+  // Clocks
+  var two = function (n) { return (n < 10 ? '0' : '') + n; };
+  var wasEnded = expired();
+  function tick() {
+    var left = DEADLINE - Date.now();
+    if (left <= 0) {
+      $('bar').hidden = true;
+      $('editor-later').hidden = true;
+    } else {
+      var s = Math.floor(left / 1000);
+      $('cd-d').textContent = Math.floor(s / 86400) + 'd';
+      $('cd-h').textContent = two(Math.floor(s / 3600) % 24) + 'h';
+      $('cd-m').textContent = two(Math.floor(s / 60) % 60) + 'm';
+      $('cd-s').textContent = two(s % 60) + 's';
+    }
+    var hourLeft = Math.max(0, HOUR - (Date.now() - start));
+    var mm = Math.floor(hourLeft / 60000), ss = Math.floor(hourLeft / 1000) % 60;
+    var label = '⏱ ' + two(mm) + ':' + two(ss) + ' left';
+    document.querySelectorAll('[data-timer]').forEach(function (el) { el.textContent = label; });
+    $('hour-head').textContent = hourLeft > 0 ? '1-hour prices: ' + two(mm) + ':' + two(ss) : '';
+    if (expired() && !wasEnded) { wasEnded = true; drawPrices(); render(); }
+  }
+
+  $('addons').addEventListener('change', render);
+  drawPrices();
   render();
+  tick();
+  setInterval(tick, 1000);
 })();
 </script>
 </body>
