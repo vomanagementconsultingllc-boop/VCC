@@ -72,10 +72,10 @@ function savingsText(cart) {
   const total = cartTotal(cart) / 100;
   if (cart.length === 1 && cart[0] === 'editor') {
     const editor = EDITOR_PER_VIDEO * DAYS;
-    return `On average, a quality editor charges ${money(EDITOR_PER_VIDEO)} a video. Post every day for ${DAYS} days and that's ${money(editor)}. You're paying ${money(total)} once, so you save ${money(editor - total)} in your first month. Needs your own paid Claude plan.`;
+    return `On average, a quality editor charges ${money(EDITOR_PER_VIDEO)} a video. Post every day for ${DAYS} days and that's ${money(editor)}. You're paying ${money(total)} once, so you save ${money(editor - total)} in your first month. All sales are final, no refunds. Needs your own paid Claude plan.`;
   }
   const extra = cart[0] === 'full' ? ' You also get the bonus video and the private GBN AI Discord. GBN AI goes to $997 on Dec 31.' : '';
-  return `On average, an agency can cost you ${money(AGENCY_PER_MONTH)} a month. You're paying ${money(total)} once, so you save ${money(AGENCY_PER_MONTH - total)} in your first month.${extra} Needs your own paid Claude plan.`;
+  return `On average, an agency can cost you ${money(AGENCY_PER_MONTH)} a month. You're paying ${money(total)} once, so you save ${money(AGENCY_PER_MONTH - total)} in your first month.${extra} All sales are final, no refunds. Needs your own paid Claude plan.`;
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));

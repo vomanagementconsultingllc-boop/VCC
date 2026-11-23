@@ -78,6 +78,39 @@
   .actions .alt { display: block; width: 100%; margin-top: 8px; padding: 8px; color: var(--muted); font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
   .fine { margin-top: 12px; text-align: center; font-size: 12.5px; color: var(--muted); }
 
+  /* popups */
+  .modal { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 16px; background: rgba(10,10,10,.6); }
+  .sheet:focus { outline: none; }
+  .sheet { position: relative; width: 100%; max-width: 460px; max-height: calc(100vh - 32px); max-height: calc(100svh - 32px); overflow: auto; padding: 24px 20px 18px; border-radius: 20px; background: #fff; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+  .sheet .x { position: absolute; right: 10px; top: 8px; width: 40px; height: 40px; border: 0; background: none; font-size: 28px; line-height: 1; color: var(--muted); cursor: pointer; }
+  .sheet .kicker { margin: 0 0 6px; color: var(--red); }
+  .sheet h2 { margin: 0 0 8px; padding-right: 24px; font-size: 26px; line-height: 1.1; }
+  .sheet .desc { margin: 0 0 16px; font-size: 15.5px; color: var(--muted); line-height: 1.45; }
+  .sheet .btn { width: 100%; }
+  .sheet .alt { display: block; width: 100%; margin-top: 8px; padding: 10px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .pick { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; padding: 14px; border: 2px solid var(--line); border-radius: 14px; }
+  .pick.on { border-color: var(--ink); background: #FAFAFA; }
+  .pick .txt { flex: 1; min-width: 0; }
+  .pick h3 { margin: 0 0 2px; font-size: 17px; }
+  .pick p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.35; }
+  .pick .px b { font-size: 20px; }
+  .toggle { flex: none; min-width: 66px; height: 38px; padding: 0 12px; border: 2px solid var(--ink); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .toggle[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .pick-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .pick-row .tags { margin: 0; justify-content: flex-start; flex-direction: row; }
+  .pick-row .px { margin-left: auto; }
+  .sheet.dark { background: var(--ink); color: #fff; }
+  .sheet.dark h2 { color: #fff; }
+  .sheet.dark .x, .sheet.dark .alt { color: #BDBDBD; }
+  .sheet.dark .val { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
+  .sheet.dark .val s { color: #9A9A9A; }
+  .sheet.dark ul { margin: 0 0 14px; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 15.5px; }
+  .sheet.dark li { display: flex; gap: 9px; }
+  .sheet.dark li::before { content: ""; flex: none; width: 17px; height: 17px; margin-top: 2px; border-radius: 5px; background: var(--red) center / 9px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
+  .sheet.dark .soon { margin: 0 0 14px; font-size: 14px; color: #D4D4D4; }
+  .sheet.dark .soon b { color: #fff; }
+  body.locked { overflow: hidden; }
+
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
     .side { position: static; }
@@ -123,7 +156,7 @@
 
         <!-- They added something: point them to GBN AI -->
         <div class="upsell" id="upsell" hidden>
-          <h2 id="up-title">Spend +$45 more and get all 4.</h2>
+          <h2 id="up-title">Spend $45 more and get all 4.</h2>
           <div class="val"><s>$688 value</s><span class="off" id="up-off">74% OFF</span></div>
           <ul>
             <li>All 4 AI systems</li>
@@ -148,11 +181,42 @@
           <a class="btn btn-red" id="go" href="#">Continue to payment: $97</a>
           <a class="alt" id="alt" href="#" hidden>No thanks, continue with $134</a>
         </div>
-        <p class="fine">One-time payment. You’ll need your own paid Claude plan. Secure checkout by Stripe.</p>
+        <p class="fine">One-time payment. All sales are final, no refunds. You’ll need your own paid Claude plan. Secure checkout by Stripe.</p>
       </div>
     </aside>
   </div>
 </main>
+
+<!-- Popup 1: when they land on the cart -->
+<div class="modal" id="m-team" hidden role="dialog" aria-modal="true" aria-labelledby="m-team-title">
+  <div class="sheet">
+    <button class="x" type="button" data-close aria-label="Close">×</button>
+    <p class="kicker">Before you check out</p>
+    <h2 id="m-team-title">Complete your entire marketing team!</h2>
+    <p class="desc">Your AI Video Editor makes the videos. Add the Researcher so you always know what to post, and the Social Media Manager so you know what’s working.</p>
+    <div id="m-team-items"></div>
+    <button class="btn btn-red" id="m-team-add" type="button">Add both: $74</button>
+    <button class="alt" type="button" data-close>No thanks</button>
+  </div>
+</div>
+
+<!-- Popup 2: continue with nothing added -->
+<div class="modal" id="m-gbn" hidden role="dialog" aria-modal="true" aria-labelledby="m-gbn-title">
+  <div class="sheet dark">
+    <button class="x" type="button" data-close aria-label="Close">×</button>
+    <p class="kicker">Wait, before you pay</p>
+    <h2 id="m-gbn-title">Get your whole marketing team for $82 more.</h2>
+    <div class="val"><s id="m-gbn-value">$688 value</s><span class="off" id="m-gbn-off">74% OFF</span></div>
+    <ul>
+      <li>All 4 AI systems: editor, researcher, social media manager and outreach</li>
+      <li>Bonus: how I make content go viral</li>
+      <li>The private GBN AI Discord</li>
+    </ul>
+    <p class="soon" id="m-gbn-soon">GBN AI goes to <b>$997</b> on Dec 31.</p>
+    <a class="btn btn-red" id="m-gbn-yes" href="#">Get all 4 for $82 more</a>
+    <a class="alt" id="m-gbn-no" href="#">No thanks, continue with $97</a>
+  </div>
+</div>
 <footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
 
 <script>
@@ -216,14 +280,19 @@
 
   function priceOf(a) { return expired() ? REGULAR : a.price; }
 
+  function priceHtml(a) {
+    return expired()
+      ? '<b>' + money(REGULAR) + '</b>'
+      : '<s>' + money(REGULAR) + '</s><b>' + money(a.price) + '</b>';
+  }
+  function tagsHtml(a) {
+    return expired()
+      ? '<span class="tags"><span class="timer ended">1-hour price ended</span></span>'
+      : '<span class="tags"><span class="off">' + pct(a.price, REGULAR) + '</span><span class="timer" data-timer>60:00</span></span>';
+  }
   function drawPrices() {
-    var ended = expired();
-    ADDONS.forEach(function (a) {
-      $('px-' + a.key).innerHTML = ended
-        ? '<b>+' + money(REGULAR) + '</b><span class="tags"><span class="timer ended">1-hour price ended</span></span>'
-        : '<s>' + money(REGULAR) + '</s><b>+' + money(a.price) + '</b>' +
-          '<span class="tags"><span class="off">' + pct(a.price, REGULAR) + '</span><span class="timer" data-timer>60:00</span></span>';
-    });
+    ADDONS.forEach(function (a) { $('px-' + a.key).innerHTML = priceHtml(a) + tagsHtml(a); });
+    if (!$('m-team').hidden) drawTeam();
   }
 
   function selected() {
@@ -263,8 +332,8 @@
     // Something added: GBN AI is the main button.
     $('up-off').textContent = pct(GBN, VALUE);
     if (total < GBN) {
-      $('up-title').textContent = 'Spend +' + money(GBN - total) + ' more and get all 4.';
-      go.textContent = 'Get all 4: +' + money(GBN - total);
+      $('up-title').textContent = 'Spend ' + money(GBN - total) + ' more and get all 4.';
+      go.textContent = 'Get all 4 for ' + money(GBN - total) + ' more';
     } else {
       $('up-title').textContent = 'Save ' + money(total - GBN) + ' when you get GBN AI.';
       go.textContent = 'Save ' + money(total - GBN) + ': get GBN AI';
@@ -300,11 +369,95 @@
     if (expired() && !wasEnded) { wasEnded = true; drawPrices(); render(); }
   }
 
+  // ---- Popups ----
+  var lastFocus = null;
+  function openModal(id) {
+    lastFocus = document.activeElement;
+    $(id).hidden = false;
+    document.body.classList.add('locked');
+    var sheet = $(id).querySelector('.sheet');
+    sheet.setAttribute('tabindex', '-1');
+    sheet.focus({ preventScroll: true });
+  }
+  function closeModal(id) {
+    $(id).hidden = true;
+    if ($('m-team').hidden && $('m-gbn').hidden) document.body.classList.remove('locked');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.querySelectorAll('.modal').forEach(function (m) {
+    m.addEventListener('click', function (e) {
+      if (e.target === m || e.target.hasAttribute('data-close')) closeModal(m.id);
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    ['m-gbn', 'm-team'].forEach(function (id) { if (!$(id).hidden) closeModal(id); });
+  });
+
+  // Popup 1: "Complete your entire marketing team!" with the Researcher and
+  // the Social Media Manager, shown when they land on the cart.
+  var TEAM = ADDONS.filter(function (a) { return a.key === 'researcher' || a.key === 'social'; });
+  var teamPicked = {};
+  function drawTeam() {
+    $('m-team-items').innerHTML = TEAM.map(function (a) {
+      var on = !!teamPicked[a.key];
+      return '<div class="pick' + (on ? ' on' : '') + '">' +
+        '<div class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p>' +
+        '<div class="pick-row">' + tagsHtml(a) + '<span class="px">' + priceHtml(a) + '</span></div></div>' +
+        '<button type="button" class="toggle" data-pick="' + a.key + '" aria-pressed="' + on + '">' + (on ? 'Added' : 'Add') + '</button></div>';
+    }).join('');
+    var chosen = TEAM.filter(function (a) { return teamPicked[a.key]; });
+    var adding = chosen.length ? chosen : TEAM; // nothing tapped: the button adds both
+    var sum = adding.reduce(function (n, a) { return n + priceOf(a); }, 0);
+    $('m-team-add').textContent = (adding.length === TEAM.length ? 'Add both: ' : 'Add to my order: ') + money(sum);
+  }
+  $('m-team-items').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pick]');
+    if (!b) return;
+    teamPicked[b.getAttribute('data-pick')] = !teamPicked[b.getAttribute('data-pick')];
+    drawTeam();
+    var again = $('m-team-items').querySelector('[data-pick="' + b.getAttribute('data-pick') + '"]');
+    if (again) again.focus();
+  });
+  $('m-team-add').addEventListener('click', function () {
+    var chosen = TEAM.filter(function (a) { return teamPicked[a.key]; });
+    (chosen.length ? chosen : TEAM).forEach(function (a) {
+      document.querySelector('#addons input[value="' + a.key + '"]').checked = true;
+    });
+    closeModal('m-team');
+    render();
+    tick();
+  });
+
+  // Popup 2: they click continue with nothing added. Offer GBN AI; "No thanks"
+  // goes on to pay for the editor.
+  $('go').addEventListener('click', function (e) {
+    if (selected().length) return; // with add-ons, the button already offers GBN AI
+    e.preventDefault();
+    var more = GBN - EDITOR_PRICE;
+    $('m-gbn-title').textContent = 'Get your whole marketing team for ' + money(more) + ' more.';
+    $('m-gbn-value').textContent = money(VALUE) + ' value';
+    $('m-gbn-off').textContent = pct(GBN, VALUE);
+    $('m-gbn-soon').hidden = !launch();
+    $('m-gbn-yes').textContent = 'Get all 4 for ' + money(more) + ' more';
+    $('m-gbn-yes').href = withSrc(LINKS.full);
+    $('m-gbn-no').textContent = 'No thanks, continue with ' + money(EDITOR_PRICE);
+    $('m-gbn-no').href = withSrc(LINKS.editor);
+    openModal('m-gbn');
+  });
+
   $('addons').addEventListener('change', render);
   drawPrices();
   render();
   tick();
   setInterval(tick, 1000);
+  // Show popup 1 a moment after they land on the cart.
+  setTimeout(function () {
+    if (selected().length) return;
+    drawTeam();
+    openModal('m-team');
+    tick();
+  }, 700);
 })();
 </script>
 </body>
