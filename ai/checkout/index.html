@@ -72,7 +72,6 @@
   .fill.you { background: var(--red); min-width: 8px; }
   .saved { margin: 4px 0 0; font-size: 20px; font-weight: 800; line-height: 1.25; }
   .saved span { color: var(--red); }
-  .saved span.on { color: inherit; }
 
   .actions { margin-top: 14px; }
   .actions .btn { width: 100%; }
@@ -179,7 +178,7 @@
           </div>
           <div class="row-l"><span id="you-label">You, with the AI Video Editor</span><span id="you-price">$97 once</span></div>
           <div class="track"><div class="fill you" id="bar-you"></div></div>
-          <p class="saved">You save <span id="saved">$1,500</span> <span class="on" id="saved-on">on an editor</span> in the first 30 days.</p>
+          <p class="saved">You save <span id="saved">$1,403</span> in the first 30 days.</p>
         </div>
 
         <div class="actions">
@@ -318,8 +317,8 @@
     $('you-label').textContent = youLabel;
     $('you-price').textContent = money(you) + ' once';
     $('bar-you').style.width = (you / max * 100).toFixed(1) + '%';
-    $('saved').textContent = money(withSmm ? editor + SMM : editor);
-    $('saved-on').textContent = withSmm ? 'on an editor and a social media manager' : 'on an editor';
+    // What they'd pay instead, minus what they pay us.
+    $('saved').textContent = money((withSmm ? editor + SMM : editor) - you);
   }
 
   function render() {

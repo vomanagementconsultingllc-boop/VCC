@@ -69,14 +69,17 @@ const DAYS = 30;
 const SMM_30_DAYS = 2000;
 const money = (n) => `$${n.toLocaleString('en-US')}`;
 
+// Savings = what they'd pay instead, minus what they pay us.
 function savingsText(cart) {
   const editor = EDITOR_PER_VIDEO * DAYS;
+  const total = cartTotal(cart) / 100;
   const hasSmm = cart[0] === 'full' || cart.map(base).includes('social');
-  const saving = hasSmm
-    ? `you save ${money(editor)} on an editor and ${money(SMM_30_DAYS)} on a social media manager in the first ${DAYS} days`
-    : `you save ${money(editor)} on an editor in the first ${DAYS} days`;
+  const instead = hasSmm
+    ? `A quality editor charges ${money(EDITOR_PER_VIDEO)} a video (${money(editor)} to post every day for ${DAYS} days), and a social media manager costs ${money(SMM_30_DAYS)}. That's ${money(editor + SMM_30_DAYS)}.`
+    : `A quality editor charges ${money(EDITOR_PER_VIDEO)} a video, so posting every day for ${DAYS} days costs ${money(editor)}.`;
+  const saved = (hasSmm ? editor + SMM_30_DAYS : editor) - total;
   const extra = cart[0] === 'full' ? ' You also get the bonus video and the private GBN AI Discord. GBN AI goes to $997 on Dec 31.' : '';
-  return `A quality editor charges ${money(EDITOR_PER_VIDEO)} a video, so posting every day for ${DAYS} days costs ${money(editor)}. With GBN AI, ${saving}.${extra} All sales are final, no refunds. Needs your own paid Claude plan.`;
+  return `${instead} You pay ${money(total)} once, so you save ${money(saved)} in the first ${DAYS} days.${extra} All sales are final, no refunds. Needs your own paid Claude plan.`;
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
