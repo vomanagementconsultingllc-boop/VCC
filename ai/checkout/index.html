@@ -20,74 +20,63 @@
   main { padding: 26px 0 48px; }
   .grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
   .side { position: sticky; top: 64px; }
-  .steps-top { display: flex; gap: 8px; align-items: center; margin: 0 0 14px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .steps-top b { color: var(--ink); }
   h1 { font-size: clamp(30px, 5vw, 44px); }
 
-  .box { margin-top: 18px; border: 1px solid var(--line); border-radius: 18px; }
-  .item { display: flex; gap: 14px; align-items: flex-start; padding: 18px; }
+  .box { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; }
+  .item { display: flex; gap: 14px; align-items: center; padding: 16px 18px; }
   .item + .item { border-top: 1px solid var(--line); }
   .item .txt { flex: 1; min-width: 0; }
-  .item h3 { margin: 0 0 4px; font-size: 18px; }
-  .item p { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.45; }
-  .item .hire { margin-top: 6px; font-size: 13px; }
-  .px { flex: none; min-width: 92px; text-align: right; }
-  .px s { display: block; font-size: 14px; color: #9A9A9A; }
-  .px b { display: block; font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
-  .px .later { display: block; font-size: 12px; color: var(--muted); }
-  .off { display: inline-block; margin-top: 4px; padding: 3px 7px; border-radius: 6px; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .03em; }
-  .timer { display: block; margin-top: 6px; color: var(--red); font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .timer.ended { color: var(--muted); font-weight: 600; }
+  .item h3 { margin: 0 0 3px; font-size: 18px; }
+  .item p { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.4; }
+  .px { flex: none; text-align: right; }
+  .px s { font-size: 14px; color: #9A9A9A; margin-right: 4px; }
+  .px b { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .tags { display: flex; justify-content: flex-end; gap: 6px; margin-top: 5px; }
+  .off { display: inline-block; padding: 3px 7px; border-radius: 6px; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .03em; white-space: nowrap; }
+  .timer { display: inline-block; padding: 3px 7px; border-radius: 6px; border: 1.5px solid var(--red); color: var(--red); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .timer.ended { border-color: var(--line); color: var(--muted); font-weight: 600; }
   .addon { cursor: pointer; transition: background-color .15s; }
   @media (hover: hover) { .addon:hover { background: #FAFAFA; } }
   .addon input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-  .check { flex: none; display: grid; place-items: center; width: 26px; height: 26px; margin-top: 1px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; }
+  .check { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; }
   .check svg { width: 14px; height: 14px; opacity: 0; }
   .addon input:checked ~ .check, .base .check { background: var(--ink); }
   .addon input:checked ~ .check svg, .base .check svg { opacity: 1; }
   .addon input:focus-visible ~ .check { outline: 3px solid var(--focus); outline-offset: 2px; }
   .addon.on { background: #FAFAFA; }
-  .sub { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin: 28px 0 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
-  .sub .timer { margin: 0; letter-spacing: 0; text-transform: none; font-size: 14px; }
+  .sub { margin: 26px 0 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
   .card { padding: 20px; border: 1px solid var(--line); border-radius: 18px; }
   .total { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; font-weight: 700; }
   .total b { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
 
   .upsell { margin-top: 14px; padding: 18px; border-radius: 16px; background: var(--ink); color: #fff; }
-  .upsell h2 { margin: 0 0 8px; color: #fff; font-size: 24px; line-height: 1.12; }
-  .upsell p { margin: 0 0 12px; color: #D4D4D4; font-size: 15px; }
+  .upsell h2 { margin: 0 0 10px; color: #fff; font-size: 24px; line-height: 1.12; }
   .upsell .val { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
   .upsell .val s { color: #9A9A9A; font-size: 16px; }
-  .upsell ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 14.5px; }
+  .upsell ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; }
   .upsell li { display: flex; gap: 9px; }
   .upsell li::before { content: ""; flex: none; width: 16px; height: 16px; margin-top: 2px; border-radius: 5px; background: var(--red) center / 9px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
 
-  .deadline { margin-top: 14px; padding: 14px 16px; border-radius: 14px; background: #FFF3F2; border: 1px solid #F6C9C5; font-size: 15px; line-height: 1.5; }
+  .deadline { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: #FFF3F2; border: 1px solid #F6C9C5; font-size: 15px; line-height: 1.45; }
   .deadline b { color: var(--red); }
 
   /* savings chart, right next to the button */
-  .chart { margin-top: 16px; padding: 16px; border-radius: 16px; background: var(--soft); }
-  .chart h3 { margin: 0 0 2px; font-size: 16px; }
-  .chart .basis { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
-  .bars { display: grid; gap: 10px; }
-  .bars .lbl { display: flex; justify-content: space-between; gap: 8px; font-size: 13.5px; font-weight: 700; margin-bottom: 4px; }
-  .track { position: relative; height: 22px; border-radius: 6px; background: #fff; overflow: hidden; }
-  .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 6px; }
-  .fill.range { background: repeating-linear-gradient(135deg, #BDBDBD 0 6px, #D6D6D6 6px 12px); }
-  .fill.low { background: #6B6B6B; }
-  .fill.you { background: var(--red); min-width: 6px; }
-  .roles { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
-  .roles li { display: flex; justify-content: space-between; gap: 10px; }
-  .roles li b { color: var(--ink); font-weight: 700; white-space: nowrap; }
-  .saved { margin: 12px 0 0; font-size: 18px; font-weight: 800; }
+  .chart { margin-top: 14px; padding: 16px; border-radius: 16px; background: var(--soft); }
+  .chart h3 { margin: 0 0 14px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .row-l { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 5px; font-size: 15px; font-weight: 700; }
+  .row-l small { display: block; font-size: 12.5px; font-weight: 500; color: var(--muted); }
+  .track { height: 26px; border-radius: 7px; background: #fff; overflow: hidden; margin-bottom: 12px; }
+  .fill { height: 100%; border-radius: 7px; }
+  .fill.them { background: #6B6B6B; width: 100%; }
+  .fill.you { background: var(--red); min-width: 8px; }
+  .saved { margin: 4px 0 0; font-size: 20px; font-weight: 800; line-height: 1.25; }
   .saved span { color: var(--red); }
 
   .actions { margin-top: 14px; }
   .actions .btn { width: 100%; }
-  .actions .alt { display: block; width: 100%; margin-top: 8px; padding: 10px; color: var(--muted); font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
-  .actions .note { margin: 8px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
-  .fine { margin-top: 14px; text-align: center; font-size: 12.5px; color: var(--muted); }
+  .actions .alt { display: block; width: 100%; margin-top: 8px; padding: 8px; color: var(--muted); font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
+  .fine { margin-top: 12px; text-align: center; font-size: 12.5px; color: var(--muted); }
 
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
@@ -96,9 +85,9 @@
   @media (max-width: 600px) {
     .bar { font-size: 14px; }
     .bar .clock { display: flex; justify-content: center; margin: 6px 0 0; }
-    .item { padding: 16px 14px; gap: 12px; }
-    .px { min-width: 84px; }
-    .upsell h2 { font-size: 22px; }
+    .item { padding: 14px; gap: 12px; }
+    .item p { font-size: 14px; }
+    .tags { flex-direction: column; align-items: flex-end; gap: 4px; }
   }
 </style>
 </head>
@@ -111,7 +100,6 @@
 <main>
   <div class="wrap grid">
     <div>
-      <p class="steps-top"><b>1. Your order</b> <span aria-hidden="true">›</span> <span>2. Payment</span></p>
       <h1>Your order</h1>
 
       <div class="box">
@@ -119,13 +107,13 @@
           <span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>
           <div class="txt">
             <h3>AI Video Editor</h3>
-            <p>Send it a raw video, approve the storyboard, get a finished vertical video. Every style.</p>
+            <p>Turns your raw video into a finished one.</p>
           </div>
-          <div class="px"><b>$97</b><span class="later" id="editor-later">$194 after Dec 30</span></div>
+          <div class="px"><b>$97</b></div>
         </div>
       </div>
 
-      <p class="sub"><span>Add to your order</span><span class="timer" id="hour-head"></span></p>
+      <p class="sub">Add to your order</p>
       <div class="box" id="addons"></div>
     </div>
 
@@ -136,40 +124,31 @@
         <!-- They added something: point them to GBN AI -->
         <div class="upsell" id="upsell" hidden>
           <h2 id="up-title">Spend +$45 more and get all 4.</h2>
-          <p id="up-text">All 4 systems, my bonus video, and the private GBN AI Discord.</p>
           <div class="val"><s>$688 value</s><span class="off" id="up-off">74% OFF</span></div>
           <ul>
-            <li>AI Video Editor</li>
-            <li>Viral Video Researcher</li>
-            <li>Social Media Manager</li>
-            <li>AI Outreach System</li>
-            <li>Bonus: my video on making content that goes viral</li>
+            <li>All 4 AI systems</li>
+            <li>Bonus: how I make content go viral</li>
             <li>The private GBN AI Discord</li>
           </ul>
         </div>
 
         <!-- They added nothing: the deadline -->
-        <p class="deadline" id="deadline">Launch prices end <b>Dec 30</b>. After that the AI Video Editor goes to $194.</p>
+        <p class="deadline" id="deadline">These launch prices end <b>Dec 30</b>.</p>
 
         <div class="chart" aria-live="polite">
-          <h3 id="chart-title">30 days of posting every day</h3>
-          <p class="basis" id="chart-basis">What it costs to hire it out vs this</p>
-          <div class="bars">
-            <div><div class="lbl"><span>Hiring it out</span><span id="hire-range">$300 to $1,800</span></div>
-              <div class="track"><span class="fill range" id="bar-high"></span><span class="fill low" id="bar-low"></span></div></div>
-            <div><div class="lbl"><span id="you-label">Your order</span><span id="you-price">$97 once</span></div>
-              <div class="track"><span class="fill you" id="bar-you"></span></div></div>
-          </div>
-          <ul class="roles" id="roles"></ul>
-          <p class="saved">You save at least <span id="saved">$203</span></p>
+          <h3>How much you’re saving on average</h3>
+          <div class="row-l"><span id="them-label">A quality editor<small>$50 a video, posting every day for a month</small></span><span id="them-price">$1,500</span></div>
+          <div class="track"><div class="fill them"></div></div>
+          <div class="row-l"><span id="you-label">You, with GBN AI</span><span id="you-price">$97</span></div>
+          <div class="track"><div class="fill you" id="bar-you"></div></div>
+          <p class="saved">You save <span id="saved">$1,403</span> in your first month.</p>
         </div>
 
         <div class="actions">
           <a class="btn btn-red" id="go" href="#">Continue to payment: $97</a>
           <a class="alt" id="alt" href="#" hidden>No thanks, continue with $134</a>
-          <p class="note" id="go-note" hidden></p>
         </div>
-        <p class="fine">Hiring costs: Upwork’s published hourly rates. Editing at 1 hour per video, every other role at just 10 hours for the month. GBN AI needs your own paid Claude plan. Secure payment by Stripe, files emailed right after you pay.</p>
+        <p class="fine">One-time payment. You’ll need your own paid Claude plan. Secure checkout by Stripe.</p>
       </div>
     </aside>
   </div>
@@ -184,14 +163,13 @@
   var HOUR = 60 * 60 * 1000;         // 1-hour add-on window, from the first time this person opens checkout
   var GBN = 179, GBN_LATER = 997;
   var DEADLINE = Date.parse('2026-12-31T05:00:00Z'); // Dec 31, 12:00 AM Eastern
-  var EDITOR = { key: 'editor', name: 'AI Video Editor', price: 97, role: 'Video editor', rate: [10, 60], hours: 30, basis: '30 edits' };
+  var EDITOR_PRICE = 97;
+  // What you'd pay instead (Nathan's numbers): a quality editor charges $50 a video; an agency can cost $2,000 a month.
+  var EDITOR_PER_VIDEO = 50, DAYS = 30, AGENCY = 2000;
   var ADDONS = [
-    { key: 'researcher', name: 'Viral Video Researcher', price: 37, role: 'Content strategist', rate: [35, 65], hours: 10, basis: '10 hrs',
-      text: 'Finds what’s blowing up in your niche and writes ideas you can film, with hooks.' },
-    { key: 'social', name: 'Social Media Manager', price: 37, role: 'Social media manager', rate: [14, 35], hours: 10, basis: '10 hrs',
-      text: 'Briefs every post, keeps your calendar, and checks how every video did.' },
-    { key: 'outreach', name: 'AI Outreach System', price: 69, role: 'Lead generation specialist', rate: [13, 45], hours: 10, basis: '10 hrs',
-      text: 'Builds your lead list and writes personal first messages in your voice.' }
+    { key: 'researcher', name: 'Viral Video Researcher', price: 37, text: 'Tells you what to post.' },
+    { key: 'social', name: 'Social Media Manager', price: 37, text: 'Plans your posts and tells you what’s working.' },
+    { key: 'outreach', name: 'AI Outreach System', price: 69, text: 'Finds leads and messages them for you.' }
   ];
   var LINKS = {
     'editor': 'https://buy.stripe.com/fZu28tesN2RyfpX6so9fW0D',
@@ -208,7 +186,7 @@
     'editor+social@197+outreach@197': 'https://buy.stripe.com/cNidRbgAV2Ry6TraIE9fW0O',
     'editor+researcher@197+social@197+outreach@197': 'https://buy.stripe.com/7sYcN7esNcs8fpX1849fW0P'
   };
-  var VALUE = EDITOR.price + REGULAR * ADDONS.length; // $688
+  var VALUE = EDITOR_PRICE + REGULAR * ADDONS.length; // $688
 
   var $ = function (id) { return document.getElementById(id); };
   var money = function (n) { return '$' + n.toLocaleString('en-US'); };
@@ -232,8 +210,7 @@
   $('addons').innerHTML = ADDONS.map(function (a) {
     return '<label class="item addon" data-key="' + a.key + '">' +
       '<input type="checkbox" value="' + a.key + '">' + check +
-      '<span class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p>' +
-      '<p class="hire">Replaces a ' + a.role.toLowerCase() + ': $' + a.rate[0] + ' to $' + a.rate[1] + ' an hour on Upwork</p></span>' +
+      '<span class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p></span>' +
       '<span class="px" id="px-' + a.key + '"></span></label>';
   }).join('');
 
@@ -243,9 +220,9 @@
     var ended = expired();
     ADDONS.forEach(function (a) {
       $('px-' + a.key).innerHTML = ended
-        ? '<b>+' + money(REGULAR) + '</b><span class="timer ended">1-hour price ended</span>'
-        : '<s>' + money(REGULAR) + '</s><b>+' + money(a.price) + '</b><span class="off">' + pct(a.price, REGULAR) + '</span>' +
-          '<span class="timer" data-timer>⏱ 60:00</span>';
+        ? '<b>+' + money(REGULAR) + '</b><span class="tags"><span class="timer ended">1-hour price ended</span></span>'
+        : '<s>' + money(REGULAR) + '</s><b>+' + money(a.price) + '</b>' +
+          '<span class="tags"><span class="off">' + pct(a.price, REGULAR) + '</span><span class="timer" data-timer>60:00</span></span>';
     });
   }
 
@@ -253,40 +230,33 @@
     return ADDONS.filter(function (a) { return document.querySelector('#addons input[value="' + a.key + '"]').checked; });
   }
 
-  function drawChart(items, price, label) {
-    var low = 0, high = 0;
-    $('roles').innerHTML = items.map(function (i) {
-      var l = i.rate[0] * i.hours, h = i.rate[1] * i.hours;
-      low += l; high += h;
-      return '<li><span>' + i.role + ' (' + i.basis + ')</span><b>' + money(l) + ' to ' + money(h) + '</b></li>';
-    }).join('');
-    $('hire-range').textContent = money(low) + ' to ' + money(high);
-    $('you-label').textContent = label;
-    $('you-price').textContent = money(price) + ' once';
-    $('bar-high').style.width = '100%';
-    $('bar-low').style.width = (low / high * 100).toFixed(1) + '%';
-    $('bar-you').style.width = (price / high * 100).toFixed(1) + '%';
-    $('saved').textContent = money(low - price);
+  function drawChart(themLabel, themNote, them, youLabel, you) {
+    $('them-label').innerHTML = themLabel + (themNote ? '<small>' + themNote + '</small>' : '');
+    $('them-price').textContent = money(them) + '/mo';
+    $('you-label').textContent = youLabel;
+    $('you-price').textContent = money(you) + ' once';
+    $('bar-you').style.width = (you / them * 100).toFixed(1) + '%';
+    $('saved').textContent = money(them - you);
   }
 
   function render() {
     var picks = selected();
     document.querySelectorAll('.addon').forEach(function (el) { el.classList.toggle('on', el.querySelector('input').checked); });
     var ended = expired();
-    var total = EDITOR.price + picks.reduce(function (n, a) { return n + priceOf(a); }, 0);
+    var total = EDITOR_PRICE + picks.reduce(function (n, a) { return n + priceOf(a); }, 0);
     var cartKey = ['editor'].concat(picks.map(function (a) { return ended ? a.key + '@197' : a.key; })).join('+');
     var cartLink = LINKS[cartKey];
     $('total').textContent = money(total);
 
-    var go = $('go'), alt = $('alt'), note = $('go-note');
+    var go = $('go'), alt = $('alt');
     $('upsell').hidden = picks.length === 0;
     $('deadline').hidden = !(picks.length === 0 && launch());
 
     if (picks.length === 0) {
       go.textContent = 'Continue to payment: ' + money(total);
       go.href = withSrc(LINKS.editor);
-      alt.hidden = true; note.hidden = true;
-      drawChart([EDITOR], total, 'AI Video Editor');
+      alt.hidden = true;
+      drawChart('A quality editor', money(EDITOR_PER_VIDEO) + ' a video, posting every day for a month', EDITOR_PER_VIDEO * DAYS, 'You, with the AI Video Editor', total);
       return;
     }
 
@@ -299,10 +269,7 @@
       $('up-title').textContent = 'Save ' + money(total - GBN) + ' when you get GBN AI.';
       go.textContent = 'Save ' + money(total - GBN) + ': get GBN AI';
     }
-    $('up-text').textContent = 'All 4 systems, my bonus video, and the private GBN AI Discord.';
     go.href = withSrc(LINKS.full);
-    note.hidden = false;
-    note.textContent = 'GBN AI is ' + money(GBN) + ' total' + (launch() ? ' until Dec 30, then ' + money(GBN_LATER) + '.' : '.');
     if (cartLink) {
       alt.hidden = false;
       alt.textContent = 'No thanks, continue with ' + money(total);
@@ -310,7 +277,7 @@
     } else {
       alt.hidden = true; // GBN AI costs less than this cart, so there's no reason to pay more
     }
-    drawChart([EDITOR].concat(ADDONS), GBN, 'GBN AI (all 4 + bonus + Discord)');
+    drawChart('An agency', '', AGENCY, 'You, with GBN AI', GBN);
   }
 
   // Clocks
@@ -320,7 +287,6 @@
     var left = DEADLINE - Date.now();
     if (left <= 0) {
       $('bar').hidden = true;
-      $('editor-later').hidden = true;
     } else {
       var s = Math.floor(left / 1000);
       $('cd-d').textContent = Math.floor(s / 86400) + 'd';
@@ -329,10 +295,8 @@
       $('cd-s').textContent = two(s % 60) + 's';
     }
     var hourLeft = Math.max(0, HOUR - (Date.now() - start));
-    var mm = Math.floor(hourLeft / 60000), ss = Math.floor(hourLeft / 1000) % 60;
-    var label = '⏱ ' + two(mm) + ':' + two(ss) + ' left';
-    document.querySelectorAll('[data-timer]').forEach(function (el) { el.textContent = label; });
-    $('hour-head').textContent = hourLeft > 0 ? '1-hour prices: ' + two(mm) + ':' + two(ss) : '';
+    var label = two(Math.floor(hourLeft / 60000)) + ':' + two(Math.floor(hourLeft / 1000) % 60);
+    document.querySelectorAll('[data-timer]').forEach(function (el) { el.textContent = '⏱ ' + label; });
     if (expired() && !wasEnded) { wasEnded = true; drawPrices(); render(); }
   }
 

@@ -60,27 +60,22 @@ const itemPrice = (item) => (item.endsWith('@197') ? TIERS[base(item)].regular :
 const cartKey = (cart) => cart.join('+');
 const cartTotal = (cart) => cart.reduce((n, k) => n + itemPrice(k), 0);
 
-// What hiring each job out costs for 30 days of posting every day: Upwork's
-// published hourly rates (Nov 2026). Editing at 1 hour per video (30 hours);
-// every other role at just 10 hours for the month. Same numbers as the chart
-// on /ai/checkout/. Shown at checkout above the Pay button.
-const HIRE = {
-  editor: { role: 'video editor', rate: [10, 60], hours: 30 },
-  researcher: { role: 'content strategist', rate: [35, 65], hours: 10 },
-  social: { role: 'social media manager', rate: [14, 35], hours: 10 },
-  outreach: { role: 'lead generation specialist', rate: [13, 45], hours: 10 },
-};
+// What you'd pay instead (Nathan's numbers, Nov 23, 2026): a quality editor
+// charges $50 a video, and an agency can cost $2,000 a month. Same numbers as
+// the chart on /ai/checkout/. Shown at checkout above the Pay button.
+const EDITOR_PER_VIDEO = 50;
+const DAYS = 30;
+const AGENCY_PER_MONTH = 2000;
 const money = (n) => `$${n.toLocaleString('en-US')}`;
 
 function savingsText(cart) {
-  const tiers = cart[0] === 'full' ? ['editor', 'researcher', 'social', 'outreach'] : cart.map(base);
-  const low = tiers.reduce((n, k) => n + HIRE[k].rate[0] * HIRE[k].hours, 0);
-  const high = tiers.reduce((n, k) => n + HIRE[k].rate[1] * HIRE[k].hours, 0);
-  const total = money(cartTotal(cart) / 100);
-  const roles = tiers.map((k) => HIRE[k].role);
-  const list = roles.length === 1 ? roles[0] : `${roles.slice(0, -1).join(', ')}${roles.length > 2 ? ',' : ''} and ${roles[roles.length - 1]}`;
-  const extra = cart[0] === 'full' ? ', plus the bonus video and the private GBN AI Discord. GBN AI goes to $997 on Dec 31' : '';
-  return `What you save: 30 days of posting every day, hired out on Upwork (a ${list}), costs about ${money(low)} to ${money(high)}. This is ${total} once${extra}. Needs your own paid Claude plan.`;
+  const total = cartTotal(cart) / 100;
+  if (cart.length === 1 && cart[0] === 'editor') {
+    const editor = EDITOR_PER_VIDEO * DAYS;
+    return `On average, a quality editor charges ${money(EDITOR_PER_VIDEO)} a video. Post every day for ${DAYS} days and that's ${money(editor)}. You're paying ${money(total)} once, so you save ${money(editor - total)} in your first month. Needs your own paid Claude plan.`;
+  }
+  const extra = cart[0] === 'full' ? ' You also get the bonus video and the private GBN AI Discord. GBN AI goes to $997 on Dec 31.' : '';
+  return `On average, an agency can cost you ${money(AGENCY_PER_MONTH)} a month. You're paying ${money(total)} once, so you save ${money(AGENCY_PER_MONTH - total)} in your first month.${extra} Needs your own paid Claude plan.`;
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -203,7 +198,7 @@ async function setActive(active) {
   console.log(`${links.length} GBN links are now ${active ? 'on' : 'off'}.`);
 }
 
-module.exports = { TIERS, CARTS, HIRE, savingsText, cartKey, cartTotal };
+module.exports = { TIERS, CARTS, savingsText, cartKey, cartTotal };
 
 if (require.main === module) {
   (async () => {
