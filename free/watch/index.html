@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How I Built the AI Behind My 1.5 Million Views | Growth By Nathan</title>
+<meta name="description" content="How I built my AI team, and how you can build your own.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Cpath d='M14 16h9l9 26 9-26h9L37 50h-10z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<link rel="stylesheet" href="/ai/gbn.css">
+<style>
+  .head { padding-top: 40px; padding-bottom: 8px; text-align: center; }
+  .head h1 { font-size: clamp(32px, 5.4vw, 60px); max-width: 16ch; margin: 0 auto; }
+  .sent { display: inline-block; margin: 18px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--soft); font-size: 15px; color: var(--muted); }
+  .video { position: relative; width: 100%; margin: 26px auto 0; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: #000; }
+  .video iframe, .video video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video.soon { display: grid; place-items: center; color: #fff; text-align: center; padding: 20px; }
+  .video.soon img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .35; }
+  .video.soon p { position: relative; margin: 0; font-size: 18px; font-weight: 700; }
+  .offer { margin-top: 36px; }
+  .offer .cta-box { text-align: left; }
+  .offer .cta-box h2, .offer .cta-box p { text-align: left; margin-left: 0; }
+  .offer .row2 { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 18px; }
+  .offer .big { font-size: 44px; font-weight: 800; letter-spacing: -.03em; }
+  .offer .after { color: #BDBDBD; font-size: 15px; }
+  .offer ul { margin: 0 0 22px; padding: 0; list-style: none; display: grid; gap: 8px; color: #fff; font-size: 16px; }
+  .offer li { display: flex; gap: 10px; line-height: 1.4; }
+  .offer li::before { content: ""; flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 6px; background: var(--red) center / 10px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
+  .offer .btn { width: 100%; }
+  .discord { margin-top: 34px; text-align: center; }
+  .discord p { color: var(--muted); }
+  @media (max-width: 600px) { .discord .btn { width: 100%; } }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="wrap narrow head">
+    <p class="kicker">Free video</p>
+    <h1>How I built the AI behind my 1.5&nbsp;million views</h1>
+    <p class="sent" id="sent" hidden>A copy is on its way to your inbox.</p>
+
+    <!-- The video. Set data-youtube to the YouTube video id (unlisted is fine),
+         or data-mp4 to a video file URL. Until one is set, a "coming soon" card shows. -->
+    <div class="video" id="video" data-youtube="" data-mp4=""></div>
+  </div>
+
+  <div class="wrap narrow offer">
+    <div class="cta-box">
+      <p class="kicker" style="color:#BDBDBD">GBN AI</p>
+      <h2>Don’t want to build it yourself?</h2>
+      <p>Get the AI Video Editor I use, already built. Send it a raw video, approve the storyboard, and the video is done.</p>
+      <div class="row2"><span class="big">$97</span><span class="after">Launch price until Dec 30. Then $194.</span></div>
+      <ul>
+        <li>Quick cut, full edit, dead-space cut, green screen and news styles</li>
+        <li>Storyboard first, then a finished vertical video</li>
+        <li>A freelance video editor on Upwork charges about $10 to $60 an hour</li>
+      </ul>
+      <a class="btn btn-red" id="get-it" href="/ai/?src=free-video">Get the AI Video Editor</a>
+    </div>
+  </div>
+
+  <div class="wrap narrow discord">
+    <p>Building your own? Ask me questions in my free Discord.</p>
+    <a class="btn btn-discord" href="https://discord.gg/jSfpvGcPmA" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.6 19.6 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.5 19.5 0 0 0-4.9 1.5C.6 9.1-.3 13.6.2 18.1a19.7 19.7 0 0 0 6 3l1.3-2a12.8 12.8 0 0 1-2-1l.5-.4a14 14 0 0 0 12 0l.5.4c-.6.4-1.3.7-2 1l1.3 2a19.6 19.6 0 0 0 6-3c.5-5.2-.8-9.7-3.5-13.7ZM8 15.3c-1.2 0-2.1-1.1-2.1-2.4S6.8 10.5 8 10.5s2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4Zm8 0c-1.2 0-2.1-1.1-2.1-2.4s.9-2.4 2.1-2.4 2.2 1.1 2.1 2.4c0 1.3-.9 2.4-2.1 2.4Z"/></svg>
+      Join the free Discord
+    </a>
+  </div>
+</main>
+
+<footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
+
+<script>
+(function () {
+  'use strict';
+  var q = new URLSearchParams(location.search);
+  document.getElementById('year').textContent = String(new Date().getFullYear());
+  if (q.get('new') === '1') document.getElementById('sent').hidden = false;
+
+  var box = document.getElementById('video');
+  var yt = (box.getAttribute('data-youtube') || '').replace(/[^\w-]/g, '');
+  var mp4 = box.getAttribute('data-mp4') || '';
+  if (yt) {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + yt + '?rel=0&modestbranding=1';
+    f.title = 'How I built the AI behind my 1.5 million views';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    f.allowFullscreen = true;
+    box.appendChild(f);
+  } else if (/^https?:\/\//.test(mp4) || /^\//.test(mp4)) {
+    var v = document.createElement('video');
+    v.src = mp4; v.controls = true; v.playsInline = true; v.preload = 'metadata';
+    box.appendChild(v);
+  } else {
+    box.className += ' soon';
+    box.innerHTML = '<img src="/free/img/edit-room.jpg" alt=""><p>The video is almost ready.<br>It’ll be in your inbox soon.</p>';
+  }
+
+  // After Dec 30 (Eastern) the launch line no longer applies.
+  if (Date.now() > Date.parse('2026-12-31T05:00:00Z')) {
+    var after = document.querySelector('.offer .after');
+    if (after) after.hidden = true;
+  }
+})();
+</script>
+</body>
+</html>

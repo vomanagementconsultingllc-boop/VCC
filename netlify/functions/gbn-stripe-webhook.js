@@ -7,11 +7,11 @@
 // Every other Stripe checkout on the account (other businesses) is ignored.
 //
 // Netlify env: STRIPE_WEBHOOK_SECRET (the endpoint's signing secret),
-// GBN_DELIVERY (download + upgrade links, see netlify/lib/gbn-delivery.js),
+// GBN_DELIVERY (download links, see netlify/lib/gbn-delivery.js),
 // RESEND_API_KEY. Emails use idempotency keys, so Stripe retries never send twice.
 
 const crypto = require('crypto');
-const { tierOf, readDelivery, buyerEmail, saleEmail } = require('../lib/gbn-delivery.js');
+const { tiersOf, readDelivery, buyerEmail, saleEmail } = require('../lib/gbn-delivery.js');
 
 const RESEND_API = process.env.RESEND_API_BASE || 'https://api.resend.com';
 const FROM = process.env.RESEND_FROM || 'Nathan Vo <nathan@vocreativeco.com>';
@@ -54,7 +54,7 @@ async function resend(method, path, body, idempotencyKey) {
   }
 }
 
-async function saveBuyer(email, name, tier) {
+async function saveBuyer(email, name, tiers) {
   const first = String(name || '').trim().split(/\s+/)[0] || '';
   let had = '';
   try {
@@ -63,7 +63,7 @@ async function saveBuyer(email, name, tier) {
   } catch (err) {
     if (err.status !== 404) throw err;
   }
-  const list = Array.from(new Set(String(had || '').split(',').map((s) => s.trim()).filter(Boolean).concat(tier)));
+  const list = Array.from(new Set(String(had || '').split(',').map((s) => s.trim()).filter(Boolean).concat(tiers)));
   const fields = { properties: { gbn_purchases: list.join(',') } };
   if (first) fields.first_name = first;
   try {
@@ -76,30 +76,28 @@ async function saveBuyer(email, name, tier) {
 }
 
 async function handleSession(s) {
-  const which = tierOf(s);
-  if (!which) return 'not a GBN AI checkout; ignored';
-  const { tier, upgradeFrom } = which;
+  const tiers = tiersOf(s);
+  if (!tiers) return 'not a GBN AI checkout; ignored';
   if (s.payment_status !== 'paid') return `GBN checkout ${s.id} not paid yet (${s.payment_status}); waiting`;
   const email = (s.customer_details && s.customer_details.email) || s.customer_email;
   if (!email) return `GBN checkout ${s.id} has no email`;
   const name = (s.customer_details && s.customer_details.name) || '';
   const delivery = readDelivery(process.env.GBN_DELIVERY);
-  const hasFiles = Boolean((delivery.tiers[tier] || {}).url);
   const done = [];
 
-  const msg = buyerEmail({ tier, name, delivery });
+  const msg = buyerEmail({ tiers, name, delivery });
   const sent = await resend('POST', '/emails', {
     from: FROM, to: [email], reply_to: REPLY_TO,
     subject: msg.subject, html: msg.html, text: msg.text,
-    tags: [{ name: 'gbn', value: tier }],
+    tags: [{ name: 'gbn', value: tiers.join('_') }],
   }, `gbn-buyer-${s.id}`);
-  done.push(`buyer email ${sent.id}${hasFiles ? '' : ' (no files yet)'}`);
+  done.push(`buyer email ${sent.id}${msg.missing.length ? ` (not set up yet: ${msg.missing.join(', ')})` : ''}`);
 
   try {
     const ping = saleEmail({
-      tier, upgradeFrom, email, name,
+      tiers, email, name,
       amount: ((s.amount_total || 0) / 100).toFixed(2).replace(/\.00$/, ''),
-      source: s.client_reference_id || '', sessionId: s.id, hasFiles,
+      source: s.client_reference_id || '', sessionId: s.id, missing: msg.missing,
     });
     await resend('POST', '/emails', { from: FROM, to: [NOTIFY], subject: ping.subject, html: ping.html }, `gbn-sale-${s.id}`);
     done.push('Nathan pinged');
@@ -108,11 +106,11 @@ async function handleSession(s) {
   }
 
   try {
-    done.push(`contact gbn_purchases=${await saveBuyer(email, name, tier)}`);
+    done.push(`contact gbn_purchases=${await saveBuyer(email, name, tiers)}`);
   } catch (err) {
     done.push(`contact not saved: ${err.message}`);
   }
-  return `GBN sale ${tier} ${s.id}: ${done.join('; ')}`;
+  return `GBN sale ${tiers.join('+')} ${s.id}: ${done.join('; ')}`;
 }
 
 exports.handler = async (event) => {

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkout | GBN AI</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Cpath d='M14 16h9l9 26 9-26h9L37 50h-10z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<link rel="stylesheet" href="../gbn.css">
+<style>
+  main { padding: 32px 0 48px; }
+  .steps-top { display: flex; gap: 8px; align-items: center; margin: 0 0 18px; font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .steps-top b { color: var(--ink); }
+  h1 { font-size: clamp(30px, 5vw, 44px); }
+  .box { margin-top: 20px; border: 1px solid var(--line); border-radius: 18px; }
+  .item { display: flex; gap: 14px; align-items: flex-start; padding: 18px; }
+  .item + .item { border-top: 1px solid var(--line); }
+  .item .txt { flex: 1; min-width: 0; }
+  .item h3 { margin: 0 0 4px; font-size: 18px; }
+  .item p { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.45; }
+  .item .hire { margin-top: 6px; font-size: 13px; }
+  .item .px { text-align: right; white-space: nowrap; }
+  .item .px b { display: block; font-size: 20px; font-weight: 800; }
+  .item .px s { font-size: 13px; color: #9A9A9A; }
+  .item .px span { display: block; font-size: 12px; color: var(--muted); }
+  .addon { cursor: pointer; transition: background-color .15s; }
+  @media (hover: hover) { .addon:hover { background: #FAFAFA; } }
+  .addon input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .check { flex: none; display: grid; place-items: center; width: 26px; height: 26px; margin-top: 1px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; }
+  .check svg { width: 14px; height: 14px; opacity: 0; }
+  .addon input:checked ~ .check { background: var(--ink); }
+  .addon input:checked ~ .check svg { opacity: 1; }
+  .addon input:focus-visible ~ .check { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .addon.on { background: #FAFAFA; }
+  .base .check { background: var(--ink); }
+  .base .check svg { opacity: 1; }
+  .sub { margin: 30px 0 4px; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+  .total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 18px; padding: 0 4px; font-size: 18px; font-weight: 700; }
+  .total b { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+
+  .upsell { margin-top: 18px; padding: 22px; border-radius: 18px; background: var(--ink); color: #fff; }
+  .upsell .kicker { color: #BDBDBD; }
+  .upsell h2 { color: #fff; font-size: clamp(24px, 4vw, 32px); }
+  .upsell p { margin: 0 0 14px; color: #D4D4D4; }
+  .upsell ul { margin: 0 0 18px; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 15px; }
+  .upsell li { display: flex; gap: 9px; }
+  .upsell li::before { content: ""; flex: none; width: 16px; height: 16px; margin-top: 2px; border-radius: 5px; background: var(--red) center / 9px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
+  .upsell .btn { width: 100%; }
+  .upsell .link { display: block; width: 100%; margin-top: 10px; padding: 10px; border: 0; background: none; color: #CFCFCF; font: inherit; font-size: 15px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: center; }
+
+  .deadline { margin-top: 18px; padding: 16px 18px; border-radius: 14px; background: #FFF3F2; border: 1px solid #F6C9C5; font-size: 16px; line-height: 1.5; }
+  .deadline b { color: var(--red); }
+
+  .go { width: 100%; margin-top: 16px; }
+
+  .savings { margin-top: 26px; padding: 18px; border-radius: 16px; background: var(--soft); }
+  .savings h3 { margin: 0 0 10px; font-size: 17px; }
+  .savings table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .savings td { padding: 8px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .savings td.n { text-align: right; white-space: nowrap; padding-left: 10px; }
+  .savings tr.you td { border-bottom: 0; font-weight: 800; padding-top: 12px; }
+  .savings p { margin: 10px 0 0; font-size: 12.5px; color: var(--muted); }
+  .fine { margin-top: 14px; text-align: center; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <div class="wrap narrow">
+    <p class="steps-top"><b>1. Your order</b> <span aria-hidden="true">›</span> <span>2. Payment</span></p>
+    <h1>Your order</h1>
+
+    <div class="box">
+      <div class="item base">
+        <span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>
+        <div class="txt">
+          <h3>AI Video Editor</h3>
+          <p>Send it a raw video, approve the storyboard, get a finished vertical video. Every style.</p>
+        </div>
+        <div class="px"><b>$97</b><span class="later">$194 after Dec 30</span></div>
+      </div>
+    </div>
+
+    <p class="sub">Add to your order</p>
+    <div class="box" id="addons"></div>
+
+    <div class="total"><span>Total</span><b id="total">$97</b></div>
+
+    <!-- If they add anything: offer GBN AI instead -->
+    <div class="upsell" id="upsell" hidden>
+      <p class="kicker">Better deal</p>
+      <h2 id="up-title">Get all of it as GBN AI for $179.</h2>
+      <p id="up-text"></p>
+      <ul>
+        <li>AI Video Editor</li>
+        <li>Viral Video Researcher</li>
+        <li>Social Media Manager</li>
+        <li>AI Outreach System</li>
+        <li>Bonus: my video on using it to make content that goes viral</li>
+      </ul>
+      <a class="btn btn-red" id="go-full" href="#">Get GBN AI: $179</a>
+      <button class="link" id="keep" type="button">No thanks, continue with <span id="keep-total">$134</span></button>
+    </div>
+
+    <!-- If they don't add anything: the deadline -->
+    <p class="deadline" id="deadline">These are launch prices, and they end <b>Dec 30</b>. After that, everything doubles: the AI Video Editor goes to $194.</p>
+
+    <a class="btn go" id="go" href="#">Continue to payment: $97</a>
+
+    <div class="savings" aria-live="polite">
+      <h3>What you save vs hiring it out</h3>
+      <table id="save-table"></table>
+      <p>Hiring costs use Upwork’s published hourly rates at just 10 hours a month each. GBN AI needs your own paid Claude plan.</p>
+    </div>
+
+    <p class="fine">Secure payment by Stripe. Your files are emailed to you right after you pay.</p>
+  </div>
+</main>
+<footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
+
+<script>
+(function () {
+  'use strict';
+  // Prices, add-ons and the Stripe payment link for each cart
+  // (scripts/gbn-stripe-setup.js makes the links).
+  var EDITOR = { key: 'editor', name: 'AI Video Editor', price: 97, role: 'video editor', rate: [10, 60] };
+  var ADDONS = [
+    { key: 'researcher', name: 'Viral Video Researcher', price: 37, role: 'content strategist', rate: [35, 65],
+      text: 'Finds what’s blowing up in your niche and writes ideas you can film, with hooks.' },
+    { key: 'social', name: 'Social Media Manager', price: 37, role: 'social media manager', rate: [14, 35],
+      text: 'Briefs every post, keeps your calendar, and checks how every video did.' },
+    { key: 'outreach', name: 'AI Outreach System', price: 69, role: 'lead generation specialist', rate: [13, 45],
+      text: 'Builds your lead list and writes personal first messages in your voice.' }
+  ];
+  var FULL_PRICE = 179;
+  var LINKS = {
+    'editor': 'https://buy.stripe.com/fZu28tesN2RyfpX6so9fW0D',
+    'editor+researcher': 'https://buy.stripe.com/eVqeVf70l1Nu7Xv7ws9fW0E',
+    'editor+social': 'https://buy.stripe.com/7sY14p1G1gIo1z71849fW0F',
+    'editor+outreach': 'https://buy.stripe.com/fZufZjgAV0Jq6Tr1849fW0G',
+    'editor+researcher+social': 'https://buy.stripe.com/28EaEZ5WhgIo6Trg2Y9fW0H',
+    'full': 'https://buy.stripe.com/fZucN73O91Nu1z75ok9fW0I'
+  };
+  var DEADLINE = Date.parse('2026-12-31T05:00:00Z'); // end of Dec 30, Eastern
+  var launch = Date.now() < DEADLINE;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) { return '$' + n.toLocaleString('en-US'); };
+  var src = (new URLSearchParams(location.search).get('src') || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
+  var withSrc = function (url) { return src ? url + '?client_reference_id=' + encodeURIComponent(src) : url; };
+  $('year').textContent = String(new Date().getFullYear());
+
+  // Build the add-on rows
+  var check = '<span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>';
+  $('addons').innerHTML = ADDONS.map(function (a) {
+    return '<label class="item addon" data-key="' + a.key + '">' +
+      '<input type="checkbox" value="' + a.key + '">' + check +
+      '<span class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p>' +
+      '<p class="hire">Replaces a ' + a.role + ': $' + a.rate[0] + ' to $' + a.rate[1] + ' an hour on Upwork</p></span>' +
+      '<span class="px"><b>+' + money(a.price) + '</b>' + (launch ? '<span class="later">' + money(a.price * 2) + ' after Dec 30</span>' : '') + '</span>' +
+      '</label>';
+  }).join('');
+  if (!launch) document.querySelectorAll('.later').forEach(function (el) { el.hidden = true; });
+
+  var dismissed = false; // "No thanks" on the GBN AI offer
+
+  function selected() {
+    return ADDONS.filter(function (a) { return document.querySelector('#addons input[value="' + a.key + '"]').checked; });
+  }
+
+  function savingsRows(items, price, label) {
+    var low = 0, high = 0;
+    var rows = items.map(function (i) {
+      low += i.rate[0] * 10; high += i.rate[1] * 10;
+      return '<tr><td>A freelance ' + i.role + '</td><td class="n">' + money(i.rate[0] * 10) + ' to ' + money(i.rate[1] * 10) + '/mo</td></tr>';
+    }).join('');
+    if (items.length > 1) rows += '<tr><td><b>Hiring it all out</b></td><td class="n"><b>' + money(low) + ' to ' + money(high) + '/mo</b></td></tr>';
+    rows += '<tr class="you"><td>' + label + '</td><td class="n">' + money(price) + ' once</td></tr>';
+    return rows;
+  }
+
+  function render() {
+    var picks = selected();
+    document.querySelectorAll('.addon').forEach(function (el) { el.classList.toggle('on', el.querySelector('input').checked); });
+    var total = EDITOR.price + picks.reduce(function (n, a) { return n + a.price; }, 0);
+    var cartKey = ['editor'].concat(picks.map(function (a) { return a.key; })).join('+');
+    var tooBig = total >= FULL_PRICE || !LINKS[cartKey]; // GBN AI is cheaper or equal: only offer that
+    $('total').textContent = money(total);
+
+    var showUpsell = picks.length > 0 && (tooBig || !dismissed);
+    $('upsell').hidden = !showUpsell;
+    $('deadline').hidden = !(picks.length === 0 && launch);
+    $('go-full').href = withSrc(LINKS.full);
+
+    if (picks.length > 0) {
+      if (tooBig) {
+        $('up-title').textContent = 'GBN AI is cheaper: ' + money(FULL_PRICE) + ' for everything.';
+        $('up-text').textContent = 'Your order comes to ' + money(total) + '. GBN AI is all 4 systems plus my bonus video for ' + money(FULL_PRICE) + ', so you save ' + money(total - FULL_PRICE) + '.';
+        $('keep').hidden = true;
+      } else {
+        $('up-title').textContent = 'Get all of it as GBN AI for ' + money(FULL_PRICE) + '.';
+        $('up-text').textContent = 'For ' + money(FULL_PRICE - total) + ' more than your order, get all 4 systems plus my bonus video. Bought one by one, they’re ' + money(EDITOR.price + ADDONS.reduce(function (n, a) { return n + a.price; }, 0)) + '.';
+        $('keep').hidden = false;
+        $('keep-total').textContent = money(total);
+      }
+    }
+
+    // Main button
+    var go = $('go');
+    if (tooBig) {
+      go.hidden = true;
+    } else {
+      go.hidden = showUpsell;
+      go.textContent = 'Continue to payment: ' + money(total);
+      go.href = withSrc(LINKS[cartKey]);
+    }
+
+    // Savings table: for GBN AI when that's the offer on screen, else for the order
+    var all = [EDITOR].concat(ADDONS);
+    $('save-table').innerHTML = (tooBig || (showUpsell && !dismissed))
+      ? savingsRows(all, FULL_PRICE, 'GBN AI (all 4 + bonus video)')
+      : savingsRows([EDITOR].concat(picks), total, 'Your order');
+  }
+
+  $('addons').addEventListener('change', function () { dismissed = false; render(); });
+  $('keep').addEventListener('click', function () {
+    dismissed = true;
+    render();
+    $('go').focus();
+  });
+  render();
+})();
+</script>
+</body>
+</html>

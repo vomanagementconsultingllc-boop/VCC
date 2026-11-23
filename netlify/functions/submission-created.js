@@ -14,7 +14,7 @@
 // Each part is skipped when its settings are missing, and errors are only logged,
 // so a problem here can never block a signup.
 
-const TABS = { prompts: 'Prompts', breakdown: '78K breakdown', waitlist: 'Answers', 'discord-click': 'Discord taps', 'studio-waitlist': 'Waitlist', booking: 'Booking' };
+const TABS = { prompts: 'Prompts', breakdown: 'Free video', waitlist: 'Answers', 'discord-click': 'Discord taps', 'studio-waitlist': 'Waitlist', booking: 'Booking' };
 
 function detroitTime(value) {
   return new Date(value).toLocaleString('en-US', {
@@ -87,8 +87,8 @@ function rowFor(form, d, submitted) {
 // ---- Resend (email) ---------------------------------------------------------
 // "prompts": send the prompts email (netlify/lib/prompts-email.js), save the
 //   person as a Resend contact and add them to the "All prompt signups" segment.
-// "breakdown": same, with the 78K video breakdown email (netlify/lib/breakdown-email.js)
-//   and got_78k_breakdown = "yes" on the contact.
+// "breakdown": same, with the free video email (/free, netlify/lib/breakdown-email.js)
+//   and got_free_video = "yes" on the contact.
 // "waitlist": the 4 questions; each answer is saved as a contact property, so a
 //   campaign can go to everyone who picked a given answer.
 // "discord-click": marks the contact with tapped_discord = "yes".
@@ -191,7 +191,7 @@ async function sendWithResend(form, d, submissionId) {
     if (Object.keys(properties).length) fields.properties = properties;
   }
   if (form === 'discord-click') fields.properties = { tapped_discord: 'yes' };
-  if (form === 'breakdown') fields.properties = { got_78k_breakdown: 'yes' };
+  if (form === 'breakdown') fields.properties = { got_free_video: 'yes' };
 
   try {
     done.push(await saveContact(email, fields));

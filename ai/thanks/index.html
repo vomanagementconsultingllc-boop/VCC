@@ -46,17 +46,23 @@
 (function () {
   'use strict';
   var NAMES = {
-    researcher: 'the Viral Video Researcher',
-    social: 'the Social Manager + Content Coach',
     editor: 'the AI Video Editor',
+    researcher: 'the Viral Video Researcher',
+    social: 'the Social Media Manager',
     outreach: 'the AI Outreach System',
     full: 'GBN AI, the full Claude team'
   };
-  var t = new URLSearchParams(location.search).get('t');
+  // t is the cart: "editor", "editor+researcher", ... or "full"
+  var t = new URLSearchParams(location.search).get('t') || '';
+  var parts = t.split('+').filter(function (k) { return NAMES[k]; });
   document.getElementById('year').textContent = String(new Date().getFullYear());
-  if (NAMES[t]) document.getElementById('what').textContent = 'Thanks for getting ' + NAMES[t] + '.';
+  if (parts.length) {
+    var names = parts.map(function (k) { return NAMES[k]; });
+    var list = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
+    document.getElementById('what').textContent = 'Thanks for getting ' + list + '.';
+  }
   // Keep the Stripe session id out of the address bar (and out of anything shared).
-  if (history.replaceState) history.replaceState(null, '', location.pathname + (NAMES[t] ? '?t=' + t : ''));
+  if (history.replaceState) history.replaceState(null, '', location.pathname + (parts.length ? '?t=' + encodeURIComponent(parts.join('+')) : ''));
 })();
 </script>
 </body>
