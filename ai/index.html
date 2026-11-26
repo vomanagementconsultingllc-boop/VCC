@@ -61,10 +61,10 @@
   .side.slop li::before { content: "\2715"; background: #DCDCDC; color: #7A7A7A; }
   .side.mine { border: 2px solid var(--red); }
   .side.mine li::before { content: "\2713"; background: var(--red); color: #fff; }
-  .side .media { aspect-ratio: 9 / 12; border-radius: 14px; overflow: hidden; }
+  .side .media { width: 200px; max-width: 100%; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 16px; overflow: hidden; }
   .side .media video { display: block; width: 100%; height: 100%; object-fit: cover; background: #111; }
-  .side.slop .media { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; padding: 20px; background: repeating-linear-gradient(135deg, #E9E9E9 0 14px, #E2E2E2 14px 28px); text-align: center; font-weight: 700; color: #8A8A8A; }
-  .side.slop .media span { display: block; padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 14px; }
+  .side.slop .media { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; padding: 14px; background: repeating-linear-gradient(135deg, #E9E9E9 0 14px, #E2E2E2 14px 28px); text-align: center; font-weight: 700; color: #8A8A8A; }
+  .side.slop .media span { display: block; padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 13px; }
   /* Results */
   .feature { display: grid; grid-template-columns: 1fr 1.1fr; gap: 28px; align-items: center; margin-top: 24px; }
   .feature img { display: block; width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 10px 26px rgba(0,0,0,.07); }
