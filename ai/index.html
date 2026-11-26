@@ -97,6 +97,10 @@
   .refs b { display: block; font-size: 17px; color: var(--ink, #111); }
   .fine { margin-top: 14px; font-size: 13px; color: var(--muted); }
   @media (max-width: 720px) { .split, .versus, .feature, .quotes { grid-template-columns: 1fr; } .reels video { width: 150px; height: 267px; } .wall { columns: 2; column-gap: 10px; } .formats { grid-template-columns: 1fr 1fr; gap: 12px; } }
+  .value { margin-top: 22px; grid-template-columns: repeat(4, 1fr); }
+  .rules { margin: 22px 0 0; padding-left: 20px; line-height: 1.6; }
+  .rules li { margin: 4px 0; }
+  @media (max-width: 720px) { .value { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
 <body>
@@ -153,6 +157,26 @@
           <li><b>You approve the storyboard.</b>Nothing is final until you say so. Then the video is done.</li>
         </ol>
       </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="kicker">What you get</p>
+      <h2>Everything I learned about editing, written down for Claude.</h2>
+      <p class="lead">Claude follows these on every video you send it.</p>
+      <div class="stats value">
+        <div><b>558</b><span>lines of editing instructions</span></div>
+        <div><b>353</b><span>editing rules</span></div>
+        <div><b>2,443</b><span>lines of editing code in 19 tools</span></div>
+        <div><b>7</b><span>editor skills</span></div>
+      </div>
+      <ul class="rules">
+        <li>Nothing goes 6 seconds without something new on screen.</li>
+        <li>Real screenshots and recordings only. Never a fake image.</li>
+        <li>It reviews its own cut and redoes it until every score is 8 out of 10 or higher.</li>
+      </ul>
+      <p class="micro">Counted from the skill files, with repeated lines counted once.</p>
     </div>
   </section>
 
