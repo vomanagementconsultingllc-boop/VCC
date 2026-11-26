@@ -83,7 +83,19 @@
   .quote[data-placeholder] { border: 2px dashed #C9C9C9; background: var(--soft); }
   .quote[data-placeholder] p, .quote[data-placeholder] cite { color: #8A8A8A; }
   .quote .tag { display: inline-block; margin-bottom: 10px; padding: 3px 9px; border-radius: 999px; background: #FFE9A8; color: #5A4500; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
-  @media (max-width: 720px) { .split, .versus, .feature, .quotes { grid-template-columns: 1fr; } .reels video { width: 150px; height: 267px; } .wall { columns: 2; column-gap: 10px; } }
+  .formats { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; margin-top: 22px; }
+  .formats figure { margin: 0; }
+  .formats video, .formats .ph { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 16px; background: #111; }
+  .formats .ph { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; background: repeating-linear-gradient(135deg, #E9E9E9 0 14px, #E2E2E2 14px 28px); font-weight: 700; color: #8A8A8A; }
+  .formats .ph span { padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 13px; }
+  .formats figcaption { margin-top: 10px; font-size: 14px; line-height: 1.4; color: var(--muted); }
+  .formats figcaption b { display: block; font-size: 16px; color: var(--ink, #111); }
+  .formats figcaption small { display: block; margin-top: 4px; font-size: 12px; }
+  .refs { margin: 22px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .refs li { padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; font-size: 14px; color: var(--muted); }
+  .refs b { display: block; font-size: 17px; color: var(--ink, #111); }
+  .fine { margin-top: 14px; font-size: 13px; color: var(--muted); }
+  @media (max-width: 720px) { .split, .versus, .feature, .quotes { grid-template-columns: 1fr; } .reels video { width: 150px; height: 267px; } .wall { columns: 2; column-gap: 10px; } .formats { grid-template-columns: 1fr 1fr; gap: 12px; } }
 </style>
 </head>
 <body>
@@ -121,6 +133,9 @@
           <figure><video src="reels/edit-6.mp4" poster="reels/edit-6.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: Captions and punch-ins"></video><figcaption>Captions and punch-ins</figcaption></figure>
           <figure><video src="reels/edit-7.mp4" poster="reels/edit-7.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: The prompt it runs"></video><figcaption>The prompt it runs</figcaption></figure>
           <figure><video src="reels/edit-8.mp4" poster="reels/edit-8.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: One prompt, finished video"></video><figcaption>One prompt, finished video</figcaption></figure>
+          <figure><video src="reels/edit-9.mp4" poster="reels/edit-9.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: Claude does my internship apps"></video><figcaption>Claude does my internship apps</figcaption></figure>
+          <figure><video src="reels/edit-10.mp4" poster="reels/edit-10.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: 7 new meetings in a week"></video><figcaption>7 new meetings in a week</figcaption></figure>
+          <figure><video src="reels/edit-11.mp4" poster="reels/edit-11.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: GTA 6, viral format"></video><figcaption>GTA 6, viral format</figcaption></figure>
       </div>
     </div>
   </section>
@@ -177,17 +192,35 @@
   </section>
 
   <section>
-    <div class="wrap narrow">
-      <p class="kicker">Every style</p>
-      <h2>One editor, 5 ways to cut.</h2>
-      <ul class="styles">
-        <li><b>Quick cut</b>One point in 20 to 25 seconds, with a title, captions and small real images.</li>
-        <li><b>Full edit</b>A 45 to 75 second educational video with screenshots and simple motion graphics.</li>
-        <li><b>Dead-space cut</b>Removes every pause and keeps every word.</li>
-        <li><b>Green screen</b>You talking over a real screenshot of what you’re explaining.</li>
-        <li><b>News</b>A split-screen style for news and trend takes.</li>
+    <div class="wrap">
+      <p class="kicker">Every format</p>
+      <h2>Every viral format I use, cut by the editor.</h2>
+      <p class="lead" style="margin-top:0">It comes with 5 editing styles, and it learns any new format from an inspo video. These are the formats I run on my own videos.</p>
+      <div class="formats">
+        <figure><video src="reels/fmt-viral.mp4" poster="reels/fmt-viral.jpg" muted loop playsinline preload="none" aria-label="Viral format, a format my AI editor cuts"></video><figcaption><b>Viral format</b>Summaries up top, real pictures, punch-ins.</figcaption></figure>
+        <figure><video src="reels/fmt-jun.mp4" poster="reels/fmt-jun.jpg" muted loop playsinline preload="none" aria-label="Talking head, a format my AI editor cuts"></video><figcaption><b>Talking head</b>Fast cuts, bold boxes on the key line.</figcaption></figure>
+        <figure><video src="reels/fmt-split.mp4" poster="reels/fmt-split.jpg" muted loop playsinline preload="none" aria-label="Split screen, a format my AI editor cuts"></video><figcaption><b>Split screen</b>From my YouTube video, stacked for vertical.<small>Frames from the real edit</small></figcaption></figure>
+        <figure><video src="reels/fmt-green.mp4" poster="reels/fmt-green.jpg" muted loop playsinline preload="none" aria-label="Green screen collage, a format my AI editor cuts"></video><figcaption><b>Green screen collage</b>Me cut out over real photos that change with each idea.<small>Frames from the real edit</small></figcaption></figure>
+        <figure><video src="reels/fmt-list.mp4" poster="reels/fmt-list.jpg" muted loop playsinline preload="none" aria-label="Numbered list, a format my AI editor cuts"></video><figcaption><b>Numbered list</b>Each point fills in the moment I say it.<small>Frames from the real edit</small></figcaption></figure>
+        <figure><video src="reels/fmt-edu.mp4" poster="reels/fmt-edu.jpg" muted loop playsinline preload="none" aria-label="Educational, a format my AI editor cuts"></video><figcaption><b>Educational</b>Charts, notes and photos on the things I name.<small>Frames from the real edit</small></figcaption></figure>
+        <figure class="soon"><div class="ph"><span>Voice-over reel</span><span>Clip coming</span></div><figcaption><b>Voice-over reel</b>B-roll of my day with my voice telling the story.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="kicker">Built from studying the best</p>
+      <h2>The creators I studied to build these formats.</h2>
+      <ul class="refs">
+        <li><b>Jun Yuh</b>Talking head</li>
+        <li><b>Shelby Sapp</b>Numbered list</li>
+        <li><b>Mino Lee</b>Green screen collage</li>
+        <li><b>Hannah Elizabeth</b>Voice-over reel</li>
+        <li><b>Ryan Trahan</b>Storytelling</li>
+        <li><b>PB Launch</b>Editing style</li>
       </ul>
-      <p style="margin-top:16px;color:var(--muted)">Give it any inspo video and it saves that format for next time.</p>
+      <p class="fine">Style references only. These creators are not affiliated with this product and have not endorsed it.</p>
     </div>
   </section>
 
