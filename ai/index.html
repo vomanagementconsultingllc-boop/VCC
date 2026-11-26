@@ -40,7 +40,50 @@
   .vs tr.you td { background: #FFF3F2; }
   .vs tr.you td:first-child { box-shadow: inset 4px 0 0 var(--red); }
   .vs small { display: block; margin-top: 4px; color: var(--muted); font-size: 13px; font-weight: 400; }
-  @media (max-width: 720px) { .split { grid-template-columns: 1fr; } }
+  /* Scrolling strip of real edits */
+  .reels { position: relative; overflow: hidden; margin-top: 22px; -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+  .reels .track { display: flex; gap: 14px; width: max-content; animation: reels 46s linear infinite; }
+  .reels:hover .track, .reels:focus-within .track { animation-play-state: paused; }
+  .reels figure { margin: 0; flex: 0 0 auto; }
+  .reels video { display: block; width: 180px; height: 320px; object-fit: cover; border-radius: 16px; background: #111; }
+  .reels figcaption { margin-top: 8px; font-size: 13px; color: var(--muted); text-align: center; }
+  @keyframes reels { to { transform: translateX(calc(-50% - 7px)); } }
+  @media (prefers-reduced-motion: reduce) { .reels { overflow-x: auto; -webkit-mask-image: none; mask-image: none; } .reels .track { animation: none; } }
+  /* AI slop vs my editor */
+  .versus { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px; }
+  .side { border: 1px solid var(--line); border-radius: 20px; padding: 18px; }
+  .side h3 { margin: 14px 0 6px; font-size: 22px; }
+  .side ul { margin: 0; padding: 0; list-style: none; }
+  .side li { padding: 11px 0 11px 30px; border-top: 1px solid var(--line); position: relative; font-size: 16px; line-height: 1.4; }
+  .side li::before { position: absolute; left: 0; top: 10px; width: 20px; height: 20px; border-radius: 50%; font-size: 12px; font-weight: 800; line-height: 20px; text-align: center; }
+  .side.slop { background: var(--soft); color: var(--muted); }
+  .side.slop h3 { color: var(--muted); }
+  .side.slop li::before { content: "\2715"; background: #DCDCDC; color: #7A7A7A; }
+  .side.mine { border: 2px solid var(--red); }
+  .side.mine li::before { content: "\2713"; background: var(--red); color: #fff; }
+  .side .media { aspect-ratio: 9 / 12; border-radius: 14px; overflow: hidden; }
+  .side .media video { display: block; width: 100%; height: 100%; object-fit: cover; background: #111; }
+  .side.slop .media { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; padding: 20px; background: repeating-linear-gradient(135deg, #E9E9E9 0 14px, #E2E2E2 14px 28px); text-align: center; font-weight: 700; color: #8A8A8A; }
+  .side.slop .media span { display: block; padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 14px; }
+  /* Results */
+  .feature { display: grid; grid-template-columns: 1fr 1.1fr; gap: 28px; align-items: center; margin-top: 24px; }
+  .feature img { display: block; width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 10px 26px rgba(0,0,0,.07); }
+  .feature .nums { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+  .feature .nums div { padding: 14px; border: 1px solid var(--line); border-radius: 14px; }
+  .feature .nums b { display: block; font-size: 28px; letter-spacing: -.02em; }
+  .feature .nums span { font-size: 14px; color: var(--muted); }
+  .wall { columns: 3 220px; column-gap: 14px; margin-top: 28px; }
+  .wall figure { break-inside: avoid; margin: 0 0 14px; }
+  .wall img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 26px rgba(0,0,0,.07); }
+  /* Testimonials */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+  .quote { margin: 0; padding: 18px; border: 1px solid var(--line); border-radius: 18px; }
+  .quote p { margin: 0 0 14px; font-size: 17px; line-height: 1.45; }
+  .quote cite { font-style: normal; font-size: 14px; color: var(--muted); }
+  .quote[data-placeholder] { border: 2px dashed #C9C9C9; background: var(--soft); }
+  .quote[data-placeholder] p, .quote[data-placeholder] cite { color: #8A8A8A; }
+  .quote .tag { display: inline-block; margin-bottom: 10px; padding: 3px 9px; border-radius: 999px; background: #FFE9A8; color: #5A4500; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+  @media (max-width: 720px) { .split, .versus, .feature, .quotes { grid-template-columns: 1fr; } .reels video { width: 150px; height: 267px; } .wall { columns: 2; column-gap: 10px; } }
 </style>
 </head>
 <body>
@@ -52,7 +95,7 @@
     <p class="lead">The Claude editor from my GBN AI team. Send it a raw video, approve the storyboard, and get a finished vertical video. No editing app.</p>
     <div class="stats">
       <div><b>1.5M+</b><span>views from my AI framework</span></div>
-      <div><b>78,829</b><span>views on a reel made in about 2 minutes</span></div>
+      <div><b>91,034</b><span>views on a reel made in about 2 minutes</span></div>
       <div><b>3</b><span>hook versions written for every video</span></div>
     </div>
     <div class="buybox">
@@ -61,6 +104,26 @@
       <p class="micro">One-time payment. All sales are final. Needs your own paid Claude plan.</p>
     </div>
   </div>
+
+  <section>
+    <div class="wrap">
+      <p class="kicker">Edited by it</p>
+      <h2>Every video here was cut by the editor.</h2>
+      <p class="lead" style="margin-top:0">No editing app touched these. I sent the raw video, approved a storyboard, and this is what came back.</p>
+    </div>
+    <div class="reels" id="reels">
+      <div class="track">
+          <figure><video src="reels/edit-1.mp4" poster="reels/edit-1.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: 1,000 hours of Claude"></video><figcaption>1,000 hours of Claude</figcaption></figure>
+          <figure><video src="reels/edit-2.mp4" poster="reels/edit-2.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: One Claude prompt"></video><figcaption>One Claude prompt</figcaption></figure>
+          <figure><video src="reels/edit-3.mp4" poster="reels/edit-3.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: In my Edit Room"></video><figcaption>In my Edit Room</figcaption></figure>
+          <figure><video src="reels/edit-4.mp4" poster="reels/edit-4.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: Talking head, fully cut"></video><figcaption>Talking head, fully cut</figcaption></figure>
+          <figure><video src="reels/edit-5.mp4" poster="reels/edit-5.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: 3 storyboards to pick from"></video><figcaption>3 storyboards to pick from</figcaption></figure>
+          <figure><video src="reels/edit-6.mp4" poster="reels/edit-6.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: Captions and punch-ins"></video><figcaption>Captions and punch-ins</figcaption></figure>
+          <figure><video src="reels/edit-7.mp4" poster="reels/edit-7.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: The prompt it runs"></video><figcaption>The prompt it runs</figcaption></figure>
+          <figure><video src="reels/edit-8.mp4" poster="reels/edit-8.jpg" width="180" height="320" muted loop playsinline preload="none" aria-label="A video my AI editor cut: One prompt, finished video"></video><figcaption>One prompt, finished video</figcaption></figure>
+      </div>
+    </div>
+  </section>
 
   <section>
     <div class="wrap split">
@@ -83,6 +146,37 @@
   </section>
 
   <section>
+    <div class="wrap">
+      <p class="kicker">The difference</p>
+      <h2>AI slop vs. my viral video editor.</h2>
+      <div class="versus">
+        <div class="side slop">
+          <div class="media" aria-label="Example of a generic AI edit"><span>Stock clip</span><span>Robot voiceover</span><span>Same captions as everyone</span></div>
+          <h3>AI slop</h3>
+          <ul>
+            <li>Stock footage and AI b-roll that has nothing to do with what you said.</li>
+            <li>One generic hook. Take it or leave it.</li>
+            <li>The same bouncing caption template everyone else uses.</li>
+            <li>Cuts on a timer, so it keeps dead air or chops your words.</li>
+            <li>Spits out a final video before you ever see the plan.</li>
+          </ul>
+        </div>
+        <div class="side mine">
+          <div class="media"><video src="reels/edit-1.mp4" poster="reels/edit-1.jpg" muted loop playsinline preload="none" aria-label="A video my AI editor cut"></video></div>
+          <h3>My viral video editor</h3>
+          <ul>
+            <li>Real screenshots and graphics of exactly what you’re talking about.</li>
+            <li>3 hook versions for every video, to test as trial reels.</li>
+            <li>Follows your rule sheet: your fonts, colors and caption style, every time.</li>
+            <li>Removes every pause and keeps every word.</li>
+            <li>Nothing is final until you approve the storyboard.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
     <div class="wrap narrow">
       <p class="kicker">Every style</p>
       <h2>One editor, 5 ways to cut.</h2>
@@ -94,6 +188,50 @@
         <li><b>News</b>A split-screen style for news and trend takes.</li>
       </ul>
       <p style="margin-top:16px;color:var(--muted)">Give it any inspo video and it saves that format for next time.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="kicker">Real results</p>
+      <h2>Real numbers, straight from my analytics.</h2>
+      <div class="feature">
+        <img src="img/reel-91k-insights.jpg" width="660" height="924" loading="lazy" decoding="async" alt="Instagram insights for my reel: 91,034 views, 62,379 viewers, 141 follows, 2.7K likes, 689 shares, 1.3K saves">
+        <div>
+          <h3 style="font-size:26px;margin:0">The reel made in about 2 minutes.</h3>
+          <p class="lead" style="margin-top:8px">“POV: I built a marketing team on Claude.” Here’s what it did on Instagram.</p>
+          <div class="nums">
+            <div><b>91,034</b><span>views</span></div>
+            <div><b>62,379</b><span>viewers</span></div>
+            <div><b>1.3K</b><span>saves</span></div>
+            <div><b>689</b><span>shares</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="kicker" style="margin-top:44px">More from my AI framework</p>
+      <div class="wall">
+        <figure><img src="/studio/img/proof/01.jpg" width="640" height="675" loading="lazy" decoding="async" alt="TikTok analytics: 591.3K views, 69K likes, 10K comments, 30K shares"></figure>
+        <figure><img src="/studio/img/proof/02.jpg" width="640" height="524" loading="lazy" decoding="async" alt="TikTok analytics: 318.1K views, 50K likes, 13K shares"></figure>
+        <figure><img src="/studio/img/proof/03.jpg" width="640" height="910" loading="lazy" decoding="async" alt="Instagram reel insights: 216,751 views and 169,797 accounts reached"></figure>
+        <figure><img src="/studio/img/proof/04.jpg" width="640" height="556" loading="lazy" decoding="async" alt="TikTok analytics: 205.6K views, 32K likes, 5,004 shares"></figure>
+        <figure><img src="/studio/img/proof/05.jpg" width="640" height="549" loading="lazy" decoding="async" alt="TikTok analytics: 135.3K views, 17K likes, 3,576 shares"></figure>
+        <figure><img src="/studio/img/proof/06.jpg" width="640" height="244" loading="lazy" decoding="async" alt="Instagram insights: 74,596 views in 30 days, up 239.8 percent"></figure>
+        <figure><img src="/studio/img/proof/08.jpg" width="640" height="865" loading="lazy" decoding="async" alt="TikTok analytics: 21.2K views, 1,672 likes, 454 saves"></figure>
+        <figure><img src="/studio/img/proof/09.jpg" width="640" height="566" loading="lazy" decoding="async" alt="TikTok analytics: 16.7K views, 40.85 percent watched the full video"></figure>
+        <figure><img src="/studio/img/proof/12.jpg" width="640" height="854" loading="lazy" decoding="async" alt="TikTok analytics: 5.2K views, 622 likes, 122 new followers"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <p class="kicker">What people say</p>
+      <h2>From people using it.</h2>
+      <div class="quotes">
+        <figure class="quote" data-placeholder><span class="tag">Placeholder</span><p>A real buyer quote goes here.</p><cite>Name, handle</cite></figure>
+        <figure class="quote" data-placeholder><span class="tag">Placeholder</span><p>A real buyer quote goes here.</p><cite>Name, handle</cite></figure>
+        <figure class="quote" data-placeholder><span class="tag">Placeholder</span><p>A real buyer quote goes here.</p><cite>Name, handle</cite></figure>
+      </div>
     </div>
   </section>
 
@@ -145,6 +283,29 @@
   var src = new URLSearchParams(location.search).get('src') || new URLSearchParams(location.search).get('utm_source') || '';
   src = src.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
   if (src) document.querySelectorAll('a[href="checkout/"]').forEach(function (a) { a.href = 'checkout/?src=' + src; });
+
+  // Scrolling strip: copy the clips once so the loop is seamless.
+  var track = document.querySelector('#reels .track');
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (track && !still) {
+    Array.prototype.slice.call(track.children).forEach(function (f) {
+      var c = f.cloneNode(true); c.setAttribute('aria-hidden', 'true'); track.appendChild(c);
+    });
+  }
+  // Play the clips only while they are on screen.
+  var vids = document.querySelectorAll('video');
+  vids.forEach(function (v) { v.muted = true; });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { var p = e.target.play(); if (p && p.catch) p.catch(function () {}); }
+        else e.target.pause();
+      });
+    }, { rootMargin: '200px' });
+    vids.forEach(function (v) { io.observe(v); });
+  } else {
+    vids.forEach(function (v) { v.autoplay = true; v.preload = 'auto'; });
+  }
 })();
 </script>
 </body>
