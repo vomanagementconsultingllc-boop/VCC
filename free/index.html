@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>How I Built the AI Behind My 1.5 Million Views | Growth By Nathan</title>
+<meta name="description" content="A free video: how I built the AI team behind my 1.5 million views, and how you can build your own.">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Growth By Nathan">
+<meta property="og:title" content="How I Built the AI Behind My 1.5 Million Views">
+<meta property="og:description" content="A free video: how I built it, and how you can build your own.">
+<meta property="og:image" content="https://vocreativeco.com/free/img/edit-room.jpg">
+<meta property="og:url" content="https://vocreativeco.com/free/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://vocreativeco.com/free/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Cpath d='M14 16h9l9 26 9-26h9L37 50h-10z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<link rel="stylesheet" href="/ai/gbn.css">
+<style>
+  .hero { padding-top: 44px; padding-bottom: 40px; text-align: center; }
+  .hero h1 { max-width: 15ch; margin: 0 auto; }
+  .hero .lead { max-width: 36ch; margin-left: auto; margin-right: auto; }
+  .hero form { margin: 0 auto; }
+  /* the video, shown as a locked player */
+  .player { position: relative; width: 100%; max-width: 560px; margin: 28px auto 26px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: #000; box-shadow: 0 18px 40px rgba(0,0,0,.18); }
+  .player img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .55; }
+  .player .play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; background: var(--red); box-shadow: 0 8px 24px rgba(232,53,43,.45); }
+  .player .play svg { width: 28px; height: 28px; margin-left: 4px; fill: #fff; }
+  .player .tag { position: absolute; left: 14px; top: 14px; padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,.6); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .player .cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 26px 16px 14px; background: linear-gradient(transparent, rgba(0,0,0,.8)); color: #fff; font-size: 15px; font-weight: 700; text-align: left; }
+  .learn { margin: 18px auto 0; padding: 0; max-width: 560px; list-style: none; display: grid; gap: 10px; text-align: left; font-size: 17px; font-weight: 600; }
+  .learn li { display: flex; gap: 12px; line-height: 1.35; }
+  .learn li::before { content: ""; flex: none; width: 22px; height: 22px; border-radius: 7px; background: var(--ink) center / 12px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='1.8'/%3E%3C/svg%3E"); }
+  .proof { text-align: center; }
+  .proof .stats { max-width: 760px; margin: 28px auto 32px; }
+  .wall { columns: 3 240px; column-gap: 16px; text-align: left; }
+  .wall figure { break-inside: avoid; margin: 0 0 16px; }
+  .wall img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 26px rgba(0,0,0,.07); }
+  .again { text-align: center; }
+  .again form { margin: 22px auto 0; }
+  @media (max-width: 600px) { .wall { columns: 2; column-gap: 10px; } .wall figure { margin-bottom: 10px; } .player .play { width: 62px; height: 62px; } }
+</style>
+</head>
+<body>
+
+<main>
+  <div class="wrap hero">
+    <p class="pill">Free video</p>
+    <h1>How I Built the AI Behind My 1.5 Million Views</h1>
+    <p class="lead">How I built my AI team, and how you can build your own. Free, straight to your inbox.</p>
+
+    <div class="player" aria-hidden="true">
+      <img src="img/edit-room.jpg" width="800" height="800" alt="">
+      <span class="tag">Free breakdown</span>
+      <span class="play"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></span>
+      <span class="cap">Inside my Claude team: the editor, the researcher, the social media manager and the outreach system</span>
+    </div>
+
+    <form id="get" class="get" name="breakdown" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <input type="hidden" name="form-name" value="breakdown">
+      <input type="hidden" name="source" class="f-source" value="">
+      <p class="hp"><label>Leave this empty <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <div class="row">
+        <label class="hp" for="f-name">First name</label>
+        <input id="f-name" class="f-name" name="name" type="text" autocomplete="given-name" placeholder="First name" maxlength="60">
+        <label class="hp" for="f-email">Email</label>
+        <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required>
+        <button id="f-btn" type="submit">Send me the video</button>
+      </div>
+      <p class="err" id="f-err" role="alert" aria-live="polite"></p>
+      <p class="micro">Free. Unsubscribe anytime. <a href="/studio/privacy/">Privacy</a></p>
+    </form>
+
+    <ul class="learn">
+      <li>The AI team I built in Claude, and what each one does</li>
+      <li>How it edits a video while I approve the storyboard</li>
+      <li>How you can build the same thing yourself</li>
+    </ul>
+  </div>
+
+  <section class="proof" aria-labelledby="proof-title">
+    <div class="wrap">
+      <p class="kicker">Real results</p>
+      <h2 id="proof-title">My results from my AI framework.</h2>
+      <p class="lead" style="margin-top:0">Screenshots straight from my TikTok and Instagram analytics.</p>
+      <div class="stats">
+        <div><b>1.5M+</b><span>views across 8 of my videos</span></div>
+        <div><b>591K</b><span>views on a single video</span></div>
+        <div><b>78,829</b><span>views on a reel made in about 2 minutes</span></div>
+      </div>
+      <div class="wall">
+        <figure><img src="/studio/img/proof/01.jpg" width="640" height="675" loading="lazy" decoding="async" alt="TikTok analytics: 591.3K views, 69K likes, 10K comments, 30K shares"></figure>
+        <figure><img src="/studio/img/proof/02.jpg" width="640" height="524" loading="lazy" decoding="async" alt="TikTok analytics: 318.1K views, 50K likes, 13K shares"></figure>
+        <figure><img src="/studio/img/proof/03.jpg" width="640" height="910" loading="lazy" decoding="async" alt="Instagram reel insights: 216,751 views and 169,797 accounts reached"></figure>
+        <figure><img src="/studio/img/proof/04.jpg" width="640" height="556" loading="lazy" decoding="async" alt="TikTok analytics: 205.6K views, 32K likes, 5,004 shares"></figure>
+        <figure><img src="img/saves.jpg" width="800" height="800" loading="lazy" decoding="async" alt="Instagram Insights: 4,020 interactions, 1,131 saves, 567 shares on the 78K reel"></figure>
+        <figure><img src="/studio/img/proof/05.jpg" width="640" height="549" loading="lazy" decoding="async" alt="TikTok analytics: 135.3K views, 17K likes, 3,576 shares"></figure>
+        <figure><img src="/studio/img/proof/06.jpg" width="640" height="244" loading="lazy" decoding="async" alt="Instagram insights: 74,596 views in 30 days, up 239.8 percent"></figure>
+        <figure><img src="/studio/img/proof/08.jpg" width="640" height="865" loading="lazy" decoding="async" alt="TikTok analytics: 21.2K views, 1,672 likes, 454 saves"></figure>
+        <figure><img src="/studio/img/proof/09.jpg" width="640" height="566" loading="lazy" decoding="async" alt="TikTok analytics: 16.7K views, 40.85 percent watched the full video"></figure>
+        <figure><img src="/studio/img/proof/12.jpg" width="640" height="854" loading="lazy" decoding="async" alt="TikTok analytics: 5.2K views, 622 likes, 122 new followers"></figure>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow again">
+      <h2>Watch how I built it.</h2>
+      <form class="get" id="get2" novalidate>
+        <div class="row">
+          <label class="hp" for="f-email2">Email</label>
+          <input id="f-email2" type="email" inputmode="email" autocomplete="email" placeholder="Your email" required>
+          <button type="submit">Send me the video</button>
+        </div>
+        <p class="err" id="f-err2" role="alert" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var source = (location.search.replace(/^\?/, '') || document.referrer || 'direct').slice(0, 300);
+  $('year').textContent = String(new Date().getFullYear());
+  document.querySelectorAll('.f-source').forEach(function (el) { el.value = source; });
+
+  function send(email, name, btn, err, input) {
+    var label = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    var fields = new URLSearchParams();
+    fields.set('form-name', 'breakdown');
+    fields.set('bot-field', '');
+    fields.set('source', source);
+    fields.set('email', email);
+    fields.set('name', name);
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: fields.toString()
+    }).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var q = new URLSearchParams({ new: '1' });
+      if (name) q.set('n', name);
+      location.href = '/free/watch/?' + q.toString();
+    }).catch(function () {
+      btn.disabled = false;
+      btn.textContent = label;
+      err.textContent = 'That didn’t go through. Check your connection and try again.';
+      input.setAttribute('aria-invalid', 'true');
+    });
+  }
+
+  function wire(formId, emailId, errId, nameId) {
+    var form = $(formId), input = $(emailId), err = $(errId);
+    input.addEventListener('input', function () { err.textContent = ''; input.removeAttribute('aria-invalid'); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = input.value.trim();
+      if (!EMAIL.test(email)) {
+        err.textContent = 'Enter a valid email, like you@yourbusiness.com.';
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+        return;
+      }
+      var name = nameId ? $(nameId).value.trim().slice(0, 60) : '';
+      send(email, name, form.querySelector('button'), err, input);
+    });
+  }
+  wire('get', 'f-email', 'f-err', 'f-name');
+  wire('get2', 'f-email2', 'f-err2', null);
+})();
+</script>
+</body>
+</html>

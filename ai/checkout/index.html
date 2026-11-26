@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Checkout | GBN AI</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#E8352B">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Cpath d='M14 16h9l9 26 9-26h9L37 50h-10z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<link rel="stylesheet" href="../gbn.css">
+<style>
+  /* the Dec 31 countdown */
+  .bar { position: sticky; top: 0; z-index: 5; padding: 10px 16px; background: var(--red); color: #fff; text-align: center; font-size: 15px; font-weight: 700; line-height: 1.3; }
+  .bar .clock { display: inline-flex; gap: 6px; margin-left: 8px; font-variant-numeric: tabular-nums; }
+  .bar .clock span { padding: 2px 7px; border-radius: 6px; background: rgba(0,0,0,.22); }
+
+  main { padding: 26px 0 48px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 28px; align-items: start; }
+  .side { position: sticky; top: 64px; }
+  h1 { font-size: clamp(30px, 5vw, 44px); }
+
+  .box { margin-top: 16px; border: 1px solid var(--line); border-radius: 18px; }
+  .item { display: flex; gap: 14px; align-items: center; padding: 16px 18px; }
+  .item + .item { border-top: 1px solid var(--line); }
+  .item .txt { flex: 1; min-width: 0; }
+  .item h3 { margin: 0 0 3px; font-size: 18px; }
+  .item p { margin: 0; font-size: 15px; color: var(--muted); line-height: 1.4; }
+  .px { flex: none; text-align: right; }
+  .px s { font-size: 14px; color: #9A9A9A; margin-right: 4px; }
+  .px b { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+  .tags { display: flex; justify-content: flex-end; gap: 6px; margin-top: 5px; }
+  .off { display: inline-block; padding: 3px 7px; border-radius: 6px; background: var(--red); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .03em; white-space: nowrap; }
+  .timer { display: inline-block; padding: 3px 7px; border-radius: 6px; border: 1.5px solid var(--red); color: var(--red); font-size: 12px; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .timer.ended { border-color: var(--line); color: var(--muted); font-weight: 600; }
+  .addon { cursor: pointer; transition: background-color .15s; }
+  @media (hover: hover) { .addon:hover { background: #FAFAFA; } }
+  .addon input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .check { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border: 2px solid var(--ink); border-radius: 8px; background: #fff; }
+  .check svg { width: 14px; height: 14px; opacity: 0; }
+  .addon input:checked ~ .check, .base .check { background: var(--ink); }
+  .addon input:checked ~ .check svg, .base .check svg { opacity: 1; }
+  .addon input:focus-visible ~ .check { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .addon.on { background: #FAFAFA; }
+  .sub { margin: 26px 0 0; font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+  .card { padding: 20px; border: 1px solid var(--line); border-radius: 18px; }
+  .total { display: flex; justify-content: space-between; align-items: baseline; font-size: 18px; font-weight: 700; }
+  .total b { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+
+  .upsell { margin-top: 14px; padding: 18px; border-radius: 16px; background: var(--ink); color: #fff; }
+  .upsell h2 { margin: 0 0 10px; color: #fff; font-size: 24px; line-height: 1.12; }
+  .upsell .val { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; }
+  .upsell .val s { color: #9A9A9A; font-size: 16px; }
+  .upsell ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 15px; }
+  .upsell li { display: flex; gap: 9px; }
+  .upsell li::before { content: ""; flex: none; width: 16px; height: 16px; margin-top: 2px; border-radius: 5px; background: var(--red) center / 9px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
+
+  .deadline { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: #FFF3F2; border: 1px solid #F6C9C5; font-size: 15px; line-height: 1.45; }
+  .deadline b { color: var(--red); }
+
+  /* savings chart, right next to the button */
+  .chart { margin-top: 14px; padding: 16px; border-radius: 16px; background: var(--soft); }
+  .chart h3 { margin: 0 0 14px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .row-l { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 5px; font-size: 15px; font-weight: 700; }
+  .row-l small { display: block; font-size: 12.5px; font-weight: 500; color: var(--muted); }
+  .track { height: 26px; border-radius: 7px; background: #fff; overflow: hidden; margin-bottom: 12px; }
+  .fill { height: 100%; border-radius: 7px; }
+  .fill.them { background: #6B6B6B; width: 100%; }
+  .fill.you { background: var(--red); min-width: 8px; }
+  .saved { margin: 4px 0 0; font-size: 20px; font-weight: 800; line-height: 1.25; }
+  .saved span { color: var(--red); }
+
+  .actions { margin-top: 14px; }
+  .actions .btn { width: 100%; }
+  .actions .alt { display: block; width: 100%; margin-top: 8px; padding: 8px; color: var(--muted); font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; }
+  .fine { margin-top: 12px; text-align: center; font-size: 12.5px; color: var(--muted); }
+
+  /* popups */
+  .modal { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; padding: 16px; background: rgba(10,10,10,.6); }
+  .sheet:focus { outline: none; }
+  .sheet { position: relative; width: 100%; max-width: 460px; max-height: calc(100vh - 32px); max-height: calc(100svh - 32px); overflow: auto; padding: 24px 20px 18px; border-radius: 20px; background: #fff; box-shadow: 0 24px 60px rgba(0,0,0,.35); }
+  .sheet .x { position: absolute; right: 10px; top: 8px; width: 40px; height: 40px; border: 0; background: none; font-size: 28px; line-height: 1; color: var(--muted); cursor: pointer; }
+  .sheet .kicker { margin: 0 0 6px; color: var(--red); }
+  .sheet h2 { margin: 0 0 8px; padding-right: 24px; font-size: 26px; line-height: 1.1; }
+  .sheet .desc { margin: 0 0 16px; font-size: 15.5px; color: var(--muted); line-height: 1.45; }
+  .sheet .btn { width: 100%; }
+  .sheet .alt { display: block; width: 100%; margin-top: 8px; padding: 10px; border: 0; background: none; color: var(--muted); font: inherit; font-size: 15px; text-align: center; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .pick { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; padding: 14px; border: 2px solid var(--line); border-radius: 14px; }
+  .pick.on { border-color: var(--ink); background: #FAFAFA; }
+  .pick .txt { flex: 1; min-width: 0; }
+  .pick h3 { margin: 0 0 2px; font-size: 17px; }
+  .pick p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.35; }
+  .pick .px b { font-size: 20px; }
+  .toggle { flex: none; min-width: 66px; height: 38px; padding: 0 12px; border: 2px solid var(--ink); border-radius: 10px; background: #fff; color: var(--ink); font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+  .toggle[aria-pressed="true"] { background: var(--ink); color: #fff; }
+  .pick-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .pick-row .tags { margin: 0; justify-content: flex-start; flex-direction: row; }
+  .pick-row .px { margin-left: auto; }
+  .sheet.dark { background: var(--ink); color: #fff; }
+  .sheet.dark h2 { color: #fff; }
+  .sheet.dark .x, .sheet.dark .alt { color: #BDBDBD; }
+  .sheet.dark .val { display: flex; align-items: center; gap: 10px; margin: 4px 0 12px; }
+  .sheet.dark .val s { color: #9A9A9A; }
+  .sheet.dark ul { margin: 0 0 14px; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 15.5px; }
+  .sheet.dark li { display: flex; gap: 9px; }
+  .sheet.dark li::before { content: ""; flex: none; width: 17px; height: 17px; margin-top: 2px; border-radius: 5px; background: var(--red) center / 9px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1.5 6.2l3 3 6-6.4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E"); }
+  .sheet.dark .soon { margin: 0 0 14px; font-size: 14px; color: #D4D4D4; }
+  .sheet.dark .soon b { color: #fff; }
+  body.locked { overflow: hidden; }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .side { position: static; }
+  }
+  @media (max-width: 600px) {
+    .bar { font-size: 14px; }
+    .bar .clock { display: flex; justify-content: center; margin: 6px 0 0; }
+    .item { padding: 14px; gap: 12px; }
+    .item p { font-size: 14px; }
+    .tags { flex-direction: column; align-items: flex-end; gap: 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="bar" id="bar" role="note">
+  GBN AI goes to $997 on Dec 31
+  <span class="clock" aria-hidden="true"><span id="cd-d">0d</span><span id="cd-h">00h</span><span id="cd-m">00m</span><span id="cd-s">00s</span></span>
+</div>
+
+<main>
+  <div class="wrap grid">
+    <div>
+      <h1>Your order</h1>
+
+      <div class="box">
+        <div class="item base">
+          <span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>
+          <div class="txt">
+            <h3>AI Video Editor</h3>
+            <p>Turns your raw video into a finished one.</p>
+          </div>
+          <div class="px"><b>$97</b></div>
+        </div>
+      </div>
+
+      <p class="sub">Add to your order</p>
+      <div class="box" id="addons"></div>
+    </div>
+
+    <aside class="side">
+      <div class="card">
+        <div class="total"><span>Total</span><b id="total">$97</b></div>
+
+        <!-- They added something: point them to GBN AI -->
+        <div class="upsell" id="upsell" hidden>
+          <h2 id="up-title">Spend $45 more and get all 4.</h2>
+          <div class="val"><s>$688 value</s><span class="off" id="up-off">74% OFF</span></div>
+          <ul>
+            <li>All 4 AI systems</li>
+            <li>Bonus: how I make content go viral</li>
+            <li>The private GBN AI Discord</li>
+          </ul>
+        </div>
+
+        <!-- They added nothing: the deadline -->
+        <p class="deadline" id="deadline">These launch prices end <b>Dec 30</b>.</p>
+
+        <div class="chart" aria-live="polite">
+          <h3>How much you’re saving on average</h3>
+          <div class="row-l"><span>A quality editor<small>$50 a video, posting every day for 30 days</small></span><span id="editor-cost">$1,500</span></div>
+          <div class="track"><div class="fill them" id="bar-editor"></div></div>
+          <div id="smm-row" hidden>
+            <div class="row-l"><span>A social media manager</span><span id="smm-cost">$2,000</span></div>
+            <div class="track"><div class="fill them" id="bar-smm"></div></div>
+          </div>
+          <div class="row-l"><span id="you-label">You, with the AI Video Editor</span><span id="you-price">$97 once</span></div>
+          <div class="track"><div class="fill you" id="bar-you"></div></div>
+          <p class="saved">You save <span id="saved">$1,403</span> in the first 30 days.</p>
+        </div>
+
+        <div class="actions">
+          <a class="btn btn-red" id="go" href="#">Continue to payment: $97</a>
+          <a class="alt" id="alt" href="#" hidden>No thanks, continue with $134</a>
+        </div>
+        <p class="fine">One-time payment. All sales are final, no refunds. You’ll need your own paid Claude plan. Secure checkout by Stripe.</p>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- Popup 1: when they land on the cart -->
+<div class="modal" id="m-team" hidden role="dialog" aria-modal="true" aria-labelledby="m-team-title">
+  <div class="sheet">
+    <button class="x" type="button" data-close aria-label="Close">×</button>
+    <p class="kicker">Before you check out</p>
+    <h2 id="m-team-title">Complete your entire marketing team!</h2>
+    <p class="desc">Your AI Video Editor makes the videos. Add the Researcher so you always know what to post, and the Social Media Manager so you know what’s working.</p>
+    <div id="m-team-items"></div>
+    <button class="btn btn-red" id="m-team-add" type="button">Add both: $74</button>
+    <button class="alt" type="button" data-close>No thanks</button>
+  </div>
+</div>
+
+<!-- Popup 2: continue with nothing added -->
+<div class="modal" id="m-gbn" hidden role="dialog" aria-modal="true" aria-labelledby="m-gbn-title">
+  <div class="sheet dark">
+    <button class="x" type="button" data-close aria-label="Close">×</button>
+    <p class="kicker">Wait, before you pay</p>
+    <h2 id="m-gbn-title">Get your whole marketing team for $82 more.</h2>
+    <div class="val"><s id="m-gbn-value">$688 value</s><span class="off" id="m-gbn-off">74% OFF</span></div>
+    <ul>
+      <li>All 4 AI systems: editor, researcher, social media manager and outreach</li>
+      <li>Bonus: how I make content go viral</li>
+      <li>The private GBN AI Discord</li>
+    </ul>
+    <p class="soon" id="m-gbn-soon">GBN AI goes to <b>$997</b> on Dec 31.</p>
+    <a class="btn btn-red" id="m-gbn-yes" href="#">Get all 4 for $82 more</a>
+    <a class="alt" id="m-gbn-no" href="#">No thanks, continue with $97</a>
+  </div>
+</div>
+<footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
+
+<script>
+(function () {
+  'use strict';
+  // ---- The offer (scripts/gbn-stripe-setup.js makes the matching Stripe links) ----
+  var REGULAR = 197;                 // add-on price after the 1-hour window
+  var HOUR = 60 * 60 * 1000;         // 1-hour add-on window, from the first time this person opens checkout
+  var GBN = 179, GBN_LATER = 997;
+  var DEADLINE = Date.parse('2026-12-31T05:00:00Z'); // Dec 31, 12:00 AM Eastern
+  var EDITOR_PRICE = 97;
+  // What you'd pay instead in the first 30 days (Nathan's numbers): a quality
+  // editor charges $50 a video ($1,500 for 30 daily videos); a social media
+  // manager costs $2,000.
+  var EDITOR_PER_VIDEO = 50, DAYS = 30, SMM = 2000;
+  var ADDONS = [
+    { key: 'researcher', name: 'Viral Video Researcher', price: 37, text: 'Tells you what to post.' },
+    { key: 'social', name: 'Social Media Manager', price: 37, text: 'Plans your posts and tells you what’s working.' },
+    { key: 'outreach', name: 'AI Outreach System', price: 69, text: 'Finds leads and messages them for you.' }
+  ];
+  var LINKS = {
+    'editor': 'https://buy.stripe.com/fZu28tesN2RyfpX6so9fW0D',
+    'editor+researcher': 'https://buy.stripe.com/eVqeVf70l1Nu7Xv7ws9fW0E',
+    'editor+social': 'https://buy.stripe.com/7sY14p1G1gIo1z71849fW0F',
+    'editor+outreach': 'https://buy.stripe.com/fZufZjgAV0Jq6Tr1849fW0G',
+    'editor+researcher+social': 'https://buy.stripe.com/28EaEZ5WhgIo6Trg2Y9fW0H',
+    'full': 'https://buy.stripe.com/fZucN73O91Nu1z75ok9fW0I',
+    'editor+researcher@197': 'https://buy.stripe.com/28EfZjdoJ4ZG2DbcQM9fW0J',
+    'editor+social@197': 'https://buy.stripe.com/5kQeVf3O92Ry6Tr8Aw9fW0K',
+    'editor+outreach@197': 'https://buy.stripe.com/5kQ5kF3O94ZG91z3gc9fW0L',
+    'editor+researcher@197+social@197': 'https://buy.stripe.com/aFaaEZ4Sdcs8b9Hg2Y9fW0M',
+    'editor+researcher@197+outreach@197': 'https://buy.stripe.com/00w5kFesNbo46Tr8Aw9fW0N',
+    'editor+social@197+outreach@197': 'https://buy.stripe.com/cNidRbgAV2Ry6TraIE9fW0O',
+    'editor+researcher@197+social@197+outreach@197': 'https://buy.stripe.com/7sYcN7esNcs8fpX1849fW0P'
+  };
+  var VALUE = EDITOR_PRICE + REGULAR * ADDONS.length; // $688
+
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) { return '$' + n.toLocaleString('en-US'); };
+  var pct = function (now, was) { return Math.round((1 - now / was) * 100) + '% OFF'; };
+  var src = (new URLSearchParams(location.search).get('src') || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
+  var withSrc = function (url) { return src ? url + '?client_reference_id=' + encodeURIComponent(src) : url; };
+  $('year').textContent = String(new Date().getFullYear());
+
+  // The 1-hour window starts the first time this person opens checkout, and
+  // really ends: after it, the add-ons are $197 here and at Stripe.
+  var start = Date.now();
+  try {
+    var saved = Number(localStorage.getItem('gbn_addon_hour_start'));
+    if (saved && saved <= Date.now()) start = saved; else localStorage.setItem('gbn_addon_hour_start', String(start));
+  } catch (e) { /* storage blocked: the hour runs from this page view */ }
+  var expired = function () { return Date.now() - start >= HOUR; };
+  var launch = function () { return Date.now() < DEADLINE; };
+
+  // Add-on rows
+  var check = '<span class="check" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M1.5 6.2l3 3 6-6.4" fill="none" stroke="#fff" stroke-width="2"/></svg></span>';
+  $('addons').innerHTML = ADDONS.map(function (a) {
+    return '<label class="item addon" data-key="' + a.key + '">' +
+      '<input type="checkbox" value="' + a.key + '">' + check +
+      '<span class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p></span>' +
+      '<span class="px" id="px-' + a.key + '"></span></label>';
+  }).join('');
+
+  function priceOf(a) { return expired() ? REGULAR : a.price; }
+
+  function priceHtml(a) {
+    return expired()
+      ? '<b>' + money(REGULAR) + '</b>'
+      : '<s>' + money(REGULAR) + '</s><b>' + money(a.price) + '</b>';
+  }
+  function tagsHtml(a) {
+    return expired()
+      ? '<span class="tags"><span class="timer ended">1-hour price ended</span></span>'
+      : '<span class="tags"><span class="off">' + pct(a.price, REGULAR) + '</span><span class="timer" data-timer>60:00</span></span>';
+  }
+  function drawPrices() {
+    ADDONS.forEach(function (a) { $('px-' + a.key).innerHTML = priceHtml(a) + tagsHtml(a); });
+    if (!$('m-team').hidden) drawTeam();
+  }
+
+  function selected() {
+    return ADDONS.filter(function (a) { return document.querySelector('#addons input[value="' + a.key + '"]').checked; });
+  }
+
+  // withSmm: compare against an editor AND a social media manager (GBN AI).
+  function drawChart(withSmm, youLabel, you) {
+    var editor = EDITOR_PER_VIDEO * DAYS;
+    var max = withSmm ? Math.max(editor, SMM) : editor;
+    $('editor-cost').textContent = money(editor);
+    $('bar-editor').style.width = (editor / max * 100).toFixed(1) + '%';
+    $('smm-row').hidden = !withSmm;
+    $('smm-cost').textContent = money(SMM);
+    $('bar-smm').style.width = (SMM / max * 100).toFixed(1) + '%';
+    $('you-label').textContent = youLabel;
+    $('you-price').textContent = money(you) + ' once';
+    $('bar-you').style.width = (you / max * 100).toFixed(1) + '%';
+    // What they'd pay instead, minus what they pay us.
+    $('saved').textContent = money((withSmm ? editor + SMM : editor) - you);
+  }
+
+  function render() {
+    var picks = selected();
+    document.querySelectorAll('.addon').forEach(function (el) { el.classList.toggle('on', el.querySelector('input').checked); });
+    var ended = expired();
+    var total = EDITOR_PRICE + picks.reduce(function (n, a) { return n + priceOf(a); }, 0);
+    var cartKey = ['editor'].concat(picks.map(function (a) { return ended ? a.key + '@197' : a.key; })).join('+');
+    var cartLink = LINKS[cartKey];
+    $('total').textContent = money(total);
+
+    var go = $('go'), alt = $('alt');
+    $('upsell').hidden = picks.length === 0;
+    $('deadline').hidden = !(picks.length === 0 && launch());
+
+    if (picks.length === 0) {
+      go.textContent = 'Continue to payment: ' + money(total);
+      go.href = withSrc(LINKS.editor);
+      alt.hidden = true;
+      drawChart(false, 'You, with the AI Video Editor', total);
+      return;
+    }
+
+    // Something added: GBN AI is the main button.
+    $('up-off').textContent = pct(GBN, VALUE);
+    if (total < GBN) {
+      $('up-title').textContent = 'Spend ' + money(GBN - total) + ' more and get all 4.';
+      go.textContent = 'Get all 4 for ' + money(GBN - total) + ' more';
+    } else {
+      $('up-title').textContent = 'Save ' + money(total - GBN) + ' when you get GBN AI.';
+      go.textContent = 'Save ' + money(total - GBN) + ': get GBN AI';
+    }
+    go.href = withSrc(LINKS.full);
+    if (cartLink) {
+      alt.hidden = false;
+      alt.textContent = 'No thanks, continue with ' + money(total);
+      alt.href = withSrc(cartLink);
+    } else {
+      alt.hidden = true; // GBN AI costs less than this cart, so there's no reason to pay more
+    }
+    drawChart(true, 'You, with GBN AI', GBN);
+  }
+
+  // Clocks
+  var two = function (n) { return (n < 10 ? '0' : '') + n; };
+  var wasEnded = expired();
+  function tick() {
+    var left = DEADLINE - Date.now();
+    if (left <= 0) {
+      $('bar').hidden = true;
+    } else {
+      var s = Math.floor(left / 1000);
+      $('cd-d').textContent = Math.floor(s / 86400) + 'd';
+      $('cd-h').textContent = two(Math.floor(s / 3600) % 24) + 'h';
+      $('cd-m').textContent = two(Math.floor(s / 60) % 60) + 'm';
+      $('cd-s').textContent = two(s % 60) + 's';
+    }
+    var hourLeft = Math.max(0, HOUR - (Date.now() - start));
+    var label = two(Math.floor(hourLeft / 60000)) + ':' + two(Math.floor(hourLeft / 1000) % 60);
+    document.querySelectorAll('[data-timer]').forEach(function (el) { el.textContent = '⏱ ' + label; });
+    if (expired() && !wasEnded) { wasEnded = true; drawPrices(); render(); }
+  }
+
+  // ---- Popups ----
+  var lastFocus = null;
+  function openModal(id) {
+    lastFocus = document.activeElement;
+    $(id).hidden = false;
+    document.body.classList.add('locked');
+    var sheet = $(id).querySelector('.sheet');
+    sheet.setAttribute('tabindex', '-1');
+    sheet.focus({ preventScroll: true });
+  }
+  function closeModal(id) {
+    $(id).hidden = true;
+    if ($('m-team').hidden && $('m-gbn').hidden) document.body.classList.remove('locked');
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  document.querySelectorAll('.modal').forEach(function (m) {
+    m.addEventListener('click', function (e) {
+      if (e.target === m || e.target.hasAttribute('data-close')) closeModal(m.id);
+    });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    ['m-gbn', 'm-team'].forEach(function (id) { if (!$(id).hidden) closeModal(id); });
+  });
+
+  // Popup 1: "Complete your entire marketing team!" with the Researcher and
+  // the Social Media Manager, shown when they land on the cart.
+  var TEAM = ADDONS.filter(function (a) { return a.key === 'researcher' || a.key === 'social'; });
+  var teamPicked = {};
+  function drawTeam() {
+    $('m-team-items').innerHTML = TEAM.map(function (a) {
+      var on = !!teamPicked[a.key];
+      return '<div class="pick' + (on ? ' on' : '') + '">' +
+        '<div class="txt"><h3>' + a.name + '</h3><p>' + a.text + '</p>' +
+        '<div class="pick-row">' + tagsHtml(a) + '<span class="px">' + priceHtml(a) + '</span></div></div>' +
+        '<button type="button" class="toggle" data-pick="' + a.key + '" aria-pressed="' + on + '">' + (on ? 'Added' : 'Add') + '</button></div>';
+    }).join('');
+    var chosen = TEAM.filter(function (a) { return teamPicked[a.key]; });
+    var adding = chosen.length ? chosen : TEAM; // nothing tapped: the button adds both
+    var sum = adding.reduce(function (n, a) { return n + priceOf(a); }, 0);
+    $('m-team-add').textContent = (adding.length === TEAM.length ? 'Add both: ' : 'Add to my order: ') + money(sum);
+  }
+  $('m-team-items').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-pick]');
+    if (!b) return;
+    teamPicked[b.getAttribute('data-pick')] = !teamPicked[b.getAttribute('data-pick')];
+    drawTeam();
+    var again = $('m-team-items').querySelector('[data-pick="' + b.getAttribute('data-pick') + '"]');
+    if (again) again.focus();
+  });
+  $('m-team-add').addEventListener('click', function () {
+    var chosen = TEAM.filter(function (a) { return teamPicked[a.key]; });
+    (chosen.length ? chosen : TEAM).forEach(function (a) {
+      document.querySelector('#addons input[value="' + a.key + '"]').checked = true;
+    });
+    closeModal('m-team');
+    render();
+    tick();
+  });
+
+  // Popup 2: they click continue with nothing added. Offer GBN AI; "No thanks"
+  // goes on to pay for the editor.
+  $('go').addEventListener('click', function (e) {
+    if (selected().length) return; // with add-ons, the button already offers GBN AI
+    e.preventDefault();
+    var more = GBN - EDITOR_PRICE;
+    $('m-gbn-title').textContent = 'Get your whole marketing team for ' + money(more) + ' more.';
+    $('m-gbn-value').textContent = money(VALUE) + ' value';
+    $('m-gbn-off').textContent = pct(GBN, VALUE);
+    $('m-gbn-soon').hidden = !launch();
+    $('m-gbn-yes').textContent = 'Get all 4 for ' + money(more) + ' more';
+    $('m-gbn-yes').href = withSrc(LINKS.full);
+    $('m-gbn-no').textContent = 'No thanks, continue with ' + money(EDITOR_PRICE);
+    $('m-gbn-no').href = withSrc(LINKS.editor);
+    openModal('m-gbn');
+  });
+
+  $('addons').addEventListener('change', render);
+  drawPrices();
+  render();
+  tick();
+  setInterval(tick, 1000);
+  // Show popup 1 a moment after they land on the cart.
+  setTimeout(function () {
+    if (selected().length) return;
+    drawTeam();
+    openModal('m-team');
+    tick();
+  }, 700);
+})();
+</script>
+</body>
+</html>

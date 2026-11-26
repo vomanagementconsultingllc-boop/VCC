@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>You’re In | GBN AI</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Cpath d='M14 16h9l9 26 9-26h9L37 50h-10z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..900&display=swap">
+<link rel="stylesheet" href="../gbn.css">
+<style>
+  main { min-height: 88vh; min-height: 88svh; display: flex; align-items: center; }
+  .done { padding-top: 48px; padding-bottom: 48px; text-align: center; }
+  .tick { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto 18px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 28px; font-weight: 800; }
+  .done h1 { font-size: clamp(36px, 6vw, 64px); }
+  .done .lead { max-width: 36ch; margin-left: auto; margin-right: auto; }
+  .next { margin: 30px auto 0; max-width: 520px; text-align: left; }
+  .next .steps li { font-size: 16px; }
+  .actions { display: flex; justify-content: center; margin-top: 22px; }
+  @media (max-width: 600px) { .actions .btn { width: 100%; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="wrap narrow done">
+    <div class="tick" aria-hidden="true">✓</div>
+    <h1 id="title">You’re in.</h1>
+    <p class="lead" id="what">Thanks for getting GBN AI.</p>
+    <div class="next">
+      <ol class="steps">
+        <li><b>Check your inbox.</b>Your order email from nathan@vocreativeco.com is on its way to the email you paid with. It usually takes a minute.</li>
+        <li><b>Not there after 10 minutes?</b>Check spam and promotions, or reply to your Stripe receipt.</li>
+        <li><b>Join the Discord.</b>Ask me anything in #ask-nathan while you set it up.</li>
+      </ol>
+    </div>
+    <div class="actions">
+      <a class="btn btn-discord" href="https://discord.gg/jSfpvGcPmA" rel="noopener">Join the free Discord</a>
+    </div>
+  </div>
+</main>
+<footer>&copy; <span id="year">2026</span> Vo Creative Co. &middot; <a href="/studio/privacy/">Privacy</a></footer>
+<script>
+(function () {
+  'use strict';
+  var NAMES = {
+    editor: 'the AI Video Editor',
+    researcher: 'the Viral Video Researcher',
+    social: 'the Social Media Manager',
+    outreach: 'the AI Outreach System',
+    full: 'GBN AI, the full Claude team'
+  };
+  // t is the cart: "editor", "editor+researcher", ... or "full"
+  var t = new URLSearchParams(location.search).get('t') || '';
+  var parts = t.split('+').filter(function (k) { return NAMES[k]; });
+  document.getElementById('year').textContent = String(new Date().getFullYear());
+  if (parts.length) {
+    var names = parts.map(function (k) { return NAMES[k]; });
+    var list = names.length > 1 ? names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1] : names[0];
+    document.getElementById('what').textContent = 'Thanks for getting ' + list + '.';
+  }
+  // Keep the Stripe session id out of the address bar (and out of anything shared).
+  if (history.replaceState) history.replaceState(null, '', location.pathname + (parts.length ? '?t=' + encodeURIComponent(parts.join('+')) : ''));
+})();
+</script>
+</body>
+</html>
