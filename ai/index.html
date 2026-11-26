@@ -63,8 +63,9 @@
   .side.mine li::before { content: "\2713"; background: var(--red); color: #fff; }
   .side .media { width: 200px; max-width: 100%; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 16px; overflow: hidden; }
   .side .media video { display: block; width: 100%; height: 100%; object-fit: cover; background: #111; }
-  .side.slop .media { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; padding: 14px; background: repeating-linear-gradient(135deg, #E9E9E9 0 14px, #E2E2E2 14px 28px); text-align: center; font-weight: 700; color: #8A8A8A; }
-  .side.slop .media span { display: block; padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 13px; }
+  .side .media { position: relative; }
+  .side.slop .media video { filter: saturate(.85); }
+  .side .media .made { position: absolute; left: 8px; top: 8px; padding: 4px 9px; border-radius: 999px; background: rgba(255,255,255,.92); color: #444; font-size: 11px; font-weight: 800; letter-spacing: .02em; }
   /* Results */
   .feature { display: grid; grid-template-columns: 1fr 1.1fr; gap: 28px; align-items: center; margin-top: 24px; }
   .feature img { display: block; width: 100%; max-width: 380px; margin: 0 auto; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 10px 26px rgba(0,0,0,.07); }
@@ -85,7 +86,7 @@
   .quote .tag { display: inline-block; margin-bottom: 10px; padding: 3px 9px; border-radius: 999px; background: #FFE9A8; color: #5A4500; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
   .formats { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; margin-top: 22px; }
   .formats figure { margin: 0; }
-  .formats video, .formats .ph { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 16px; background: #111; }
+  .formats video, .formats .ph, .formats .still { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 16px; background: #111; }
   .formats .ph { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; background: repeating-linear-gradient(135deg, #E9E9E9 0 14px, #E2E2E2 14px 28px); font-weight: 700; color: #8A8A8A; }
   .formats .ph span { padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 13px; }
   .formats figcaption { margin-top: 10px; font-size: 14px; line-height: 1.4; color: var(--muted); }
@@ -141,7 +142,7 @@
   </section>
 
   <section>
-    <div class="wrap split">
+    <div class="wrap">
       <div>
         <p class="kicker">How it works</p>
         <h2>One prompt. I approve. Done.</h2>
@@ -151,12 +152,7 @@
           <li><b>It writes 3 hooks.</b>Three openings to test as trial reels.</li>
           <li><b>You approve the storyboard.</b>Nothing is final until you say so. Then the video is done.</li>
         </ol>
-        <blockquote>“I didn’t touch a single editing software.”<cite>Me, Nov 19</cite></blockquote>
       </div>
-      <figure class="shot">
-        <img src="../free/img/edit-room.jpg" width="800" height="800" loading="lazy" decoding="async" alt="My Claude Edit Room with video storyboards waiting for approval">
-        <figcaption>My Edit Room. Every storyboard waits here for my OK.</figcaption>
-      </figure>
     </div>
   </section>
 
@@ -166,7 +162,7 @@
       <h2>AI slop vs. my viral video editor.</h2>
       <div class="versus">
         <div class="side slop">
-          <div class="media" aria-label="Example of a generic AI edit"><span>Stock clip</span><span>Robot voiceover</span><span>Same captions as everyone</span></div>
+          <div class="media"><video src="reels/slop.mp4" poster="reels/slop.jpg" muted loop playsinline preload="none" aria-label="A generic AI slop video we made as an example: stock background, robot voice, template captions"></video><span class="made">Example we made</span></div>
           <h3>AI slop</h3>
           <ul>
             <li>Stock footage and AI b-roll that has nothing to do with what you said.</li>
@@ -193,17 +189,14 @@
 
   <section>
     <div class="wrap">
-      <p class="kicker">Every format</p>
-      <h2>Every viral format I use, cut by the editor.</h2>
-      <p class="lead" style="margin-top:0">It comes with 5 editing styles, and it learns any new format from an inspo video. These are the formats I run on my own videos.</p>
+      <p class="kicker">4 formats</p>
+      <h2>The 4 formats I post, cut by the editor.</h2>
+      <p class="lead" style="margin-top:0">Each one is built to get results, and still looks like something you filmed yourself.</p>
       <div class="formats">
-        <figure><video src="reels/fmt-viral.mp4" poster="reels/fmt-viral.jpg" muted loop playsinline preload="none" aria-label="Viral format, a format my AI editor cuts"></video><figcaption><b>Viral format</b>Summaries up top, real pictures, punch-ins.</figcaption></figure>
-        <figure><video src="reels/fmt-jun.mp4" poster="reels/fmt-jun.jpg" muted loop playsinline preload="none" aria-label="Talking head, a format my AI editor cuts"></video><figcaption><b>Talking head</b>Fast cuts, bold boxes on the key line.</figcaption></figure>
-        <figure><video src="reels/fmt-split.mp4" poster="reels/fmt-split.jpg" muted loop playsinline preload="none" aria-label="Split screen, a format my AI editor cuts"></video><figcaption><b>Split screen</b>From my YouTube video, stacked for vertical.<small>Frames from the real edit</small></figcaption></figure>
-        <figure><video src="reels/fmt-green.mp4" poster="reels/fmt-green.jpg" muted loop playsinline preload="none" aria-label="Green screen collage, a format my AI editor cuts"></video><figcaption><b>Green screen collage</b>Me cut out over real photos that change with each idea.<small>Frames from the real edit</small></figcaption></figure>
-        <figure><video src="reels/fmt-list.mp4" poster="reels/fmt-list.jpg" muted loop playsinline preload="none" aria-label="Numbered list, a format my AI editor cuts"></video><figcaption><b>Numbered list</b>Each point fills in the moment I say it.<small>Frames from the real edit</small></figcaption></figure>
-        <figure><video src="reels/fmt-edu.mp4" poster="reels/fmt-edu.jpg" muted loop playsinline preload="none" aria-label="Educational, a format my AI editor cuts"></video><figcaption><b>Educational</b>Charts, notes and photos on the things I name.<small>Frames from the real edit</small></figcaption></figure>
-        <figure class="soon"><div class="ph"><span>Voice-over reel</span><span>Clip coming</span></div><figcaption><b>Voice-over reel</b>B-roll of my day with my voice telling the story.</figcaption></figure>
+        <figure class="soon"><div class="ph"><span>Voice-over</span><span>Clip coming</span></div><figcaption><b>Voice-over</b>B-roll of my day with my voice telling the story.</figcaption></figure>
+        <figure><video src="reels/fmt-viral.mp4" poster="reels/fmt-viral.jpg" muted loop playsinline preload="none" aria-label="Viral format, cut by my AI editor"></video><figcaption><b>Viral format</b>Summaries up top, real pictures, punch-ins.</figcaption></figure>
+        <figure><img class="still" src="reels/fmt-green.jpg" width="270" height="480" loading="lazy" decoding="async" alt="A frame from my green screen edit"><figcaption><b>Green screen</b>Me over real photos that change with each idea.<small>Still from the real edit, clip coming</small></figcaption></figure>
+        <figure><video src="reels/fmt-jun.mp4" poster="reels/fmt-jun.jpg" muted loop playsinline preload="none" aria-label="Yapping format, cut by my AI editor"></video><figcaption><b>Yapping</b>Me talking to the camera, fast cuts, bold boxes on the key line.</figcaption></figure>
       </div>
     </div>
   </section>
