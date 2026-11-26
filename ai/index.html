@@ -24,6 +24,8 @@
   .hero h1 { max-width: 14ch; margin: 0 auto; }
   .hero .lead { max-width: 40ch; margin-left: auto; margin-right: auto; }
   .hero .stats { max-width: 720px; margin: 28px auto 26px; }
+  .video { position: relative; width: 100%; max-width: 720px; margin: 26px auto 0; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 18px; background: #000; box-shadow: 0 18px 40px rgba(0,0,0,.18); }
+  .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .buybox { max-width: 520px; margin: 0 auto; padding: 22px; border: 2px solid var(--ink); border-radius: 20px; text-align: left; }
   .buybox .line { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
   .buybox .big { font-size: 46px; font-weight: 800; letter-spacing: -.03em; }
@@ -50,6 +52,9 @@
     <p class="pill">GBN AI</p>
     <h1>Get my AI Video Editor.</h1>
     <p class="lead">The Claude editor from my GBN AI team. Send it a raw video, approve the storyboard, and get a finished vertical video. No editing app.</p>
+    <!-- The free video. Set data-youtube to the YouTube video id (the part after
+         "v=" or after "youtu.be/"). Empty = no video box on the page. -->
+    <div class="video" id="video" data-youtube="" hidden></div>
     <div class="stats">
       <div><b>1.5M+</b><span>views from my AI framework</span></div>
       <div><b>78,829</b><span>views on a reel made in about 2 minutes</span></div>
@@ -141,6 +146,18 @@
 (function () {
   'use strict';
   document.getElementById('year').textContent = String(new Date().getFullYear());
+  // The free video, when it's set
+  var box = document.getElementById('video');
+  var yt = (box.getAttribute('data-youtube') || '').replace(/[^\w-]/g, '');
+  if (yt) {
+    var f = document.createElement('iframe');
+    f.src = 'https://www.youtube-nocookie.com/embed/' + yt + '?rel=0&modestbranding=1';
+    f.title = 'How I built the AI behind my 1.5 million views';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    f.allowFullscreen = true;
+    box.appendChild(f);
+    box.hidden = false;
+  }
   // Carry ?src=... to the checkout page, so each sale shows where it came from.
   var src = new URLSearchParams(location.search).get('src') || new URLSearchParams(location.search).get('utm_source') || '';
   src = src.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40);
